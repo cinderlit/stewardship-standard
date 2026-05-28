@@ -1,0 +1,54 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+=========================================================
+
+Copyright (c) 2026 Caitlin Stokes / Cinderlit (cinderlit.com) — The Stewardship Standard (stewardshipstandard.org)
+
+The specification documents in this repository (the contents of the `specs/`
+directory, this repository's prose documentation, and the normative text of
+The Stewardship Standard, the Quantified Stewardship Model, THRIVE, and
+QSM-FAI) are licensed under the Creative Commons Attribution 4.0
+International License.
+
+------------------------------------------------------------------------------
+YOU ARE FREE TO:
+
+  * Share — copy and redistribute the material in any medium or format.
+  * Adapt — remix, transform, and build upon the material for any purpose,
+    even commercially.
+
+  The licensor cannot revoke these freedoms as long as you follow the
+  license terms.
+
+UNDER THE FOLLOWING TERMS:
+
+  * Attribution — You must give appropriate credit, provide a link to the
+    license, and indicate if changes were made. You may do so in any
+    reasonable manner, but not in any way that suggests the licensor
+    endorses you or your use.
+
+  * No additional restrictions — You may not apply legal terms or
+    technological measures that legally restrict others from doing anything
+    the license permits.
+
+------------------------------------------------------------------------------
+RECOMMENDED ATTRIBUTION:
+
+  "The Stewardship Standard (TSS), Quantified Stewardship Model (QSM),
+  THRIVE, and QSM-FAI" by Caitlin Stokes / The Stewardship Standard,
+  licensed under CC BY 4.0. Source: https://github.com/cinderlit/stewardship-standard
+
+------------------------------------------------------------------------------
+FULL LEGAL CODE:
+
+  This file contains the human-readable summary of (and not a substitute
+  for) the license. The complete, authoritative legal code of the
+  Creative Commons Attribution 4.0 International License is available at:
+
+      https://creativecommons.org/licenses/by/4.0/legalcode
+
+------------------------------------------------------------------------------
+NOTE ON REFERENCE SCHEMAS:
+
+  The JSON reference schemas in the `schemas/` directory are licensed
+  separately under the Apache License 2.0 (see LICENSE-SCHEMAS), to make
+  them maximally reusable in software implementations.

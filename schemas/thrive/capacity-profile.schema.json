@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/thrive/capacity-profile/v1.0.json",
+  "title": "THRIVE CapacityProfile Schema",
+  "description": "Represents available effort across dimensions, balanced against load. Defined by THRIVE v1.0.1 §7.",
+  "type": "object",
+  "required": ["id", "effective_date"],
+  "properties": {
+    "id": { "type": "string" },
+    "effective_date": { "type": "string", "format": "date-time" },
+    "capacity": {
+      "type": "object",
+      "description": "Capacity dimensions (THRIVE §7.1). Values are implementation-defined (e.g. 0-1, low/med/high).",
+      "properties": {
+        "cognitive": {},
+        "emotional": {},
+        "physical": {},
+        "social": {},
+        "administrative": {},
+        "recovery": {}
+      }
+    },
+    "load": {
+      "type": "object",
+      "description": "Load dimensions (THRIVE §7.2).",
+      "properties": {
+        "required_tasks": {},
+        "interruptions": {},
+        "care_obligations": {},
+        "decision_burden": {},
+        "hidden_maintenance": {},
+        "context_switching": {}
+      }
+    },
+    "overload_flag": {
+      "type": "boolean",
+      "description": "Set when load persistently exceeds capacity (THRIVE §7.3)."
+    }
+  }
+}

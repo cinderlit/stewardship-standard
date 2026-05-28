@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/entity/v1.1.json",
+  "title": "TSS Entity Schema",
+  "description": "Any person, place, system, obligation, or asset represented in a context. Defined by TSS v1.1.1 §5.2.",
+  "type": "object",
+  "required": ["id", "type", "label", "status"],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "type": "string" },
+    "label": { "type": "string" },
+    "status": { "type": "string", "enum": ["active", "inactive", "deprecated"] },
+    "context_id": { "type": "string" }
+  }
+}

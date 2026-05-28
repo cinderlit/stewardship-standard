@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/relationship/v1.1.json",
+  "title": "TSS Relationship Schema",
+  "description": "An explicit link between two objects in a context. Defined by TSS v1.1.1 §5.7.",
+  "type": "object",
+  "required": ["id", "from", "to", "type"],
+  "properties": {
+    "id": { "type": "string" },
+    "from": { "type": "string" },
+    "to": { "type": "string" },
+    "type": { "type": "string", "description": "e.g., depends_on, supports, owns." },
+    "context_id": { "type": "string" }
+  }
+}

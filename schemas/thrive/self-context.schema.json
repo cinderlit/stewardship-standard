@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/thrive/self-context/v1.0.json",
+  "title": "THRIVE SelfContext Schema",
+  "description": "The required entry point for a THRIVE implementation. Defined by THRIVE v1.0.1 §6. Conforms to TSS Context rules.",
+  "type": "object",
+  "required": ["id", "person_ref", "effective_date", "scope", "capacity_baseline", "review_cadence"],
+  "properties": {
+    "id": { "type": "string" },
+    "person_ref": { "type": "string", "description": "Person identifier or alias." },
+    "context_type": {
+      "type": "string",
+      "enum": ["SELF", "RECOVERY", "TRANSITION", "CAREGIVING", "OVERLOAD"],
+      "description": "MAY be used individually or in combination."
+    },
+    "effective_date": { "type": "string", "format": "date-time" },
+    "scope": { "type": "string" },
+    "capacity_baseline": { "type": "string", "description": "Reference to or summary of the baseline CapacityProfile." },
+    "known_constraints": { "type": "array", "items": { "type": "string" } },
+    "support_network": { "type": "array", "items": { "type": "string" } },
+    "review_cadence": { "type": "string" }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "context": {
+    "id": "ctx-hearth-001",
+    "name": "Primary Residence Stewardship",
+    "type": "HEARTH",
+    "stewards": ["person-001"],
+    "effective_date": "2026-05-28T00:00:00Z",
+    "scope": "Single-family home and household systems",
+    "version": "1.0"
+  },
+  "entities": [
+    {
+      "id": "entity-hvac-001",
+      "type": "System",
+      "label": "HVAC System",
+      "status": "active",
+      "context_id": "ctx-hearth-001"
+    },
+    {
+      "id": "entity-smoke-001",
+      "type": "Safety",
+      "label": "Smoke / CO Detectors",
+      "status": "active",
+      "context_id": "ctx-hearth-001"
+    }
+  ],
+  "needs": [
+    {
+      "id": "need-safety-001",
+      "label": "Air quality and heating safety",
+      "priority": "high"
+    }
+  ],
+  "risks": [
+    {
+      "id": "risk-hvac-001",
+      "label": "HVAC failure in winter",
+      "severity": "high",
+      "likelihood": "medium"
+    }
+  ],
+  "records": []
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/thrive/need/v1.0.json",
+  "title": "THRIVE Need Schema",
+  "description": "A condition required to sustain wellbeing, functioning, or recovery. Defined by THRIVE v1.0.1. Aligns with TSS Need rules (TSS-NEED-01..04).",
+  "type": "object",
+  "required": ["id", "label", "priority"],
+  "properties": {
+    "id": { "type": "string" },
+    "label": { "type": "string" },
+    "priority": { "type": "string", "description": "Priority or urgency indicator." },
+    "references": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "At least one referenced Entity or Role where applicable."
+    },
+    "status": { "type": "string" },
+    "target": { "type": "string", "description": "The condition that satisfies the need." }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/tenure-entry/v1.0.json",
+  "title": "QSM-FAI TENURE Record Entry Schema",
+  "description": "A timestamped, append-only audit log entry attached to an entity or action. Every agent output MUST produce at least one TENURE entry. Conforms to TSS Record rules (TSS-REC-01..05). Defined by QSM-FAI v1.0.1 §6.",
+  "type": "object",
+  "required": ["id", "fc_id", "agent_id", "timestamp", "entry_type", "summary"],
+  "properties": {
+    "id": { "type": "string", "description": "TENURE entry identifier, e.g. te-[uuid]." },
+    "fc_id": { "type": "string", "description": "FiduciaryContext.id this entry is bound to (FC-05)." },
+    "agent_id": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "entry_type": {
+      "type": "string",
+      "enum": ["action", "recommendation", "escalation", "notification", "read"]
+    },
+    "entity_refs": { "type": "array", "items": { "type": "string" } },
+    "summary": { "type": "string" },
+    "rationale_ref": {
+      "description": "Inline rationale object or a reference id.",
+      "type": ["object", "string"]
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["pending", "accepted", "rejected", "superseded", "completed"]
+    },
+    "steward_acknowledgment": {
+      "type": "object",
+      "properties": {
+        "acknowledged_by": { "type": ["string", "null"] },
+        "acknowledged_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    }
+  }
+}

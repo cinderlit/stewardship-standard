@@ -1,0 +1,9 @@
+{
+  "id": "claim-001",
+  "tss_version": "1.1.1",
+  "context_types": ["HEARTH", "SELF"],
+  "conformance_level": "T2",
+  "deviations": [],
+  "claimant": "Cinderlit",
+  "claimed_at": "2026-05-28T00:00:00Z"
+}
