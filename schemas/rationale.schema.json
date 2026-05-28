@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/rationale/v1.0.json",
+  "title": "QSM-FAI Rationale Schema",
+  "description": "A machine-readable justification linking an action or recommendation to one or more QSM model elements. Required on every Recommendation and Action. Defined by QSM-FAI v1.0.1 §5.",
+  "type": "object",
+  "required": ["human_readable"],
+  "anyOf": [
+    { "required": ["addresses_needs"] },
+    { "required": ["addresses_risks"] },
+    { "required": ["references_requirements"] }
+  ],
+  "properties": {
+    "addresses_needs": { "type": "array", "items": { "type": "string" } },
+    "addresses_risks": { "type": "array", "items": { "type": "string" } },
+    "references_requirements": { "type": "array", "items": { "type": "string" } },
+    "domain": { "type": "string", "description": "e.g., systems, safety, financial." },
+    "urgency": { "type": "string", "enum": ["routine", "elevated", "critical"] },
+    "human_readable": { "type": "string", "minLength": 1, "description": "Plain-language explanation for the steward (RAT-02)." }
+  }
+}

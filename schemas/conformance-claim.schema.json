@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/conformance-claim/v1.1.json",
+  "title": "TSS ConformanceClaim Schema",
+  "description": "A versioned, explicit claim of conformance to TSS. Defined by TSS v1.1.1 §5.11 and §12. TSS T-level is the primary audit standard; QSM C-level, THRIVE H-level, and QSM-FAI L-level are domain interpretations of the same tier (see TSS Appendix Z).",
+  "type": "object",
+  "required": ["id", "tss_version", "context_types", "conformance_level"],
+  "properties": {
+    "id": { "type": "string" },
+    "tss_version": { "type": "string" },
+    "context_types": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "conformance_level": { "type": "string", "enum": ["T0", "T1", "T2", "T3"] },
+    "deviations": { "type": "array", "items": { "type": "string" } },
+    "claimant": { "type": "string" },
+    "claimed_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+title: "The Stewardship Standard: QSM, TSS, THRIVE, and QSM-FAI"
+message: "If you use or build on this standard, please cite it as below."
+type: software
+authors:
+  - given-names: Caitlin
+    family-names: Stokes
+    affiliation: "Cinderlit (cinderlit.com); The Stewardship Standard (stewardshipstandard.org)"
+abstract: >-
+  The Stewardship Standard (TSS) is a layered open standard for representing
+  people, places, systems, responsibilities, needs, values, and relationships
+  so that stewardship is legible, measurable, and improvable for both humans
+  and AI agents. It comprises the Quantified Stewardship Model (QSM, the
+  ontology and methodology), TSS (the normative umbrella for conformance and
+  audit), THRIVE (the self and wellness context layer), and QSM-FAI (the
+  fiduciary AI interface). QSM-FAI is, to the author's knowledge, the first
+  open standard designed explicitly as a fiduciary AI substrate, encoding the
+  legal duties of care, loyalty, and disclosure in the data architecture
+  itself rather than in a policy layer.
+keywords:
+  - fiduciary AI
+  - open standard
+  - stewardship
+  - ontology
+  - agent architecture
+  - AI governance
+  - principal-agent
+  - world model
+  - responsible AI
+  - conformance
+version: "1.0.0"
+date-released: "2026-05-28"
+license: CC-BY-4.0
+repository-code: "https://github.com/cinderlit/stewardship-standard"
+url: "https://stewardshipstandard.org"

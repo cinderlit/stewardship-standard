@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/thrive/wellness-record/v1.0.json",
+  "title": "THRIVE WellnessRecord Schema",
+  "description": "An append-only, timestamped, non-punitive record of meaningful self-context changes. Defined by THRIVE v1.0.1 §10. Conforms to TSS Record rules.",
+  "type": "object",
+  "required": ["id", "record_type", "timestamp"],
+  "properties": {
+    "id": { "type": "string" },
+    "record_type": {
+      "type": "string",
+      "enum": ["capacity-update", "need-change", "constraint-change", "routine-change", "support-change", "load-spike", "recovery-event", "reflection"]
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "summary": { "type": "string", "description": "User-understandable description. MUST NOT imply blame (THRIVE-04)." },
+    "details": { "type": "object" }
+  }
+}
