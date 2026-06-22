@@ -1,0 +1,29 @@
+{
+  "_comment": "Demonstrates the Escalation Outbox pattern added in QSM-FAI v1.1.0 §4.3 — one resolved entry, one still awaiting steward review.",
+  "escalation_outbox": [
+    {
+      "id": "eo-hearth-001",
+      "fc_id": "fc-hearth-001",
+      "tenure_entry_ref": "te-hearth-0042",
+      "reason": "rule_conflict",
+      "status": "resolved",
+      "created_at": "2026-06-10T14:32:00Z",
+      "resolved_at": "2026-06-10T19:05:00Z",
+      "resolution": "Steward confirmed Todoist (task_management rule) over Airtable (workflow_management rule) for this recurring grocery task; rule_conflict closed without a policy change.",
+      "summary": "Two decision rules disagreed on tool selection for a batchable grocery task.",
+      "context_id": "ctx-hearth-001"
+    },
+    {
+      "id": "eo-hearth-002",
+      "fc_id": "fc-hearth-001",
+      "tenure_entry_ref": "te-hearth-0058",
+      "reason": "timeout_exceeded",
+      "status": "awaiting_human_review",
+      "created_at": "2026-06-21T09:00:00Z",
+      "resolved_at": null,
+      "resolution": null,
+      "summary": "Yard care responsibility has exceeded 2x its expected attention window for the third consecutive week; agent has no scope to reassign it.",
+      "context_id": "ctx-hearth-001"
+    }
+  ]
+}

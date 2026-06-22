@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stewardshipstandard.org/schemas/tenure-entry/v1.0.json",
+  "$id": "https://stewardshipstandard.org/schemas/tenure-entry/v1.1.json",
   "title": "QSM-FAI TENURE Record Entry Schema",
-  "description": "A timestamped, append-only audit log entry attached to an entity or action. Every agent output MUST produce at least one TENURE entry. Conforms to TSS Record rules (TSS-REC-01..05). Defined by QSM-FAI v1.0.1 §6.",
+  "description": "A timestamped, append-only audit log entry attached to an entity or action. Every agent output MUST produce at least one TENURE entry. Conforms to TSS Record rules (TSS-REC-01..05). Defined by QSM-FAI v1.1.0 §6. v1.1: entry_type is now extensible (TEN-06) and an optional escalation_reason field was added for entry_type: escalation (§4.2).",
   "type": "object",
   "required": ["id", "fc_id", "agent_id", "timestamp", "entry_type", "summary"],
   "properties": {
@@ -12,7 +12,13 @@
     "timestamp": { "type": "string", "format": "date-time" },
     "entry_type": {
       "type": "string",
-      "enum": ["action", "recommendation", "escalation", "notification", "read"]
+      "enum": ["action", "recommendation", "escalation", "notification", "read"],
+      "description": "MAY be extended with implementation-specific values per TEN-06, provided the extension is declared in the implementation's conformance manifest."
+    },
+    "escalation_reason": {
+      "type": ["string", "null"],
+      "enum": ["uncertain_decision", "scope_violation", "rule_conflict", "timeout_exceeded", "tool_failure", "concurrent_write_risk", null],
+      "description": "Added v1.1.0. Present only when entry_type is 'escalation'. One of the Escalation Taxonomy values in QSM-FAI §4.2, or an implementation-declared extension (ESC-04) — implementations using an extension SHOULD relax this enum accordingly."
     },
     "entity_refs": { "type": "array", "items": { "type": "string" } },
     "summary": { "type": "string" },

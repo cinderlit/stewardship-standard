@@ -1,18 +1,16 @@
-> **Superseded.** This is an archived version. The current specification is
-> [THRIVE v1.1.0](./THRIVE-v1.1.0.md). See `CHANGELOG.md` [1.1.0] for what changed and why.
-
-# THRIVE v1.0.1
+# THRIVE v1.1.0
 ## Self and Wellness Context Layer
 ### Normative Specification for Personal Stewardship, Capacity, and Wellbeing
 
-**Version:** 1.0.1  
-**Status:** Final Draft — Ready for Submission  
-**Author:** Caitlin Stokes  
-**Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)  
-**License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)  
-**DOI:** [pending — Zenodo]  
-**Published:** 2026-05-28  
-**Dependent Specs:** QSM v1.0.1, TSS v1.1.1, QSM-FAI v1.0.1
+**Version:** 1.1.0
+**Status:** Final Draft — Ready for Submission
+**Author:** Caitlin Stokes
+**Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)
+**License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)
+**DOI:** [pending — Zenodo]
+**Published:** 2026-05-28
+**Amended:** 2026-06-22 (v1.1.0 — see `CHANGELOG.md`)
+**Dependent Specs:** QSM v1.1.0, TSS v1.2.0, QSM-FAI v1.1.0
 
 ---
 
@@ -37,6 +35,12 @@ stack. It is an openly accessible reference for implementers and practitioners a
 may evolve over time through public feedback and practical experience. Changes are
 recorded in the public change history (`CHANGELOG.md`) and tracked through public
 issues in the canonical repository; the latest editor's draft there is authoritative.
+
+**v1.1.0 amendment note:** this revision cross-references QSM §4.2.1's needs-framework
+mechanism from THRIVE's Capacity and Load Model (§7.1), so the two specs do not silently
+diverge on which needs-tiering vocabulary a SELF context actually uses. The change is
+additive and informative; no v1.0.1 requirement was removed or tightened. See `CHANGELOG.md`
+[1.1.0] for the full amendment record and implementation evidence.
 
 ## Use of AI-Assisted Tools in the Development of This Specification
 
@@ -211,6 +215,19 @@ A conformant implementation SHOULD be able to represent:
 - Administrative capacity.
 - Recovery capacity.
 
+#### 7.1.1 Relationship to QSM needs frameworks *(added v1.1.0)*
+
+THRIVE deliberately does not prescribe a needs-tiering theory of its own — see QSM §4.2.1,
+which names the needs frameworks (Maslow, ERG, Pink, WELL) that QSM-conformant implementations
+commonly select per context type, and notes that SELF contexts most often use Maslow's
+hierarchy. Where a THRIVE SelfContext is also a QSM Context (per §13), the capacity dimensions
+above SHOULD be interpretable against that Context's declared `needs_framework` rather than
+introducing a second, parallel tiering scheme. For example, under Maslow, Physical capacity
+maps most directly to physiological/safety tiers, Social capacity to belonging, and Recovery
+capacity supports whichever tier is currently under strain. This is guidance for consistency
+across the stack, not a new conformance requirement: THRIVE-02 (below) is satisfied by
+representing capacity and load at all, regardless of whether a framework mapping is declared.
+
 ### 7.2 Load dimensions
 
 A conformant implementation SHOULD be able to represent:
@@ -353,10 +370,10 @@ A system MAY claim conformance if it satisfies the following.
 
 | Document | Role |
 |---|---|
-| **QSM v1.0.1** | Core ontology and stewardship model |
-| **TSS v1.1.1** | Normative umbrella and audit framework |
-| **THRIVE v1.0.1** | Self and wellness context layer |
-| **QSM-FAI v1.0.1** | Fiduciary AI interface for acting within the stack |
+| **QSM v1.1.0** | Core ontology and stewardship model |
+| **TSS v1.2.0** | Normative umbrella and audit framework |
+| **THRIVE v1.1.0** | Self and wellness context layer |
+| **QSM-FAI v1.1.0** | Fiduciary AI interface for acting within the stack |
 
 THRIVE MAY serve as the SELF context type within QSM.
 THRIVE MUST be governed by the conformance and record rules of TSS.
@@ -389,8 +406,8 @@ A conformant implementation SHOULD include:
 
 ## Appendix B: Example Conformance Statement
 
-> This implementation conforms to THRIVE v1.0.1 at level H2 for SELF and RECOVERY contexts. It represents capacity, load, routines, and recovery events, maintains records, and avoids punitive framing.
+> This implementation conforms to THRIVE v1.1.0 at level H2 for SELF and RECOVERY contexts. It represents capacity, load, routines, and recovery events, maintains records, and avoids punitive framing.
 
-*THRIVE v1.0.1 — Self and Wellness Context Layer*  
-*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*  
-*First published: 2026-05-28*
+*THRIVE v1.1.0 — Self and Wellness Context Layer*
+*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*
+*First published: 2026-05-28 · Amended: 2026-06-22*

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/escalation-outbox-entry/v1.0.json",
+  "title": "QSM-FAI Escalation Outbox Entry Schema",
+  "description": "A standing, queryable record of an unresolved escalation awaiting steward attention. MAY be implemented as a materialized view over TENURE Records filtered to entry_type: escalation. Added v1.1.0. Defined by QSM-FAI v1.1.0 §4.3.",
+  "type": "object",
+  "required": ["id", "fc_id", "tenure_entry_ref", "reason", "status", "created_at"],
+  "properties": {
+    "id": { "type": "string", "description": "Unique Escalation Outbox entry identifier." },
+    "fc_id": { "type": "string", "description": "FiduciaryContext.id this escalation is bound to." },
+    "tenure_entry_ref": { "type": "string", "description": "References the TENURE entry (entry_type: escalation) that generated this Outbox entry (EO-01)." },
+    "reason": {
+      "type": "string",
+      "enum": ["uncertain_decision", "scope_violation", "rule_conflict", "timeout_exceeded", "tool_failure", "concurrent_write_risk"],
+      "description": "One of the Escalation Taxonomy values in QSM-FAI §4.2, or an implementation-declared extension — implementations using an extension SHOULD relax this enum accordingly."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["awaiting_human_review", "awaiting_approval", "awaiting_authority", "resolved"],
+      "description": "EO-02. A resolved entry MUST NOT be deleted (EO-03) — resolution is a status change."
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "resolved_at": { "type": ["string", "null"], "format": "date-time" },
+    "resolution": {
+      "type": ["string", "null"],
+      "description": "Required once status is 'resolved' (EO-03)."
+    },
+    "summary": { "type": "string" },
+    "context_id": { "type": "string" }
+  }
+}
