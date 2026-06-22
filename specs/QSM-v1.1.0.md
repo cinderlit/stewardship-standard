@@ -1,18 +1,16 @@
-> **Superseded.** This is an archived version. The current specification is
-> [QSM v1.1.0](./QSM-v1.1.0.md). See `CHANGELOG.md` [1.1.0] for what changed and why.
-
-# QSM v1.0.1
+# QSM v1.1.0
 ## Quantified Stewardship Model
 ### Domain-Agnostic Ontology and Methodology for Legible Stewardship
 
-**Version:** 1.0.1  
-**Status:** Final Draft — Ready for Submission  
-**Author:** Caitlin Stokes  
-**Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)  
-**License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)  
-**DOI:** [pending — Zenodo]  
-**Published:** 2026-05-28  
-**Related Specs:** TSS v1.1.1, THRIVE v1.0.1, QSM-FAI v1.0.1
+**Version:** 1.1.0
+**Status:** Final Draft — Ready for Submission
+**Author:** Caitlin Stokes
+**Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)
+**License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)
+**DOI:** [pending — Zenodo]
+**Published:** 2026-05-28
+**Amended:** 2026-06-22 (v1.1.0 — see `CHANGELOG.md`)
+**Related Specs:** TSS v1.2.0, THRIVE v1.1.0, QSM-FAI v1.1.0
 
 ---
 
@@ -39,6 +37,12 @@ stack. It is an openly accessible reference for implementers and practitioners a
 may evolve over time through public feedback and practical experience. Changes are
 recorded in the public change history (`CHANGELOG.md`) and tracked through public
 issues in the canonical repository; the latest editor's draft there is authoritative.
+
+**v1.1.0 amendment note:** this revision adds the `QSM_META` context type, formalizes the
+context template/instance pattern (§6.2), and names the needs-framework selection mechanism
+(§4.2.1) that v1.0.1 left implicit. All changes are additive; no v1.0.1 requirement was removed
+or tightened, and v1.0.1 conformance claims remain valid under v1.1.0. See `CHANGELOG.md` [1.1.0]
+for the full amendment record and implementation evidence.
 
 ## Use of AI-Assisted Tools in the Development of This Specification
 
@@ -165,6 +169,45 @@ This includes:
 - Service levels.
 - Urgency and tolerance thresholds.
 
+#### 4.2.1 Needs Frameworks (informative)
+
+QSM does not itself define a needs-tiering theory, but conformant implementations consistently
+need one to turn raw needs and values into prioritized, comparable scores. Implementation
+experience (see `CHANGELOG.md` [1.1.0]) shows the same four named frameworks recurring across
+context types:
+
+| Context type | Commonly used framework | Why |
+|---|---|---|
+| SELF | Maslow's hierarchy of needs | Tiers map naturally onto personal needs from safety through self-actualization |
+| HEARTH | WELL (or an equivalent household-wellness framework) | Designed around the physical/social conditions of a dwelling and its occupants |
+| CHARTER (business/organizational) | ERG (Existence–Relatedness–Growth) or Pink's autonomy/mastery/purpose | Suited to organizational and ownership-relationship motivation structures |
+| CREST / ESTATE | Context-specific; no single default | Episodic and portfolio-scale contexts vary too much for one default framework |
+
+A QSM implementation SHOULD:
+
+- **QSM-NF-01:** Declare which needs framework (if any) is the default for each Context type it
+  supports.
+- **QSM-NF-02:** Allow an individual Entity, Need, or Value to override its Context's default
+  framework when the entity's nature warrants a different tiering (e.g., an ownership
+  relationship scored on Pink within an otherwise ERG-scored CHARTER context).
+- **QSM-NF-03:** Document the formula used to turn framework tiers into a score. A common,
+  reference-only formula observed in practice is:
+
+  ```
+  score(entity)  = Σ attended_weight / Σ all_weight
+  weight(indicator) = tier_weight[framework][indicator.tier]
+                       × stage_factor[framework][context.stage][indicator.tier]
+  ```
+
+  where `stage` is an optional developmental or lifecycle modifier on the owning Context (for
+  example, an early-stage business may weight Existence-tier needs more heavily than a mature
+  one). This formula is illustrative, not normative — QSM-NF-03 only requires that *some*
+  documented, reproducible formula exist, not this specific one.
+
+This subsection is informative rather than normative: it names a real, recurring pattern so
+implementers are not left to invent framework selection independently, without requiring any
+specific framework or formula for conformance.
+
 ### 4.3 Relationship and action layer
 
 The relationship layer describes how entities depend on one another and what actions arise
@@ -212,9 +255,59 @@ A declaration that lacks boundary definition is incomplete and SHOULD be treated
 
 - **SELF** — personal well-being, executive function, habits, and life maintenance.
 - **HEARTH** — home and household stewardship.
-- **ESTATE** — multi-property or portfolio-scale stewardship.
+- **ESTATE** — multi-property or portfolio-scale stewardship. ESTATE contexts are typically
+  long-lived and structural: the same property portfolio, reviewed continuously.
 - **CHARTER** — organizational governance or leadership context.
-- **CREST** — recurring seasonal or episodic responsibility context.
+- **CREST** — recurring seasonal or episodic responsibility context. CREST is distinguished
+  from ESTATE by *shape*, not scale: a CREST context exists to govern a responsibility that
+  recurs on a cycle (a wildfire season, an HOA's annual budget cycle, a holiday-hosting
+  rotation) and may go dormant between cycles, whereas an ESTATE context is continuously active
+  property/portfolio stewardship. A multi-property HOA-style context that is continuously
+  active should be modeled as ESTATE; a seasonal or cyclical responsibility scoped to that same
+  property should be modeled as CREST. Implementations MAY layer a CREST context on top of an
+  ESTATE context (e.g., an annual wildfire-readiness cycle governed within a continuously
+  active estate).
+- **QSM_META** *(added v1.1.0)* — a singleton, non-steward-owned context representing the
+  governance/ontology layer itself (rules, templates, cross-context policy) rather than a
+  stewarded entity. A QSM_META context MUST NOT be duplicated via the template mechanism in
+  §6.2 and MUST NOT be assigned a `stewards` value, since it does not represent a stewarded
+  domain — see `QSM-NF`-adjacent rule **QSM-META-01** below.
+  - **QSM-META-01:** An implementation supporting QSM_META MUST treat it as singleton (at most
+    one QSM_META context per implementation instance) and MUST exclude it from any view, report,
+    or scoring pass intended to represent stewarded entities (e.g., a fairness dashboard or a
+    health-score ranking).
+
+### 6.2 Context Templates and Instances (added v1.1.0)
+
+QSM describes itself as a fractal ontology — the same model applies at every scale, from an
+individual to a household to a business to a portfolio of estates. In practice, this fractal
+property is realized through a **template/instance pattern**: a context type's default domain
+map is captured once, as a template, and reused across many concrete, steward-owned instances.
+
+- **Template.** A Context row with `is_template: true`. A template MUST NOT have an assigned
+  steward and MUST NOT itself be treated as an active stewardship domain — it exists only to be
+  duplicated. A template SHOULD hold a generic default domain map appropriate to its context
+  type (for example, a default CHARTER template might pre-populate "Product/Service Delivery,"
+  "Client/Stakeholder Success," "Operations," and "Revenue" as starting domains).
+- **Instance.** A Context row with `is_template: false` and `template_id` referencing the
+  template it was duplicated from. An instance MUST have a declared steward (per §6, TSS-CTX-03)
+  and is otherwise a normal, conformant Context.
+
+Conformance rules:
+
+- **QSM-TPL-01:** A template Context MUST NOT be assigned a steward.
+- **QSM-TPL-02:** An instance Context's `template_id`, if present, MUST reference a Context with
+  `is_template: true` of the same context type.
+- **QSM-TPL-03:** "Duplicating a template" MUST, at minimum, copy the template's domain map into
+  the new instance at creation time. Implementations MAY also copy default responsibilities,
+  systems, or scenario patterns.
+- **QSM-TPL-04:** The template/instance relationship is informative metadata, not a permission
+  boundary — it MUST NOT be used as a substitute for the delegation and scope rules defined in
+  QSM-FAI.
+
+This pattern is optional (templates are not required for conformance at any level) but
+RECOMMENDED for any implementation expecting to host more than one instance of the same context
+type (e.g., more than one CHARTER-type business, or more than one CREST-type seasonal context).
 
 ---
 
@@ -320,10 +413,10 @@ A QSM implementation MAY claim conformance if it satisfies the following:
 
 | Document | Role |
 |---|---|
-| **QSM v1.0.1** | Core ontology and methodology |
-| **TSS v1.1.1** | The broader stewardship standard and normative implementation layer |
-| **THRIVE v1.0.1** | Self and wellness subcontext |
-| **QSM-FAI v1.0.1** | Fiduciary AI interface for acting within QSM contexts |
+| **QSM v1.1.0** | Core ontology and methodology |
+| **TSS v1.2.0** | The broader stewardship standard and normative implementation layer |
+| **THRIVE v1.1.0** | Self and wellness subcontext |
+| **QSM-FAI v1.1.0** | Fiduciary AI interface for acting within QSM contexts |
 
 ---
 
@@ -343,9 +436,9 @@ A QSM implementation MAY claim conformance if it satisfies the following:
 
 A household context may begin with a single graph containing occupants, appliances, maintenance obligations, and recurring scenarios such as travel, storm outages, or caregiving weeks. The model then expands by adding priorities, thresholds, and recorded actions over time.
 
-*QSM v1.0.1 — Quantified Stewardship Model*  
-*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*  
-*First published: 2026-05-28*
+*QSM v1.1.0 — Quantified Stewardship Model*
+*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*
+*First published: 2026-05-28 · Amended: 2026-06-22*
 
 
 ## Appendix C: Formal Schema Appendix
@@ -355,18 +448,20 @@ A conformant implementation SHOULD expose these objects in a machine-readable fo
 
 ### C.1 Canonical object set
 
-| Object | Purpose | Required Fields |
-|---|---|---|
-| Context | Bounded stewardship scope | id, name, type, stewards, scope |
-| Entity | Any represented person, place, system, or obligation | id, type, label, status |
-| Need | Required condition for stability or flourishing | id, label, priority, target |
-| Value | Priority or principle used in decision-making | id, label, weight |
-| Role | Function or responsibility in context | id, label, holder, scope |
-| Relationship | Explicit link between objects | id, from, to, type |
-| Risk | Potential harm or failure mode | id, label, severity, likelihood |
-| Action | Proposed or executed change | id, type, actor, target, timestamp |
-| StewardshipRecord | Append-only event log entry | id, event_type, timestamp, source |
-| ScenarioPattern | Reusable contextual pattern | id, label, triggers, defaults |
+| Object | Purpose | Required Fields | Optional Fields (v1.1.0) |
+|---|---|---|---|
+| Context | Bounded stewardship scope | id, name, type, stewards, scope | is_template, template_id, needs_framework, stewardship_phase (see TSS §6.2) |
+| Entity | Any represented person, place, system, or obligation | id, type, label, status | |
+| Need | Required condition for stability or flourishing | id, label, priority, target | |
+| Value | Priority or principle used in decision-making | id, label, weight | |
+| Role | Function or responsibility in context | id, label, holder, scope | |
+| Relationship | Explicit link between objects | id, from, to, type | |
+| Risk | Potential harm or failure mode | id, label, severity, likelihood | |
+| Action | Proposed or executed change | id, type, actor, target, timestamp | |
+| StewardshipRecord | Append-only event log entry | id, event_type, timestamp, source | |
+| ScenarioPattern | Reusable contextual pattern | id, label, triggers, defaults | |
+
+A template Context (§6.2) is exempt from requiring a populated `stewards` field; see QSM-TPL-01.
 
 ### C.2 Minimal canonical JSON shape
 
@@ -404,10 +499,10 @@ This appendix clarifies how QSM relates to the broader standard stack.
 
 | Layer | Role in the stack | Normative dependency |
 |---|---|---|
-| QSM v1.0.1 | Ontology and methodology | Base layer |
-| THRIVE v1.0.1 | Self and wellness context | Supplies the human-centered context for self stewardship |
-| TSS v1.1.1 | Stewardship standard | Governs conformance, records, and interoperable structure |
-| QSM-FAI v1.0.1 | Fiduciary AI interface | Constrains agent behavior within QSM contexts |
+| QSM v1.1.0 | Ontology and methodology | Base layer |
+| THRIVE v1.1.0 | Self and wellness context | Supplies the human-centered context for self stewardship |
+| TSS v1.2.0 | Stewardship standard | Governs conformance, records, and interoperable structure |
+| QSM-FAI v1.1.0 | Fiduciary AI interface | Constrains agent behavior within QSM contexts |
 
 QSM implementations MAY reference THRIVE-specific need sets when the declared context is SELF.
 QSM implementations MUST defer to TSS for conformance language and audit requirements.
@@ -426,4 +521,4 @@ Where this document uses these terms, the intended force is normative, not advis
 
 ## Appendix F: Conformance Statement Template
 
-> This implementation conforms to QSM v1.0.1 at level C2 for the HEARTH context. It represents contexts, entities, needs, values, roles, relationships, risks, actions, and records using an explicit machine-readable schema. It preserves context boundaries and produces auditable outputs.
+> This implementation conforms to QSM v1.1.0 at level C2 for the HEARTH context. It represents contexts, entities, needs, values, roles, relationships, risks, actions, and records using an explicit machine-readable schema. It preserves context boundaries and produces auditable outputs.

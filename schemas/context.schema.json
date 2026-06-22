@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stewardshipstandard.org/schemas/context/v1.1.json",
+  "$id": "https://stewardshipstandard.org/schemas/context/v1.2.json",
   "title": "TSS Context Schema",
-  "description": "A bounded stewardship domain with explicit scope. Defined by TSS v1.1.1 §5.1 and §6.",
+  "description": "A bounded stewardship domain with explicit scope. Defined by TSS v1.2.0 §5.1 and §6. v1.2: relaxed `stewards` to accept a single steward reference or an array; added is_template, template_id, needs_framework, stewardship_phase; added QSM_META to the type enum.",
   "type": "object",
   "required": ["id", "name", "type", "stewards", "effective_date", "scope", "version"],
   "properties": {
@@ -10,18 +10,37 @@
     "name": { "type": "string", "description": "Human-readable context name." },
     "type": {
       "type": "string",
-      "enum": ["SELF", "HEARTH", "ESTATE", "CHARTER", "CREST"],
-      "description": "Declared context type. Additional types MAY be added in future versions."
+      "enum": ["SELF", "HEARTH", "ESTATE", "CHARTER", "CREST", "QSM_META"],
+      "description": "Declared context type. QSM_META (added v1.2.0) is a singleton, non-steward-owned governance context — see QSM §6.1, QSM-META-01. Additional types MAY be added in future versions."
     },
     "stewards": {
-      "type": "array",
-      "items": { "type": "string" },
-      "minItems": 1,
-      "description": "At least one responsible steward identifier."
+      "oneOf": [
+        { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        { "type": "string" }
+      ],
+      "description": "One or more responsible steward identifiers. MAY be a single string reference or an array (added v1.2.0). A QSM_META context is exempt from this requirement (QSM-META-01) and SHOULD omit this field or set it to an empty array."
     },
     "effective_date": { "type": "string", "format": "date-time" },
     "scope": { "type": "string", "description": "Explicit scope boundary for the context." },
     "exclusions": { "type": "array", "items": { "type": "string" } },
-    "version": { "type": "string" }
+    "version": { "type": "string" },
+    "is_template": {
+      "type": "boolean",
+      "default": false,
+      "description": "Added v1.2.0. True if this Context is a non-steward-owned template to be duplicated into instances. See QSM §6.2, QSM-TPL-01."
+    },
+    "template_id": {
+      "type": ["string", "null"],
+      "description": "Added v1.2.0. References the template Context (is_template: true, same type) this instance was duplicated from, if any. See QSM §6.2, QSM-TPL-02."
+    },
+    "needs_framework": {
+      "type": ["string", "null"],
+      "description": "Added v1.2.0. The default needs framework for entities in this Context, e.g. 'maslow', 'well', 'erg', 'pink'. See QSM §4.2.1. Informative; not required for conformance."
+    },
+    "stewardship_phase": {
+      "type": "string",
+      "enum": ["locus", "atlas", "tenure"],
+      "description": "Added v1.2.0. The Context's current position in the LOCUS → ATLAS → TENURE lifecycle. See TSS §6.2. RECOMMENDED, not required below T3. Not applicable to QSM_META contexts (TSS-PHASE-04)."
+    }
   }
 }

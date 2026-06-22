@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/assignment/v1.0.json",
+  "title": "TSS Assignment Schema",
+  "description": "Binds a Role or Responsibility to the Steward(s) or Delegate(s) who hold it, under a named delegation model. Added v1.2.0. Defined by TSS v1.2.0 §5.12.",
+  "type": "object",
+  "required": ["id", "role_id", "holders", "model"],
+  "properties": {
+    "id": { "type": "string", "description": "Unique Assignment identifier." },
+    "role_id": { "type": "string", "description": "References the Role or Responsibility this Assignment binds." },
+    "holders": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["holder_id"],
+        "properties": {
+          "holder_id": { "type": "string", "description": "References a Steward or Delegate." },
+          "sub_role": {
+            "type": "string",
+            "description": "Meaningful only relative to `model` — e.g. 'responsible'/'accountable'/'consulted'/'informed' under RACI, 'driver'/'approver'/'contributor'/'informed' under DACI, 'manager'/'owner'/'consulted'/'helper'/'approver' under MOCHA. Omit for 'unstructured'."
+          }
+        }
+      }
+    },
+    "model": {
+      "type": "string",
+      "enum": ["RACI", "DACI", "MOCHA", "unstructured"],
+      "description": "The delegation model this Assignment uses. Implementations MAY define additional values; per TSS-CONF-05 a ConformanceClaim using a non-listed model SHOULD declare it as a deviation."
+    },
+    "context_id": { "type": "string", "description": "The Context this Assignment is scoped to." }
+  }
+}
