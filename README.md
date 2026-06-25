@@ -12,6 +12,7 @@
 **Implementation partner:** Excentropy ([excentropy.com](https://excentropy.com))¹
 **Status:** Final Draft — Public Release Candidate
 **First published:** 2026-05-28
+**Current release:** v1.1.0 (2026-06-22) — see [`CHANGELOG.md`](CHANGELOG.md)
 
 ---
 
@@ -29,10 +30,13 @@ The standard is composed of four interdependent specifications. **TSS is the nor
 
 | Spec | Version | Role |
 |------|---------|------|
-| **[QSM](specs/QSM-v1.0.1.md)** | 1.0.1 | **Quantified Stewardship Model** — the domain-agnostic ontology and methodology. Defines what exists in a stewardship domain, what it needs, and what follows from that. The foundation layer. |
-| **[TSS](specs/TSS-v1.1.1.md)** | 1.1.1 | **The Stewardship Standard** — the normative umbrella. Defines required objects, conformance levels (T0–T3), records, and audit rules that govern the whole stack. **The primary audit standard.** |
-| **[THRIVE](specs/THRIVE-v1.0.1.md)** | 1.0.1 | **Self and Wellness Context Layer** — represents personal capacity, load, needs, routines, and recovery without reducing wellbeing to a productivity metric. Supplies the SELF context. |
-| **[QSM-FAI](specs/QSM-FAI-v1.0.1.md)** | 1.0.1 | **Fiduciary AI Interface** — the conditions and constraints under which an AI agent may act as a fiduciary within a stewardship context. Defines the FiduciaryContext, action tiers, rationale, and TENURE audit records. |
+| **[QSM](specs/QSM-v1.1.0.md)** | 1.1.0 | **Quantified Stewardship Model** — the domain-agnostic ontology and methodology. Defines what exists in a stewardship domain, what it needs, and what follows from that. The foundation layer. |
+| **[TSS](specs/TSS-v1.2.0.md)** | 1.2.0 | **The Stewardship Standard** — the normative umbrella. Defines required objects, conformance levels (T0–T3), records, and audit rules that govern the whole stack. **The primary audit standard.** |
+| **[THRIVE](specs/THRIVE-v1.1.0.md)** | 1.1.0 | **Self and Wellness Context Layer** — represents personal capacity, load, needs, routines, and recovery without reducing wellbeing to a productivity metric. Supplies the SELF context. |
+| **[QSM-FAI](specs/QSM-FAI-v1.1.0.md)** | 1.1.0 | **Fiduciary AI Interface** — the conditions and constraints under which an AI agent may act as a fiduciary within a stewardship context. Defines the FiduciaryContext, action tiers, rationale, and TENURE audit records. |
+
+Previous versions (v1.0.x) remain available in `specs/`, each marked superseded with a pointer
+to its replacement. See [`CHANGELOG.md`](CHANGELOG.md) [1.1.0] for what changed and why.
 
 ### How they relate
 
@@ -74,19 +78,22 @@ stewardship-standard/
 ├── LICENSE-SCHEMAS               ← Apache 2.0 (reference schemas)
 ├── .zenodo.json                  ← metadata for Zenodo DOI minting
 ├── specs/
-│   ├── QSM-v1.0.1.md
-│   ├── TSS-v1.1.1.md
-│   ├── THRIVE-v1.0.1.md
-│   └── QSM-FAI-v1.0.1.md
+│   ├── QSM-v1.1.0.md
+│   ├── TSS-v1.2.0.md
+│   ├── THRIVE-v1.1.0.md
+│   ├── QSM-FAI-v1.1.0.md
+│   └── (superseded v1.0.x versions kept alongside, marked superseded)
 ├── schemas/
 │   ├── context.schema.json
 │   ├── entity.schema.json
 │   ├── relationship.schema.json
 │   ├── record.schema.json
 │   ├── conformance-claim.schema.json
+│   ├── assignment.schema.json
 │   ├── fiduciary-context.schema.json
 │   ├── rationale.schema.json
 │   ├── tenure-entry.schema.json
+│   ├── escalation-outbox-entry.schema.json
 │   └── thrive/
 │       ├── self-context.schema.json
 │       ├── capacity-profile.schema.json
@@ -96,7 +103,9 @@ stewardship-standard/
 └── samples/
     ├── hearth-context.json
     ├── hearth-fiduciary-context.json
-    └── default-conformance-claim.json
+    ├── default-conformance-claim.json
+    ├── charter-template-and-instance.json
+    └── escalation-outbox-entry.json
 ```
 
 ---
@@ -116,10 +125,10 @@ TSS defines four conformance levels. Each domain layer mirrors them (see TSS App
 
 ## Getting started
 
-1. Read **[QSM](specs/QSM-v1.0.1.md)** for the conceptual foundation.
-2. Read **[TSS](specs/TSS-v1.1.1.md)** for conformance and audit requirements.
-3. If you are building an AI agent, read **[QSM-FAI](specs/QSM-FAI-v1.0.1.md)**.
-4. If you are modeling personal capacity and wellbeing, read **[THRIVE](specs/THRIVE-v1.0.1.md)**.
+1. Read **[QSM](specs/QSM-v1.1.0.md)** for the conceptual foundation.
+2. Read **[TSS](specs/TSS-v1.2.0.md)** for conformance and audit requirements.
+3. If you are building an AI agent, read **[QSM-FAI](specs/QSM-FAI-v1.1.0.md)**.
+4. If you are modeling personal capacity and wellbeing, read **[THRIVE](specs/THRIVE-v1.1.0.md)**.
 5. Validate your data against the JSON schemas in [`schemas/`](schemas/); see [`samples/`](samples/) for worked examples.
 
 ---
@@ -143,7 +152,7 @@ This is an open standard: publicly accessible, implementable by anyone without d
 
 If you reference or build on this standard, please cite it. See [`CITATION.cff`](CITATION.cff). Once the Zenodo DOI is minted, cite:
 
-> Stokes, Caitlin. *The Stewardship Standard: QSM, TSS, THRIVE, and QSM-FAI* (v1.0.0). The Stewardship Standard, 2026. DOI: [pending — Zenodo]. https://github.com/cinderlit/stewardship-standard
+> Stokes, Caitlin. *The Stewardship Standard: QSM, TSS, THRIVE, and QSM-FAI* (v1.1.0). The Stewardship Standard, 2026. DOI: [pending — Zenodo]. https://github.com/cinderlit/stewardship-standard
 
 ---
 

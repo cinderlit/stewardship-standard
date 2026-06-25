@@ -1,0 +1,54 @@
+{
+  "_comment": "Demonstrates the Context template/instance pattern added in QSM v1.1.0 §6.2 / TSS v1.2.0 §11.1.1. tpl-charter-001 is a non-steward-owned template; ctx-charter-acme-001 is a steward-owned instance duplicated from it.",
+  "contexts": [
+    {
+      "id": "tpl-charter-001",
+      "name": "CHARTER Template",
+      "type": "CHARTER",
+      "is_template": true,
+      "template_id": null,
+      "stewards": [],
+      "effective_date": "2026-06-22T00:00:00Z",
+      "scope": "Generic organizational governance template — not an active stewardship domain.",
+      "needs_framework": "erg",
+      "version": "1.0",
+      "domains": [
+        { "id": "dom-charter-tpl-delivery", "label": "Product/Service Delivery" },
+        { "id": "dom-charter-tpl-client", "label": "Client/Stakeholder Success" },
+        { "id": "dom-charter-tpl-ops", "label": "Operations" },
+        { "id": "dom-charter-tpl-revenue", "label": "Revenue" }
+      ]
+    },
+    {
+      "id": "ctx-charter-acme-001",
+      "name": "Acme Co. Stewardship",
+      "type": "CHARTER",
+      "is_template": false,
+      "template_id": "tpl-charter-001",
+      "stewards": ["person-acme-founder-001"],
+      "effective_date": "2026-06-22T00:00:00Z",
+      "scope": "Acme Co. organizational governance, duplicated from the CHARTER template.",
+      "needs_framework": "erg",
+      "stewardship_phase": "atlas",
+      "version": "1.0",
+      "domains": [
+        { "id": "dom-charter-acme-delivery", "label": "Product Delivery" },
+        { "id": "dom-charter-acme-client", "label": "Client Success" },
+        { "id": "dom-charter-acme-ops", "label": "Engineering Platform" },
+        { "id": "dom-charter-acme-revenue", "label": "Revenue Operations", "health_status": "at_risk" }
+      ]
+    }
+  ],
+  "assignments": [
+    {
+      "id": "asn-acme-revenue-001",
+      "role_id": "role-acme-revenue-lead",
+      "holders": [
+        { "holder_id": "person-acme-founder-001", "sub_role": "accountable" },
+        { "holder_id": "person-acme-ops-lead-001", "sub_role": "responsible" }
+      ],
+      "model": "RACI",
+      "context_id": "ctx-charter-acme-001"
+    }
+  ]
+}
