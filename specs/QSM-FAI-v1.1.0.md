@@ -1,18 +1,17 @@
-> **Superseded.** This is an archived version. The current specification is
-> [QSM-FAI v1.1.0](./QSM-FAI-v1.1.0.md). See `CHANGELOG.md` [1.1.0] for what changed and why.
-
-# QSM-FAI v1.0.1
+# QSM-FAI v1.1.0
 ## Quantified Stewardship Model — Fiduciary AI Interface
 ### Normative Specification
 
-**Version:** 1.0.1  
-**Status:** Final Draft — Ready for Submission  
-**Author:** Caitlin Stokes  
-**Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)  
-**License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)  
-**DOI:** [pending — Zenodo]  
-**Published:** 2026-05-28  
+**Version:** 1.1.0
+**Status:** Final Draft — Ready for Submission
+**Author:** Caitlin Stokes
+**Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)
+**License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)
+**DOI:** [pending — Zenodo]
+**Published:** 2026-05-28
+**Amended:** 2026-06-22 (v1.1.0 — see `CHANGELOG.md`)
 **First Hardened Context:** HEARTH (Quantified Home)
+**Dependent Specs:** QSM v1.1.0, TSS v1.2.0, THRIVE v1.1.0
 
 ---
 
@@ -37,6 +36,15 @@ stack. It is an openly accessible reference for implementers and practitioners a
 may evolve over time through public feedback and practical experience. Changes are
 recorded in the public change history (`CHANGELOG.md`) and tracked through public
 issues in the canonical repository; the latest editor's draft there is authoritative.
+
+**v1.1.0 amendment note:** this revision formalizes the single `requires_escalation` flag
+(§4.1) into a named Escalation Taxonomy (§4.2) and a standing Escalation Outbox pattern (§4.3),
+adds an optional Delegate Track Record to `delegation_chain` entries (§3.3), notes that
+`entry_type` on TENURE entries is extensible (§6.1), and adds a prohibited behavior excluding
+QSM_META governance contexts from agent action (§9, PROHIB-06). All changes are additive or
+optional; no v1.0.1 requirement was removed or tightened, and v1.0.1 conformance claims remain
+valid under v1.1.0. See `CHANGELOG.md` [1.1.0] for the full amendment record and implementation
+evidence.
 
 ## Use of AI-Assisted Tools in the Development of This Specification
 
@@ -103,15 +111,18 @@ This specification does NOT govern:
 
 ### 1.3 Relationship to QSM
 
-QSM defines the ontology, needs/values layer, and relationship graph.  
+QSM defines the ontology, needs/values layer, and relationship graph.
 QSM-FAI defines how agents read from, act within, and write back to that graph — subject to
 fiduciary constraints.
 
 ```
 QSM (world model)
     └── QSM-FAI (agent interface + fiduciary rules)
-            └── HEARTH / CREST / CHARTER / SELF (hardened contexts)
+            └── HEARTH / CREST / CHARTER / SELF / ESTATE (hardened contexts)
 ```
+
+Note: `QSM_META` (QSM §6.1) is a governance context, not a hardened context, and is not a valid
+target for agent action — see PROHIB-06.
 
 ---
 
@@ -129,6 +140,8 @@ QSM (world model)
 | **Rationale** | A machine-readable justification linking an action to one or more QSM model elements |
 | **TENURE Record** | A timestamped audit log entry attached to an entity or action |
 | **Hardened Context** | A context with a fully populated LOCUS, a validated ATLAS, and at least one TENURE cycle |
+| **Escalation Outbox** *(added v1.1.0)* | A standing, queryable collection of unresolved escalations awaiting steward attention (see §4.3) |
+| **Track Record** *(added v1.1.0)* | An optional, rolling summary of a delegate's accepted/rejected/superseded outcome history (see §3.3) |
 
 ---
 
@@ -144,7 +157,7 @@ any action. This object is the agent's "license to act."
   "$schema": "https://stewardshipstandard.org/schemas/fiduciary-context/v1.0.json",
   "id": "fc-[uuid]",
   "version": "1.0",
-  "context_type": "HEARTH | CREST | CHARTER | SELF",
+  "context_type": "HEARTH | CREST | CHARTER | SELF | ESTATE",
   "label": "string — human-readable name for this context",
   "declared_by": {
     "steward_id": "string",
@@ -156,7 +169,13 @@ any action. This object is the agent's "license to act."
       "steward_id": "string",
       "role": "primary | delegate | observer",
       "authorized_at": "ISO8601 timestamp",
-      "scope": ["read", "recommend", "act", "delegate"]
+      "scope": ["read", "recommend", "act", "delegate"],
+      "track_record": {
+        "accepted_count": 0,
+        "rejected_count": 0,
+        "superseded_count": 0,
+        "last_updated_at": "ISO8601 timestamp | null"
+      }
     }
   ],
   "entity_set_ref": "string — reference to LOCUS document ID",
@@ -183,6 +202,24 @@ any action. This object is the agent's "license to act."
 - **FC-04:** `delegation_chain` MUST include at least one `primary` steward.
 - **FC-05:** An agent MUST attach the `fc.id` to every Action and TENURE Record it generates.
 
+### 3.3 Delegate Track Record *(added v1.1.0, optional)*
+
+A `delegation_chain` entry MAY carry a `track_record` object summarizing that delegate's
+history of accepted, rejected, and superseded outcomes, derived from the `outcome` field of its
+own TENURE Records (§6.1).
+
+- **TR-01 (optional):** If present, `track_record` counts MUST be derived only from this
+  delegate's own TENURE Record outcomes within this FiduciaryContext.
+- **TR-02 (optional):** `track_record` MUST NOT be used as the sole basis for changing
+  `max_action_tier` or any other constraint without a corresponding Recommendation and Rationale
+  — i.e., a track record MAY inform a steward's decision to widen or narrow a delegate's scope,
+  but MUST NOT silently and automatically change `constraints` on its own.
+- This subsection is explicitly non-normative for conformance at any level (L0–L3) in v1.1.0.
+  It names a real, recurring implementation need — using a delegate's history to inform trust —
+  without yet specifying how that history should affect autonomy. A future MAJOR or MINOR
+  version may formalize `track_record` as an input to tier policy once more implementations have
+  produced evidence on how to do so safely.
+
 ---
 
 ## 4. Action Tiers
@@ -205,6 +242,48 @@ If an agent determines that a Tier 3 or Tier 4 action is necessary but lacks sco
 2. Attach a `requires_escalation: true` flag
 3. Notify the nearest `primary` steward in the delegation chain
 4. Log the escalation attempt in the TENURE Record
+
+### 4.2 Escalation Taxonomy *(added v1.1.0)*
+
+`requires_escalation: true` alone does not say *why* an agent could not resolve something on its
+own, which matters both for the steward reviewing it and for any pattern-detection layer
+watching for systemic issues. An agent MUST classify every escalation under one of the following
+reasons:
+
+| Reason | Description |
+|---|---|
+| `uncertain_decision` | The agent lacks sufficient information to choose an action or approach with confidence |
+| `scope_violation` | The needed action falls outside the agent's declared delegation scope |
+| `rule_conflict` | Two or more applicable decision rules or policies point in different directions |
+| `timeout_exceeded` | A task or action was not completed within its expected window (implementations commonly use a multiplier of the expected duration, e.g. 2×, as the threshold) |
+| `tool_failure` | An external tool or system the agent depends on returned an error or unexpected result |
+| `concurrent_write_risk` | The agent is about to write to a record or file that another agent or process may also be writing to |
+
+- **ESC-01:** Every escalation MUST be classified under exactly one reason from the table above,
+  or under an implementation-declared extension (see ESC-04).
+- **ESC-02:** A `rule_conflict` escalation MUST record the conflicting rule identifiers or
+  sources in the TENURE entry (see `escalation_reason` in §6.1).
+- **ESC-03:** A `scope_violation` escalation MUST record the scope that was required and the
+  scope the agent actually held.
+- **ESC-04:** Implementations MAY define additional escalation reasons beyond this table, but
+  per TSS-CONF-05 SHOULD declare them as deviations in their conformance claim.
+
+### 4.3 Escalation Outbox *(added v1.1.0)*
+
+A conformant implementation SHOULD maintain a standing, queryable collection of unresolved
+escalations — an **Escalation Outbox** — rather than leaving each implementation to invent its
+own ad hoc holding area for "things waiting on a human."
+
+- **EO-01:** Each Escalation Outbox entry MUST reference the TENURE entry that generated it.
+- **EO-02:** Each entry MUST carry a `status`: `awaiting_human_review`, `awaiting_approval`,
+  `awaiting_authority`, or `resolved`.
+- **EO-03:** A resolved entry MUST record its resolution and MUST NOT be deleted — resolution is
+  a status change, not a removal (consistent with TSS-REC-05).
+- **EO-04:** The Escalation Outbox MAY be implemented as a materialized view over TENURE Records
+  filtered to `entry_type: escalation` rather than as a separate data store, provided it
+  satisfies EO-01 through EO-03.
+
+See `schemas/escalation-outbox-entry.schema.json` for a reference schema.
 
 ---
 
@@ -249,6 +328,7 @@ Every agent action, recommendation, and escalation MUST produce a TENURE Record 
     "agent_id": "string",
     "timestamp": "ISO8601",
     "entry_type": "action | recommendation | escalation | notification | read",
+    "escalation_reason": "uncertain_decision | scope_violation | rule_conflict | timeout_exceeded | tool_failure | concurrent_write_risk | string | null",
     "entity_refs": ["entity_id_1"],
     "summary": "string",
     "rationale_ref": "rationale object or id",
@@ -261,6 +341,9 @@ Every agent action, recommendation, and escalation MUST produce a TENURE Record 
 }
 ```
 
+`escalation_reason` is present only when `entry_type: escalation`; it MUST be one of the
+Escalation Taxonomy values in §4.2 or an implementation-declared extension string.
+
 ### 6.2 TENURE Conformance Rules
 
 - **TEN-01:** Every agent output MUST produce at least one TENURE entry.
@@ -268,9 +351,13 @@ Every agent action, recommendation, and escalation MUST produce a TENURE Record 
 - **TEN-03:** `outcome` MUST be updated when a steward accepts or rejects a recommendation.
 - **TEN-04:** TENURE logs MUST be exportable in JSON and human-readable formats.
 - **TEN-05:** TENURE Records MUST conform to TSS Record schema and rules (TSS-REC-01 through
-  TSS-REC-05). QSM-FAI L-levels map to TSS T-levels as shown in Appendix Z of TSS v1.1.1;
+  TSS-REC-05). QSM-FAI L-levels map to TSS T-levels as shown in Appendix Z of TSS v1.2.0;
   L2 typically aligns with T2.
-
+- **TEN-06 *(added v1.1.0):*** `entry_type` MAY be extended with implementation-specific values
+  beyond `action | recommendation | escalation | notification | read` (for example, values used
+  internally for pattern-detection bookkeeping), provided the extension is declared in the
+  implementation's conformance manifest and each extended value still satisfies TSS-REC-01
+  through TSS-REC-05.
 
 ---
 
@@ -368,6 +455,9 @@ Regardless of delegation scope, a QSM-FAI-conformant agent MUST NOT:
   defined in the FiduciaryContext constraints
 - **PROHIB-05:** Override a steward's explicit rejection of a prior recommendation on the same
   entity without a new rationale citing changed conditions
+- **PROHIB-06 *(added v1.1.0):*** Hold or act under a FiduciaryContext whose `context_type` is
+  `QSM_META` (QSM §6.1). QSM_META represents the governance/ontology layer itself, not a
+  stewarded entity, and per QSM-META-01 MUST NOT be treated as an actionable Entity Set.
 
 ---
 
@@ -391,6 +481,8 @@ Regardless of delegation scope, a QSM-FAI-conformant agent MUST NOT:
 - [ ] Critical urgency triggers immediate steward notification
 - [ ] TENURE log is append-only and exportable
 - [ ] Conformance level declared in system manifest
+- [ ] Escalations are classified under the Escalation Taxonomy (§4.2) or a declared extension
+- [ ] Agent does not act under a QSM_META FiduciaryContext (PROHIB-06)
 
 ---
 
@@ -398,13 +490,13 @@ Regardless of delegation scope, a QSM-FAI-conformant agent MUST NOT:
 
 | Document | Role |
 |----------|------|
-| **QSM v1.0.1** | Core ontology and modeling framework; QSM-FAI is a dependent spec |
-| **TSS v1.1.1** | The Stewardship Standard; normative open standard QSM-FAI implements |
-| **THRIVE v1.0.1** | Human wellness and Self context layer; informs occupant need modeling in HEARTH |
-| **QSM-FAI v1.0.1** | This document |
+| **QSM v1.1.0** | Core ontology and modeling framework; QSM-FAI is a dependent spec |
+| **TSS v1.2.0** | The Stewardship Standard; normative open standard QSM-FAI implements |
+| **THRIVE v1.1.0** | Human wellness and Self context layer; informs occupant need modeling in HEARTH |
+| **QSM-FAI v1.1.0** | This document |
 
 ---
 
-*QSM-FAI v1.0.1 — Quantified Stewardship Model: Fiduciary AI Interface*  
-*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*  
-*First published: 2026-05-28*
+*QSM-FAI v1.1.0 — Quantified Stewardship Model: Fiduciary AI Interface*
+*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*
+*First published: 2026-05-28 · Amended: 2026-06-22*

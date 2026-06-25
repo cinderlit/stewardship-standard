@@ -1,18 +1,16 @@
-> **Superseded.** This is an archived version. The current specification is
-> [TSS v1.2.0](./TSS-v1.2.0.md). See `CHANGELOG.md` [1.1.0] for what changed and why.
-
-# TSS v1.1.1
+# TSS v1.2.0
 ## The Stewardship Standard
 ### Normative Framework for Context, Care, Accountability, and Action
 
-**Version:** 1.1.1  
-**Status:** Final Draft — Ready for Submission  
-**Author:** Caitlin Stokes  
-**Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)  
-**License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)  
-**DOI:** [pending — Zenodo]  
-**Published:** 2026-05-28  
-**Dependent Specs:** QSM v1.0.1, THRIVE v1.0.1, QSM-FAI v1.0.1
+**Version:** 1.2.0
+**Status:** Final Draft — Ready for Submission
+**Author:** Caitlin Stokes
+**Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)
+**License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)
+**DOI:** [pending — Zenodo]
+**Published:** 2026-05-28
+**Amended:** 2026-06-22 (v1.2.0 — see `CHANGELOG.md`)
+**Dependent Specs:** QSM v1.1.0, THRIVE v1.1.0, QSM-FAI v1.1.0
 
 ---
 
@@ -38,6 +36,13 @@ stack. It is an openly accessible reference for implementers and practitioners a
 may evolve over time through public feedback and practical experience. Changes are
 recorded in the public change history (`CHANGELOG.md`) and tracked through public
 issues in the canonical repository; the latest editor's draft there is authoritative.
+
+**v1.2.0 amendment note:** this revision adds the **Assignment** object and named delegation
+models (§5.12), formalizes the **LOCUS → ATLAS → TENURE** stewardship-phase lifecycle as a
+normative Context property (§6.2), and clarifies that an audit trail MAY be composed of
+multiple linked Record subtypes (§9.1). All changes are additive; no v1.1.1 requirement was
+removed or tightened, and v1.1.1 conformance claims remain valid under v1.2.0. See
+`CHANGELOG.md` [1.1.0] for the full amendment record and implementation evidence.
 
 ## Use of AI-Assisted Tools in the Development of This Specification
 
@@ -145,6 +150,7 @@ The standard MUST preserve meaning, not merely count events or tasks.
 | **Risk** | A condition that may harm the context or degrade outcomes |
 | **Action** | A change to state, schedule, responsibility, or communication |
 | **Record** | An auditable entry describing a stewardship event |
+| **Assignment** | A binding between a Role or Responsibility and the Steward(s) or Delegate(s) who hold it, under a named delegation model |
 | **Conformance** | Demonstrated adherence to the rules of this standard |
 
 ### 4.1 Normative language
@@ -175,6 +181,8 @@ A conformant implementation MUST support, at minimum, the following object types
 9. Record
 10. ScenarioPattern
 11. ConformanceClaim
+12. Assignment *(conditionally required — see §5.12; required wherever the implementation
+    supports Role-based delegation)*
 
 Each object MUST satisfy the rules in this section.
 
@@ -258,6 +266,35 @@ Each object MUST satisfy the rules in this section.
 - **TSS-CONF-04:** Each ConformanceClaim MUST specify the conformance level claimed.
 - **TSS-CONF-05:** Each ConformanceClaim MUST declare any deviations.
 
+### 5.12 Assignment *(added v1.2.0)*
+
+An Assignment binds a Role or Responsibility to the Steward(s) or Delegate(s) who hold it,
+under a named delegation model. Assignment formalizes a pattern implementations consistently
+need as soon as more than one person or agent can be responsible for the same Role: not just
+*who* holds a Role, but *how* responsibility is distributed across multiple holders.
+
+- **TSS-ASN-01:** Each Assignment MUST have a unique identifier.
+- **TSS-ASN-02:** Each Assignment MUST reference exactly one Role (or Responsibility, where the
+  implementation distinguishes the two) and at least one holder (Steward or Delegate).
+- **TSS-ASN-03:** Each Assignment MUST declare a `model` field (see §5.12.1).
+- **TSS-ASN-04:** Each Assignment MUST be assignable to a Context.
+
+#### 5.12.1 Delegation Models
+
+`model` is an open, extensible enumeration. The following values are recognized by this
+standard:
+
+- **RACI** — Responsible, Accountable, Consulted, Informed. Each holder on the Assignment MAY
+  carry one of these four sub-roles.
+- **DACI** — Driver, Approver, Contributor, Informed.
+- **MOCHA** — Manager, Owner, Consulted, Helper, Approver.
+- **unstructured** — a single holder with no further sub-role distinction; the default for the
+  common case of one Role, one holder.
+
+Implementations MAY define additional `model` values beyond this list, but per TSS-CONF-05 a
+ConformanceClaim using a non-listed model SHOULD declare it as a deviation so the claim remains
+explicit about what a reader can assume.
+
 ---
 
 ## 6. Context Declaration
@@ -283,10 +320,44 @@ The standard recognizes, at minimum:
 - ESTATE
 - CHARTER
 - CREST
-
+- QSM_META *(added v1.2.0 — see QSM §6.1; a singleton, non-steward-owned governance context, not
+  a stewarded entity. Excluded from §6.2 phase rules below: QSM_META has no stewardship phase.)*
 
 **Note:** HEARTH is the first hardened context for the stewardship stack. QSM and QSM-FAI reference HEARTH as the priority hardened context and reference implementation.
 Additional context types MAY be added in future versions if they preserve compatibility.
+
+### 6.2 Stewardship Phase *(added v1.2.0)*
+
+A Context's relationship to its own data matures over time. Implementation experience across
+multiple concurrent contexts (see `CHANGELOG.md` [1.1.0]) converged independently on the same
+three-phase lifecycle that QSM-FAI's "Hardened Context" definition already implies but never
+names on its own. TSS now defines it directly, as an optional but RECOMMENDED Context property.
+
+- **LOCUS** — establishing ground truth. The Context has a declared Steward and a structured,
+  even if incomplete, inventory of what exists. No scoring or automated prioritization is
+  expected to be meaningful yet.
+- **ATLAS** — mapping the option space. The Context has at least one mapped Domain,
+  Responsibility, System, or equivalent structural Entity, and a declared approach to
+  prioritization (e.g., a needs framework per QSM §4.2.1).
+- **TENURE** — ongoing maintenance. The Context is in a recurring review/scoring/oversight loop:
+  cadence-driven reviews, health scoring, and escalation are active.
+
+A conformant implementation MAY represent this as a `stewardship_phase` field on Context, with
+enum value `locus | atlas | tenure`.
+
+- **TSS-PHASE-01:** If a `stewardship_phase` field is present, a Context MUST NOT transition
+  from `locus` to `atlas` unless TSS-CTX-03 (a declared Steward) is already satisfied.
+- **TSS-PHASE-02:** A Context MUST NOT transition from `atlas` to `tenure` unless at least one
+  structural Entity (Domain, Responsibility, System, or equivalent) is mapped to it.
+- **TSS-PHASE-03:** An implementation MAY allow a Context to skip or reverse a phase, but any
+  such transition MUST produce a Record (per §9) carrying an explicit justification. Skipping or
+  reversing a phase MUST NOT happen silently.
+- **TSS-PHASE-04:** QSM_META contexts (§6.1) are exempt from this section; they have no
+  `stewardship_phase`.
+
+This section is RECOMMENDED, not required for any conformance level below T3, since `locus`/
+`atlas`/`tenure` gating is meaningful primarily for implementations that actively block premature
+transitions rather than merely describing maturity informally.
 
 ---
 
@@ -335,8 +406,11 @@ A conformant system MUST maintain an append-only record of stewardship-relevant 
 
 ### 9.1 Record types
 
-
-> Implementations MAY use domain-specific names (e.g., StewardshipRecord, WellnessRecord, TENURE Record) as long as they satisfy TSS Record rules.
+> Implementations MAY use domain-specific names (e.g., StewardshipRecord, WellnessRecord, TENURE Record) as long as they satisfy TSS Record rules. An implementation's audit trail MAY also be
+> composed of several linked Record subtypes (for example, a run log, a review log, and an
+> escalation outbox) rather than a single flat log, provided each subtype independently
+> satisfies TSS-REC-01 through TSS-REC-05 and the relationships between subtypes are explicit
+> (§7).
 - Context declaration.
 - Entity creation or update.
 - Role assignment.
@@ -405,10 +479,11 @@ A conformant implementation SHOULD provide schemas for at least the following:
 3. Relationship schema.
 4. Record schema.
 5. ConformanceClaim schema.
+6. Assignment schema *(added v1.2.0; required wherever §5.12 applies)*.
 
 ### 11.1 Formal schema appendix
 
-The following schemas are normative reference schemata for TSS v1.1.1.
+The following schemas are normative reference schemata for TSS v1.2.0.
 
 #### 11.1.1 context.schema.json
 
@@ -421,16 +496,22 @@ The following schemas are normative reference schemata for TSS v1.1.1.
   "properties": {
     "id": { "type": "string" },
     "name": { "type": "string" },
-    "type": { "type": "string", "enum": ["SELF", "HEARTH", "ESTATE", "CHARTER", "CREST"] },
+    "type": { "type": "string", "enum": ["SELF", "HEARTH", "ESTATE", "CHARTER", "CREST", "QSM_META"] },
     "stewards": {
-      "type": "array",
-      "items": { "type": "string" },
-      "minItems": 1
+      "oneOf": [
+        { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        { "type": "string" }
+      ],
+      "description": "MAY be a single steward reference or an array of stewards. A QSM_META context (type: QSM_META) is exempt from this requirement per QSM-META-01."
     },
     "effective_date": { "type": "string", "format": "date-time" },
     "scope": { "type": "string" },
     "exclusions": { "type": "array", "items": { "type": "string" } },
-    "version": { "type": "string" }
+    "version": { "type": "string" },
+    "is_template": { "type": "boolean", "default": false, "description": "Added v1.2.0. See QSM §6.2." },
+    "template_id": { "type": ["string", "null"], "description": "Added v1.2.0. References the template Context this instance was duplicated from, if any. See QSM §6.2." },
+    "needs_framework": { "type": ["string", "null"], "description": "Added v1.2.0. e.g. 'maslow', 'well', 'erg', 'pink'. See QSM §4.2.1." },
+    "stewardship_phase": { "type": "string", "enum": ["locus", "atlas", "tenure"], "description": "Added v1.2.0. See §6.2." }
   }
 }
 ```
@@ -514,6 +595,35 @@ The following schemas are normative reference schemata for TSS v1.1.1.
 }
 ```
 
+#### 11.1.6 assignment.schema.json *(added v1.2.0)*
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TSS Assignment Schema",
+  "type": "object",
+  "required": ["id", "role_id", "holders", "model"],
+  "properties": {
+    "id": { "type": "string" },
+    "role_id": { "type": "string", "description": "References a Role or Responsibility." },
+    "holders": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["holder_id"],
+        "properties": {
+          "holder_id": { "type": "string" },
+          "sub_role": { "type": "string", "description": "e.g. 'responsible', 'accountable', 'driver', 'owner' — meaningful only relative to `model`." }
+        }
+      }
+    },
+    "model": { "type": "string", "enum": ["RACI", "DACI", "MOCHA", "unstructured"] },
+    "context_id": { "type": "string" }
+  }
+}
+```
+
 ### 11.2 Schema rules
 
 - **TSS-SCH-01:** A conformant implementation MUST validate that required fields are present.
@@ -557,10 +667,10 @@ A conformance claim MUST specify:
 
 | Document | Role |
 |---|---|
-| **QSM v1.0.1** | Ontology and modeling foundation |
-| **TSS v1.1.1** | Normative umbrella standard |
-| **THRIVE v1.0.1** | Self and wellness context layer |
-| **QSM-FAI v1.0.1** | Fiduciary AI interface for context-bound action |
+| **QSM v1.1.0** | Ontology and modeling foundation |
+| **TSS v1.2.0** | Normative umbrella standard |
+| **THRIVE v1.1.0** | Self and wellness context layer |
+| **QSM-FAI v1.1.0** | Fiduciary AI interface for context-bound action |
 
 ---
 
@@ -596,7 +706,7 @@ Implementations SHOULD aim for aligned levels when possible. A typical operation
 
 ### Z.2 Primary audit standard
 
-**TSS T-level is the primary audit standard.**  
+**TSS T-level is the primary audit standard.**
 QSM C-level, THRIVE H-level, and QSM-FAI L-level are domain-specific interpretations of the same conformance tier.
 
 An implementation claiming "TSS T2" MAY also claim "QSM C2", "THRIVE H2", and "QSM-FAI L2" if it satisfies the respective domain-level rules.
@@ -605,11 +715,11 @@ An implementation claiming "TSS T2" MAY also claim "QSM C2", "THRIVE H2", and "Q
 
 A submission-ready TSS package SHOULD include:
 
-- TSS v1.1.1 specification (this document).
-- QSM v1.0.1 specification.
-- THRIVE v1.0.1 specification.
-- QSM-FAI v1.0.1 specification.
-- A schemas/ directory with the five reference JSON schemas.
+- TSS v1.2.0 specification (this document).
+- QSM v1.1.0 specification.
+- THRIVE v1.1.0 specification.
+- QSM-FAI v1.1.0 specification.
+- A schemas/ directory with the reference JSON schemas (six core TSS schemas as of v1.2.0).
 - One sample context bundle (e.g., HEARTH or SELF) in JSON.
 - One sample conformance claim in JSON.
 - A README.md describing the package.
@@ -620,16 +730,17 @@ A submission-ready TSS package SHOULD include:
 stewardship-stack/
 ├── README.md
 ├── specs/
-│   ├── QSM-v1.0.1.md
-│   ├── THRIVE-v1.0.1.md
-│   ├── QSM-FAI-v1.0.1.md
-│   └── TSS-v1.1.1.md
+│   ├── QSM-v1.1.0.md
+│   ├── THRIVE-v1.1.0.md
+│   ├── QSM-FAI-v1.1.0.md
+│   └── TSS-v1.2.0.md
 ├── schemas/
 │   ├── context.schema.json
 │   ├── entity.schema.json
 │   ├── relationship.schema.json
 │   ├── record.schema.json
-│   └── conformance-claim.schema.json
+│   ├── conformance-claim.schema.json
+│   └── assignment.schema.json
 ├── samples/
 │   ├── hearth-context.json
 │   └── default-conformance-claim.json
@@ -680,7 +791,7 @@ stewardship-stack/
 ```json
 {
   "id": "claim-001",
-  "tss_version": "1.1.1",
+  "tss_version": "1.2.0",
   "context_types": ["HEARTH", "SELF"],
   "conformance_level": "T2",
   "deviations": [],
@@ -693,10 +804,10 @@ stewardship-stack/
 
 ## Appendix B: Example Conformance Statement
 
-> This implementation conforms to TSS v1.1.1 at level T2 for HEARTH and SELF contexts. It
+> This implementation conforms to TSS v1.2.0 at level T2 for HEARTH and SELF contexts. It
 > supports explicit context declaration, entity and relationship modeling, and append-only
 > stewardship records. It does not yet support CHARTER or ESTATE contexts.
 
-*The Stewardship Standard (TSS) v1.1.1*  
-*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*  
-*First published: 2026-05-28*
+*The Stewardship Standard (TSS) v1.2.0*
+*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*
+*First published: 2026-05-28 · Amended: 2026-06-22*
