@@ -1,0 +1,1733 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix qsm:  <https://quantifiedstewardship.org/ontology/qsm#> .
+
+# ===================================================================
+# Ontology Metadata
+# ===================================================================
+
+<https://quantifiedstewardship.org/ontology/qsm>
+    a owl:Ontology ;
+    owl:versionInfo "3.0.0" ;
+    owl:versionIRI <https://quantifiedstewardship.org/ontology/qsm/3.0.0> ;
+    owl:priorVersion <https://quantifiedstewardship.org/ontology/qsm/2.0.0> ;
+    rdfs:label "Quantified Stewardship Model Ontology" ;
+    rdfs:comment """The Quantified Stewardship Model (QSM) is an open ontology and framework for
+modeling stewardship health across five entity contexts — Self (THRIVE), Home (HEARTH),
+Community (CREST), Organization (CHARTER), and Foundational needs (ROOTS) — operationalized
+via the three-phase methodology: LOCUS (assess and orient) → ATLAS (map and plan) →
+TENURE (measure and sustain). The ontology provides a shared vocabulary for entities,
+domains, responsibilities, roles, needs states, execution taxonomy, process stack layers,
+and scoring constructs. Grounded in a pluggable needs framework architecture (Max-Neef for SELF context;
+Maslow, WELL, Building Performance, or ERG for other contexts as appropriate) and the QSM 8-layer
+operating model. See QSM-ARCH v1.0 for the layer/engine specification.""" .
+
+
+# ===================================================================
+# SECTION 1: CONTROLLED VOCABULARIES (Enumerations)
+# ===================================================================
+
+# --- 1.1 Context ---
+# The four top-level stewardship contexts. Sub-frameworks bind to these.
+
+qsm:Context
+    a owl:Class ;
+    rdfs:label "Context" ;
+    rdfs:comment "Top-level stewardship context an entity or record belongs to." .
+
+qsm:ctx_self    a owl:NamedIndividual, qsm:Context ; rdfs:label "self"   ;
+    rdfs:comment "Individual/personal context — implemented by the THRIVE sub-framework." .
+qsm:ctx_home    a owl:NamedIndividual, qsm:Context ; rdfs:label "home"   ;
+    rdfs:comment "Household/property context — implemented by the HEARTH sub-framework." .
+qsm:ctx_work    a owl:NamedIndividual, qsm:Context ; rdfs:label "work"   ;
+    rdfs:comment "Organizational/team context — implemented by the CHARTER sub-framework." .
+qsm:ctx_shared  a owl:NamedIndividual, qsm:Context ; rdfs:label "shared" ;
+    rdfs:comment "Cross-context shared domain (e.g. household finances spanning self and home)." .
+qsm:ctx_community a owl:NamedIndividual, qsm:Context ; rdfs:label "community" ;
+    rdfs:comment "Community/neighborhood context — implemented by the CREST sub-framework." .
+
+# --- 1.2 Needs Dimension (abstract) ---
+
+qsm:NeedsDimension
+    a owl:Class ;
+    rdfs:label "Needs Dimension" ;
+    rdfs:comment """Abstract superclass for all needs framework vocabularies.
+    Implementations declare which NeedsDimension subclass they use per context.
+    This allows different contexts to use different needs frameworks (Max-Neef for SELF,
+    ERG for CHARTER, Building Performance for HEARTH, etc.) without changing the ontology
+    schema. The property needs_dimension_primary always points to a NeedsDimension
+    individual regardless of which framework is in use.""" .
+
+# --- 1.2.1 Maslow Tier (preserved for non-SELF contexts) ---
+
+qsm:MaslowTier
+    a owl:Class ;
+    rdfs:subClassOf qsm:NeedsDimension ;
+    rdfs:label "Maslow Tier" ;
+    rdfs:comment "Maslow hierarchy of needs tier. Used for contexts where Maslow is the declared needs framework. Not used for SELF context as of QSM v1.1." .
+
+qsm:tier_physiological      a owl:NamedIndividual, qsm:MaslowTier ; rdfs:label "physiological" .
+qsm:tier_safety             a owl:NamedIndividual, qsm:MaslowTier ; rdfs:label "safety" .
+qsm:tier_belonging          a owl:NamedIndividual, qsm:MaslowTier ; rdfs:label "belonging" .
+qsm:tier_esteem             a owl:NamedIndividual, qsm:MaslowTier ; rdfs:label "esteem" .
+qsm:tier_self_actualization a owl:NamedIndividual, qsm:MaslowTier ; rdfs:label "self_actualization" .
+
+# --- 1.2.2 Max-Neef Fundamental Human Need (SELF context) ---
+
+qsm:MaxNeefNeed
+    a owl:Class ;
+    rdfs:subClassOf qsm:NeedsDimension ;
+    rdfs:label "Max-Neef Fundamental Human Need" ;
+    rdfs:comment """Max-Neef's taxonomy of 9 fundamental human needs (Manfred Max-Neef, 1991).
+    Unlike Maslow, these needs are non-hierarchical and simultaneous — all are always present
+    to varying degrees. They are universal and constant; what varies across persons and contexts
+    are the satisfiers (the specific practices, resources, and relationships that address them).
+    Used as the needs framework for the SELF context in QSM.""" .
+
+qsm:need_subsistence
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "subsistence" ;
+    rdfs:comment "Physical health, food, water, shelter, rest, work to sustain life." .
+
+qsm:need_protection
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "protection" ;
+    rdfs:comment "Care, adaptability, autonomy, rights, security, health systems, legal structures." .
+
+qsm:need_affection
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "affection" ;
+    rdfs:comment "Self-esteem, solidarity, respect, tolerance, generosity, love, friendship, care for others." .
+
+qsm:need_understanding
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "understanding" ;
+    rdfs:comment "Critical capacity, curiosity, intuition, study, research, analysis, learning, education." .
+
+qsm:need_participation
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "participation" ;
+    rdfs:comment "Adaptability, receptiveness, solidarity, commitment, cooperation, civic engagement." .
+
+qsm:need_leisure
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "leisure" ;
+    rdfs:comment "Imagination, tranquility, spontaneity, play, humor, rest-as-enjoyment." .
+
+qsm:need_creation
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "creation" ;
+    rdfs:comment "Imagination, boldness, inventiveness, curiosity, productive work, making, contribution." .
+
+qsm:need_identity
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "identity" ;
+    rdfs:comment "Sense of belonging, self-esteem, consistency, differentiation, values, meaning, purpose." .
+
+qsm:need_freedom
+    a owl:NamedIndividual, qsm:MaxNeefNeed ;
+    rdfs:label "freedom" ;
+    rdfs:comment "Autonomy, passion, self-determination, tolerance, openness, life design, non-coercion." .
+
+# --- 1.2.3 Needs Framework Declaration ---
+
+qsm:NeedsFramework
+    a owl:Class ;
+    rdfs:label "Needs Framework" ;
+    rdfs:comment "A declared needs framework used by a context. Specifies which NeedsDimension subclass provides the vocabulary for this context's needs assessment." .
+
+qsm:NeedsFrameworkDeclaration
+    a owl:Class ;
+    rdfs:label "Needs Framework Declaration" ;
+    rdfs:comment "An explicit declaration that a context uses a specific needs framework." .
+
+qsm:uses_needs_framework
+    a owl:ObjectProperty ;
+    rdfs:label "uses needs framework" ;
+    rdfs:comment "Declares which needs framework (and therefore which NeedsDimension subclass) a context or implementation uses." ;
+    rdfs:domain qsm:Context ;
+    rdfs:range qsm:NeedsFramework .
+
+qsm:framework_maxneef   a owl:NamedIndividual, qsm:NeedsFramework ; rdfs:label "Max-Neef Fundamental Human Needs" .
+qsm:framework_maslow    a owl:NamedIndividual, qsm:NeedsFramework ; rdfs:label "Maslow Hierarchy of Needs" .
+qsm:framework_erg       a owl:NamedIndividual, qsm:NeedsFramework ; rdfs:label "Alderfer ERG Theory" .
+qsm:framework_well      a owl:NamedIndividual, qsm:NeedsFramework ; rdfs:label "WELL Building Standard" .
+qsm:framework_bldg_perf a owl:NamedIndividual, qsm:NeedsFramework ; rdfs:label "Building Performance Hierarchy" .
+
+# --- 1.2.4 Max-Neef Satisfier Types ---
+
+qsm:SatisfierType
+    a owl:Class ;
+    rdfs:label "Satisfier Type" ;
+    rdfs:comment """Max-Neef's classification of satisfiers by their effect on needs.
+    A satisfier is any practice, resource, relationship, or structure that addresses a need.
+    The same satisfier can have different effects on different needs simultaneously.""" .
+
+qsm:satisfier_synergic
+    a owl:NamedIndividual, qsm:SatisfierType ;
+    rdfs:label "synergic" ;
+    rdfs:comment "Satisfies one need while simultaneously and positively contributing to others. The ideal satisfier type." .
+
+qsm:satisfier_singular
+    a owl:NamedIndividual, qsm:SatisfierType ;
+    rdfs:label "singular" ;
+    rdfs:comment "Satisfies one need and is neutral with respect to others." .
+
+qsm:satisfier_inhibiting
+    a owl:NamedIndividual, qsm:SatisfierType ;
+    rdfs:label "inhibiting" ;
+    rdfs:comment "Over-satisfies one need in a way that impairs the satisfying of other needs." .
+
+qsm:satisfier_pseudo
+    a owl:NamedIndividual, qsm:SatisfierType ;
+    rdfs:label "pseudo" ;
+    rdfs:comment "Appears to satisfy a need but actually provides only a false or temporary sense of satisfaction." .
+
+qsm:satisfier_violator
+    a owl:NamedIndividual, qsm:SatisfierType ;
+    rdfs:label "violator" ;
+    rdfs:comment "Claims to satisfy a need but actually makes it harder to satisfy that and other needs." .
+
+qsm:satisfier_type
+    a owl:ObjectProperty ;
+    rdfs:label "satisfier type" ;
+    rdfs:comment "The Max-Neef satisfier type of a management category, practice, or resource." ;
+    rdfs:range qsm:SatisfierType .
+
+# --- 1.2.5 World Domains (SELF context) ---
+
+qsm:WorldDomain
+    a owl:Class ;
+    rdfs:label "World Domain" ;
+    rdfs:comment """The domain of existence in which a stewardship activity or need is primarily located.
+    Relevant primarily to the SELF context. As human life now spans physical, digital, and
+    metaphysical arenas with distinct stewardship requirements, a SelfContext SHOULD declare
+    which world domains it is actively stewarding.""" .
+
+qsm:domain_physical
+    a owl:NamedIndividual, qsm:WorldDomain ;
+    rdfs:label "physical" ;
+    rdfs:comment "Body, space, material environment, sensory experience, movement, health, sleep, food." .
+
+qsm:domain_digital
+    a owl:NamedIndividual, qsm:WorldDomain ;
+    rdfs:label "digital" ;
+    rdfs:comment "Online presence, data, tools, attention, notification load, digital identity, information diet, digital obligations, privacy." .
+
+qsm:domain_metaphysical
+    a owl:NamedIndividual, qsm:WorldDomain ;
+    rdfs:label "metaphysical" ;
+    rdfs:comment "Meaning, values, spiritual practice, psychological interior, purpose, the relationship to uncertainty, grief, and becoming." .
+
+qsm:active_in_domain
+    a owl:ObjectProperty ;
+    rdfs:label "active in domain" ;
+    rdfs:comment "Declares which world domain(s) a SelfContext, management category, or need is actively being stewarded in." ;
+    rdfs:range qsm:WorldDomain .
+
+# --- 1.2.6 QSM Architectural Layers ---
+# REVIEW: Brief specified qsm:layer_* IRIs; v3 uses qsm:arch_layer_* to avoid collision with
+# ProcessLayerType. IRIs are stable; rdfs:label values follow QSM-LAYER-MATRIX names (Intent,
+# Memory, Practice, Signal, Adaptation).
+
+qsm:ArchitecturalLayer
+    a owl:Class ;
+    rdfs:label "Architectural Layer" ;
+    rdfs:comment """One of the eight structural layers of the QSM operating model.
+    Layers are the stable domains of responsibility within a QSM implementation.
+    See QSM-ARCH v1.0 for the full layer/engine specification.""" .
+
+qsm:arch_layer_identity_intent
+    a owl:NamedIndividual, qsm:ArchitecturalLayer ;
+    rdfs:label "intent" ;
+    rdfs:comment "Who/what this context is, what it is trying to become, and what orients its choices. Mission framing, role definition, boundary-setting, priority selection." .
+
+qsm:arch_layer_governance
+    a owl:NamedIndividual, qsm:ArchitecturalLayer ;
+    rdfs:label "governance" ;
+    rdfs:comment "Authority, policy, constraints, review, escalation, approval, rights." .
+
+qsm:arch_layer_intake
+    a owl:NamedIndividual, qsm:ArchitecturalLayer ;
+    rdfs:label "intake" ;
+    rdfs:comment "Capture from the world into the system: ingestion, triage, classification, normalization, deduplication." .
+
+qsm:arch_layer_knowledge
+    a owl:NamedIndividual, qsm:ArchitecturalLayer ;
+    rdfs:label "memory" ;
+    rdfs:comment "Meaning, memory, models, ontology, reference truth. Includes documentation as a stabilization function." .
+
+qsm:arch_layer_execution
+    a owl:NamedIndividual, qsm:ArchitecturalLayer ;
+    rdfs:label "practice" ;
+    rdfs:comment "Convert intent into outcomes: planning, orchestration, workflow, automation, task dispatch, fulfillment." .
+
+qsm:arch_layer_observation
+    a owl:NamedIndividual, qsm:ArchitecturalLayer ;
+    rdfs:label "observation" ;
+    rdfs:comment "Sense what happened and what is happening: monitoring, sensing, validation, audit trail, anomaly detection." .
+
+qsm:arch_layer_dashboard_signal
+    a owl:NamedIndividual, qsm:ArchitecturalLayer ;
+    rdfs:label "signal" ;
+    rdfs:comment "Present state and trigger attention: summarization, alerting, status surfacing, drill-down, routing." .
+
+qsm:arch_layer_feedback_learning
+    a owl:NamedIndividual, qsm:ArchitecturalLayer ;
+    rdfs:label "adaptation" ;
+    rdfs:comment "Adapt the system over time: review, retrospection, calibration, metric analysis, continuous improvement." .
+
+qsm:primary_layer
+    a owl:ObjectProperty ;
+    rdfs:label "primary layer" ;
+    rdfs:comment "The QSM architectural layer this entity, domain, or management category primarily operates in." ;
+    rdfs:range qsm:ArchitecturalLayer .
+
+qsm:spanning_layers
+    a owl:ObjectProperty ;
+    rdfs:label "spanning layers" ;
+    rdfs:comment "Secondary QSM architectural layers this entity, domain, or management category also operates in." ;
+    rdfs:range qsm:ArchitecturalLayer .
+
+# --- 1.2.7 Cross-Cutting Planes ---
+# These properties apply to all major QSM objects regardless of layer.
+
+qsm:LifecycleState
+    a owl:Class ;
+    rdfs:label "Lifecycle State" ;
+    rdfs:comment "The current lifecycle state of any QSM object." .
+
+qsm:state_draft     a owl:NamedIndividual, qsm:LifecycleState ; rdfs:label "draft" .
+qsm:state_active    a owl:NamedIndividual, qsm:LifecycleState ; rdfs:label "active" .
+qsm:state_suspended a owl:NamedIndividual, qsm:LifecycleState ; rdfs:label "suspended" .
+qsm:state_retired   a owl:NamedIndividual, qsm:LifecycleState ; rdfs:label "retired" .
+
+qsm:lifecycle_state
+    a owl:ObjectProperty ;
+    rdfs:label "lifecycle state" ;
+    rdfs:comment "Current lifecycle state of this object (draft, active, suspended, retired)." ;
+    rdfs:range qsm:LifecycleState .
+
+qsm:steward_ref
+    a owl:DatatypeProperty ;
+    rdfs:label "steward reference" ;
+    rdfs:comment "Identifier of the person or role responsible for this object." ;
+    rdfs:range xsd:string .
+
+qsm:schema_version
+    a owl:DatatypeProperty ;
+    rdfs:label "schema version" ;
+    rdfs:comment "Semantic version string for this object's schema at time of creation." ;
+    rdfs:range xsd:string .
+
+qsm:provenance_source
+    a owl:DatatypeProperty ;
+    rdfs:label "provenance source" ;
+    rdfs:comment "Reference to the source, process, or agent that created or last modified this object." ;
+    rdfs:range xsd:string .
+
+# --- 1.3 Health Status ---
+
+qsm:HealthStatus
+    a owl:Class ;
+    rdfs:label "Health Status" ;
+    rdfs:comment "Qualitative stewardship health state for a domain, entity, or record." .
+
+qsm:status_thriving  a owl:NamedIndividual, qsm:HealthStatus ; rdfs:label "thriving" .
+qsm:status_stable    a owl:NamedIndividual, qsm:HealthStatus ; rdfs:label "stable" .
+qsm:status_at_risk   a owl:NamedIndividual, qsm:HealthStatus ; rdfs:label "at_risk" .
+qsm:status_neglected a owl:NamedIndividual, qsm:HealthStatus ; rdfs:label "neglected" .
+qsm:status_unknown   a owl:NamedIndividual, qsm:HealthStatus ; rdfs:label "unknown" .
+
+# --- 1.4 Attention Cadence ---
+
+qsm:AttentionCadence
+    a owl:Class ;
+    rdfs:label "Attention Cadence" ;
+    rdfs:comment "Required frequency of stewardship attention for an entity or domain." .
+
+qsm:cadence_daily        a owl:NamedIndividual, qsm:AttentionCadence ; rdfs:label "daily" .
+qsm:cadence_weekly       a owl:NamedIndividual, qsm:AttentionCadence ; rdfs:label "weekly" .
+qsm:cadence_monthly      a owl:NamedIndividual, qsm:AttentionCadence ; rdfs:label "monthly" .
+qsm:cadence_quarterly    a owl:NamedIndividual, qsm:AttentionCadence ; rdfs:label "quarterly" .
+qsm:cadence_annually     a owl:NamedIndividual, qsm:AttentionCadence ; rdfs:label "annually" .
+qsm:cadence_as_needed    a owl:NamedIndividual, qsm:AttentionCadence ; rdfs:label "as_needed" .
+qsm:cadence_event_driven a owl:NamedIndividual, qsm:AttentionCadence ; rdfs:label "event_driven" .
+
+# --- 1.5 Stewardship Phase ---
+
+qsm:StewardshipPhase
+    a owl:Class ;
+    rdfs:label "Stewardship Phase" ;
+    rdfs:comment "Which QSM methodology phase (LOCUS/ATLAS/TENURE) an entity or record belongs to." .
+
+qsm:phase_locus  a owl:NamedIndividual, qsm:StewardshipPhase ; rdfs:label "locus" .
+qsm:phase_atlas  a owl:NamedIndividual, qsm:StewardshipPhase ; rdfs:label "atlas" .
+qsm:phase_tenure a owl:NamedIndividual, qsm:StewardshipPhase ; rdfs:label "tenure" .
+
+# --- 1.6 Gap Type ---
+
+qsm:GapType
+    a owl:Class ;
+    rdfs:label "Gap Type" ;
+    rdfs:comment "Classification of a stewardship gap by its root cause or character." .
+
+qsm:gap_unknown    a owl:NamedIndividual, qsm:GapType ; rdfs:label "unknown"
+    ; rdfs:comment "Gap exists but root cause is not yet determined." .
+qsm:gap_missing    a owl:NamedIndividual, qsm:GapType ; rdfs:label "missing"
+    ; rdfs:comment "Required domain, role, or system is absent entirely." .
+qsm:gap_conflicted a owl:NamedIndividual, qsm:GapType ; rdfs:label "conflicted"
+    ; rdfs:comment "Competing ownership, values, or policies create unresolved tension." .
+qsm:gap_at_risk    a owl:NamedIndividual, qsm:GapType ; rdfs:label "at_risk"
+    ; rdfs:comment "Present but fragile; likely to fail under stress or transition." .
+qsm:gap_deferred   a owl:NamedIndividual, qsm:GapType ; rdfs:label "deferred"
+    ; rdfs:comment "Known gap intentionally left for a future cycle." .
+qsm:gap_undocumented a owl:NamedIndividual, qsm:GapType ; rdfs:label "undocumented"
+    ; rdfs:comment "System or responsibility exists but is not captured in institutional memory." .
+
+# --- 1.7 Gap Severity ---
+
+qsm:GapSeverity
+    a owl:Class ;
+    rdfs:label "Gap Severity" ;
+    rdfs:comment "Priority/urgency classification for a stewardship gap." .
+
+qsm:severity_low      a owl:NamedIndividual, qsm:GapSeverity ; rdfs:label "low" .
+qsm:severity_medium   a owl:NamedIndividual, qsm:GapSeverity ; rdfs:label "medium" .
+qsm:severity_high     a owl:NamedIndividual, qsm:GapSeverity ; rdfs:label "high" .
+qsm:severity_critical a owl:NamedIndividual, qsm:GapSeverity ; rdfs:label "critical" .
+
+# --- 1.8 Access Level ---
+
+qsm:AccessLevel
+    a owl:Class ;
+    rdfs:label "Access Level" ;
+    rdfs:comment "Permission tier for a stakeholder role within a stewardship context." .
+
+qsm:access_view        a owl:NamedIndividual, qsm:AccessLevel ; rdfs:label "view" .
+qsm:access_contribute  a owl:NamedIndividual, qsm:AccessLevel ; rdfs:label "contribute" .
+qsm:access_manage      a owl:NamedIndividual, qsm:AccessLevel ; rdfs:label "manage" .
+qsm:access_admin       a owl:NamedIndividual, qsm:AccessLevel ; rdfs:label "admin" .
+qsm:access_owner       a owl:NamedIndividual, qsm:AccessLevel ; rdfs:label "owner" .
+
+# --- 1.9 Tenure Status ---
+
+qsm:TenureStatus
+    a owl:Class ;
+    rdfs:label "Tenure Status" ;
+    rdfs:comment "Career/engagement stage of a person within a stewardship context." .
+
+qsm:tenure_new          a owl:NamedIndividual, qsm:TenureStatus ; rdfs:label "new" .
+qsm:tenure_established  a owl:NamedIndividual, qsm:TenureStatus ; rdfs:label "established" .
+qsm:tenure_transitioning a owl:NamedIndividual, qsm:TenureStatus ; rdfs:label "transitioning" .
+qsm:tenure_departing    a owl:NamedIndividual, qsm:TenureStatus ; rdfs:label "departing" .
+
+# --- 1.10 Life Stage ---
+
+qsm:LifeStage
+    a owl:Class ;
+    rdfs:label "Life Stage" ;
+    rdfs:comment "Developmental/operational stage of a stewardship entity." .
+
+qsm:stage_emerging     a owl:NamedIndividual, qsm:LifeStage ; rdfs:label "emerging" .
+qsm:stage_established  a owl:NamedIndividual, qsm:LifeStage ; rdfs:label "established" .
+qsm:stage_scaling      a owl:NamedIndividual, qsm:LifeStage ; rdfs:label "scaling" .
+qsm:stage_transitioning a owl:NamedIndividual, qsm:LifeStage ; rdfs:label "transitioning" .
+qsm:stage_winding_down a owl:NamedIndividual, qsm:LifeStage ; rdfs:label "winding_down" .
+
+# --- 1.11 Execution Source Type ---
+
+qsm:ExecutionSourceType
+    a owl:Class ;
+    rdfs:label "Execution Source Type" ;
+    rdfs:comment """Structural classification of execution work items.
+    Subprojects change state; Routines confirm state; Subareas hold state.""" .
+
+qsm:exec_subproject a owl:NamedIndividual, qsm:ExecutionSourceType ; rdfs:label "subproject"
+    ; rdfs:comment "Finite, outcome-bound PARA-style project. Changes Atlas state on completion." .
+qsm:exec_routine    a owl:NamedIndividual, qsm:ExecutionSourceType ; rdfs:label "routine"
+    ; rdfs:comment "Cadence or trigger-driven recurring pattern. Confirms Atlas state when complete." .
+qsm:exec_subarea    a owl:NamedIndividual, qsm:ExecutionSourceType ; rdfs:label "subarea"
+    ; rdfs:comment "Standing area of responsibility. Holds state; contains both routines and subprojects." .
+
+# --- 1.12 SLO Status ---
+
+qsm:SLOStatus
+    a owl:Class ;
+    rdfs:label "SLO Status" ;
+    rdfs:comment "Adherence status of a service-level objective." .
+
+qsm:slo_met      a owl:NamedIndividual, qsm:SLOStatus ; rdfs:label "met" .
+qsm:slo_at_risk  a owl:NamedIndividual, qsm:SLOStatus ; rdfs:label "at_risk" .
+qsm:slo_breached a owl:NamedIndividual, qsm:SLOStatus ; rdfs:label "breached" .
+qsm:slo_undefined a owl:NamedIndividual, qsm:SLOStatus ; rdfs:label "undefined" .
+
+# --- 1.13 Record Status ---
+
+qsm:RecordStatus
+    a owl:Class ;
+    rdfs:label "Record Status" ;
+    rdfs:comment "Workflow/completeness status of a LOCUS, ATLAS, or TENURE record." .
+
+qsm:record_in_progress      a owl:NamedIndividual, qsm:RecordStatus ; rdfs:label "in_progress" .
+qsm:record_complete         a owl:NamedIndividual, qsm:RecordStatus ; rdfs:label "complete" .
+qsm:record_ready_for_atlas  a owl:NamedIndividual, qsm:RecordStatus ; rdfs:label "ready_for_atlas" .
+qsm:record_ready_for_tenure a owl:NamedIndividual, qsm:RecordStatus ; rdfs:label "ready_for_tenure" .
+qsm:record_active           a owl:NamedIndividual, qsm:RecordStatus ; rdfs:label "active" .
+qsm:record_archived         a owl:NamedIndividual, qsm:RecordStatus ; rdfs:label "archived" .
+
+# --- 1.14 Review Cycle Type ---
+
+qsm:ReviewCycleType
+    a owl:Class ;
+    rdfs:label "Review Cycle Type" ;
+    rdfs:comment "Frequency/depth classification of a TENURE review cycle." .
+
+qsm:cycle_pulse  a owl:NamedIndividual, qsm:ReviewCycleType ; rdfs:label "pulse"
+    ; rdfs:comment "Monthly lightweight check-in across signal-layer domains." .
+qsm:cycle_review a owl:NamedIndividual, qsm:ReviewCycleType ; rdfs:label "review"
+    ; rdfs:comment "Quarterly full domain reassessment." .
+qsm:cycle_audit  a owl:NamedIndividual, qsm:ReviewCycleType ; rdfs:label "audit"
+    ; rdfs:comment "Annual comprehensive reassessment including LOCUS re-baseline." .
+
+# --- 1.15 Process Layer Type ---
+
+qsm:ProcessLayerType
+    a owl:Class ;
+    rdfs:label "Process Layer Type" ;
+    rdfs:comment "The six canonical layers of the QSM process stack." .
+
+qsm:layer_governance    a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "governance" .
+qsm:layer_signal        a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "signal_surface" .
+qsm:layer_intake        a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "intake" .
+qsm:layer_execution     a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "execution" .
+qsm:layer_observation   a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "observation" .
+qsm:layer_documentation a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "documentation" .
+
+# --- 1.16 THRIVE Conformance Level ---
+
+qsm:THRIVEConformanceLevel
+    a owl:Class ;
+    rdfs:label "THRIVE Conformance Level" ;
+    rdfs:comment "Conformance tiers for the THRIVE sub-framework (H0–H3)." .
+
+qsm:thrive_H0 a owl:NamedIndividual, qsm:THRIVEConformanceLevel ; rdfs:label "H0"
+    ; rdfs:comment "Baseline awareness only; no active tracking." .
+qsm:thrive_H1 a owl:NamedIndividual, qsm:THRIVEConformanceLevel ; rdfs:label "H1"
+    ; rdfs:comment "CapacityProfile established; basic health tracking active." .
+qsm:thrive_H2 a owl:NamedIndividual, qsm:THRIVEConformanceLevel ; rdfs:label "H2"
+    ; rdfs:comment "WellnessRecord and Routine cadence active; recovery planning in place." .
+qsm:thrive_H3 a owl:NamedIndividual, qsm:THRIVEConformanceLevel ; rdfs:label "H3"
+    ; rdfs:comment "Full THRIVE implementation: scenario patterns, SLOs, and longitudinal tracking." .
+
+
+# ===================================================================
+# SECTION 2: CORE ENTITY CLASSES (7 Base Types — unchanged from v1)
+# ===================================================================
+
+qsm:Person
+    a owl:Class ;
+    rdfs:label "Person" ;
+    rdfs:comment "Any human actor in the stewardship system — steward, stakeholder, or beneficiary." .
+
+qsm:Space
+    a owl:Class ;
+    rdfs:label "Space" ;
+    rdfs:comment "A physical or virtual location being stewarded (room, property, zone, digital workspace)." .
+
+qsm:System
+    a owl:Class ;
+    rdfs:label "System" ;
+    rdfs:comment "A technical, operational, or relational system being stewarded (HVAC, network, workflow, etc.)." .
+
+qsm:Responsibility
+    a owl:Class ;
+    rdfs:label "Responsibility" ;
+    rdfs:comment "A discrete stewardship duty assigned to a person or role within a domain." .
+
+qsm:Asset
+    a owl:Class ;
+    rdfs:label "Asset" ;
+    rdfs:comment "A physical or digital asset under stewardship (appliance, vehicle, data set, document, etc.)." .
+
+qsm:Domain
+    a owl:Class ;
+    rdfs:label "Domain" ;
+    rdfs:comment "A named stewardship domain — a bounded area of responsibility (Health, Finance, Infrastructure, etc.)." .
+
+qsm:Role
+    a owl:Class ;
+    rdfs:label "Role" ;
+    rdfs:comment "A named stewardship role held by a person within a context (Estate Manager, House Steward, etc.)." .
+
+
+# ===================================================================
+# SECTION 3: DISJOINTNESS AXIOMS
+# ===================================================================
+
+qsm:Person owl:disjointWith
+    qsm:Space, qsm:System, qsm:Responsibility, qsm:Asset, qsm:Domain, qsm:Role .
+qsm:Space owl:disjointWith
+    qsm:System, qsm:Responsibility, qsm:Asset, qsm:Domain, qsm:Role .
+qsm:System owl:disjointWith
+    qsm:Responsibility, qsm:Asset, qsm:Domain, qsm:Role .
+qsm:Responsibility owl:disjointWith
+    qsm:Asset, qsm:Domain, qsm:Role .
+qsm:Asset owl:disjointWith
+    qsm:Domain, qsm:Role .
+qsm:Domain owl:disjointWith
+    qsm:Role .
+
+
+# ===================================================================
+# SECTION 4: SUB-FRAMEWORK CLASSES AND INDIVIDUALS
+# ===================================================================
+
+# --- 4.1 SubFramework (parent class) ---
+
+qsm:SubFramework
+    a owl:Class ;
+    rdfs:label "Sub-Framework" ;
+    rdfs:comment """A named sub-framework within The Stewardship Standard, each scoped to a specific
+    entity context. All share the QSM ontology as a common foundation. The five canonical
+    sub-frameworks are: THRIVE (self), HEARTH (home), CREST (community), ROOTS (foundational
+    needs/financial), and CHARTER (organization/governance).""" .
+
+# --- 4.2 Five Canonical Sub-Framework Individuals ---
+
+qsm:THRIVE
+    a owl:NamedIndividual, qsm:SubFramework ;
+    rdfs:label "THRIVE" ;
+    rdfs:comment """THRIVE v1.0.1 — Transparency, Health, Resilience, Infrastructure, Values, Environment.
+    The self and wellness layer of QSM. Models the human side of stewardship: how people and
+    communities live well, stay resilient, and maintain conditions that let everything work.
+    Defines SelfContext, CapacityProfile, Routine, WellnessRecord, capacity/load modeling,
+    and recovery planning. Binds to qsm:ctx_self.""" ;
+    qsm:binds_to_context qsm:ctx_self .
+
+qsm:HEARTH
+    a owl:NamedIndividual, qsm:SubFramework ;
+    rdfs:label "HEARTH" ;
+    rdfs:comment """HEARTH — The home/estate sub-framework. Covers physical systems, property
+    infrastructure, and the residential or multi-property environment as a stewarded asset.
+    First hardened QSM context. Binds to qsm:ctx_home.""" ;
+    qsm:binds_to_context qsm:ctx_home .
+
+qsm:CREST
+    a owl:NamedIndividual, qsm:SubFramework ;
+    rdfs:label "CREST" ;
+    rdfs:comment """CREST — Community/neighborhood sub-framework. Covers operational resilience,
+    community continuity, HOA governance, and collective risk management.
+    Binds to qsm:ctx_community.""" ;
+    qsm:binds_to_context qsm:ctx_community .
+
+qsm:ROOTS
+    a owl:NamedIndividual, qsm:SubFramework ;
+    rdfs:label "ROOTS" ;
+    rdfs:comment """ROOTS — Foundational needs sub-framework. Covers financial stewardship,
+    legal structures, ownership, and the asset/liability landscape underlying all other
+    contexts. May span multiple contexts (home, self, work).""" ;
+    qsm:binds_to_context qsm:ctx_shared .
+
+qsm:CHARTER
+    a owl:NamedIndividual, qsm:SubFramework ;
+    rdfs:label "CHARTER" ;
+    rdfs:comment """CHARTER — Organizational governance sub-framework. Covers roles, accountability
+    structures, stakeholder agreements, decision rights, and organizational operating policy.
+    Binds to qsm:ctx_work.""" ;
+    qsm:binds_to_context qsm:ctx_work .
+
+# --- 4.3 THRIVE-specific Classes ---
+
+qsm:SelfContext
+    a owl:Class ;
+    rdfs:label "Self Context" ;
+    rdfs:comment "THRIVE: A scoped stewardship record for an individual person in the SELF context." ;
+    rdfs:subClassOf qsm:Domain .
+
+qsm:CapacityProfile
+    a owl:Class ;
+    rdfs:label "Capacity Profile" ;
+    rdfs:comment """THRIVE: A structured model of a person's current load capacity across dimensions
+    (physical, cognitive, emotional, relational, financial). Used for capacity/load modeling
+    and recovery planning. Central to THRIVE conformance levels H1+.""" .
+
+qsm:WellnessRecord
+    a owl:Class ;
+    rdfs:label "Wellness Record" ;
+    rdfs:comment """THRIVE: Longitudinal record of a person's wellness state over time. Captures
+    dimension scores, trend data, recovery events, and scenario pattern activations.
+    Required for THRIVE conformance level H2+.""" .
+
+qsm:RecoveryPlan
+    a owl:Class ;
+    rdfs:label "Recovery Plan" ;
+    rdfs:comment "THRIVE: A structured plan for restoring capacity in one or more dimensions after depletion or disruption." .
+
+
+# ===================================================================
+# SECTION 5: METHODOLOGY CLASSES (LOCUS → ATLAS → TENURE)
+# ===================================================================
+
+# --- 5.1 LocusRecord ---
+
+qsm:LocusRecord
+    a owl:Class ;
+    rdfs:label "Locus Record" ;
+    rdfs:comment """LOCUS phase output. A structured ground-truth assessment of a stewardship entity.
+    Captures: scope definition, entity register (stakeholders, assets, systems), current domain
+    states, needs/values map, and gap inventory. Required before ATLAS can begin.
+    Exportable as JSON (Annex B.1).""" .
+
+# --- 5.2 AtlasRecord ---
+
+qsm:AtlasRecord
+    a owl:Class ;
+    rdfs:label "Atlas Record" ;
+    rdfs:comment """ATLAS phase output. Built from a LocusRecord. A living stewardship map containing:
+    domain definitions, domain stewardship cards (scored, assigned, SLO'd), the stewardship map
+    overview, and a tiered priority plan (Tier 1/2/3 + charter agreements).
+    Required before TENURE can begin. Exportable as JSON (Annex B.2).""" .
+
+# --- 5.3 TenureRecord ---
+
+qsm:TenureRecord
+    a owl:Class ;
+    rdfs:label "Tenure Record" ;
+    rdfs:comment """TENURE phase record. Operational record for an active stewardship engagement.
+    Contains: active SLOs, review cycle schedule, current TENURE score, improvement actions,
+    and links to the parent AtlasRecord and StewardshipRecord.""" .
+
+# --- 5.4 StewardshipRecord ---
+
+qsm:StewardshipRecord
+    a owl:Class ;
+    rdfs:label "Stewardship Record" ;
+    rdfs:comment """Longitudinal master record for a stewardship entity across all phases.
+    Contains: initial LocusProfile + all reassessments, all TenureScore entries with timestamps,
+    log of significant stewardship events, review cycle records, and steward identity history.
+    The artifact that persists across personnel changes, tool changes, and time.
+    Exportable as JSON (Annex B.3).""" .
+
+# --- 5.5 DomainCard ---
+
+qsm:DomainCard
+    a owl:Class ;
+    rdfs:label "Domain Card" ;
+    rdfs:comment """ATLAS artifact. One card per domain. Contains: primary steward role, supporting
+    roles, escalation path, stewardship score, SLO definition, needs/values state, load
+    assessment (sustainable/at-risk), risk gaps, and first action item.""" .
+
+# --- 5.6 DomainState ---
+
+qsm:DomainState
+    a owl:Class ;
+    rdfs:label "Domain State" ;
+    rdfs:comment "LOCUS artifact. A point-in-time description of a domain's current condition, owner, and confidence level." .
+
+# --- 5.7 LocusSlice ---
+
+qsm:LocusSlice
+    a owl:Class ;
+    rdfs:label "Locus Slice" ;
+    rdfs:comment """A scoped, read-only view of a subarea's health, cadence adherence, and open items
+    at a point in time. The unit of information consumed by governance and portfolio views.
+    Carries: health score, SLO adherence signal, and active escalation flags.
+    Derived from Atlas state — not raw tasks.""" .
+
+
+# ===================================================================
+# SECTION 6: CORE DATA STRUCTURE CLASSES
+# ===================================================================
+
+# --- 6.1 NeedsValueSet ---
+
+qsm:NeedsValueSet
+    a owl:Class ;
+    rdfs:label "Needs Value Set" ;
+    rdfs:comment """A structured representation of what an entity requires (needs), prioritizes (values),
+    holds as non-negotiable, and experiences as tensions (named conflicts between values or needs).
+    Attaches to entities, domain cards, and LOCUS/ATLAS records.""" .
+
+# --- 6.2 Gap ---
+
+qsm:Gap
+    a owl:Class ;
+    rdfs:label "Gap" ;
+    rdfs:comment """A named stewardship gap — something missing, conflicted, at-risk, or undocumented
+    within a domain or entity. Produced by LOCUS assessment. Carries type, severity, responsible
+    role, identification date, and resolution status.""" .
+
+# --- 6.3 StewardshipScore ---
+
+qsm:StewardshipScore
+    a owl:Class ;
+    rdfs:label "Stewardship Score" ;
+    rdfs:comment """A scored assessment of stewardship quality for a domain. Scale 1–5.
+    Carries: domain reference, score, rationale, target score, scored-by role, and scored-at date.
+    Powers ATLAS domain cards and TENURE tracking.""" .
+
+# --- 6.4 StakeholderRole ---
+
+qsm:StakeholderRole
+    a owl:Class ;
+    rdfs:label "Stakeholder Role" ;
+    rdfs:comment """A person's role within a specific stewardship context. Extends qsm:Role with
+    operational attributes: access level, on-site status, tenure status, and a list of
+    responsibilities held in that context.""" .
+
+# --- 6.5 SLO (Service Level Objective) ---
+
+qsm:SLO
+    a owl:Class ;
+    rdfs:label "Service Level Objective" ;
+    rdfs:comment """A measurable stewardship care objective for a domain. Defines: what 'good' looks
+    like, failure response time, reporting cadence, and current adherence status.
+    The SLO layer is the quantitative backbone of the TENURE phase.""" .
+
+# --- 6.6 ReviewCycle ---
+
+qsm:ReviewCycle
+    a owl:Class ;
+    rdfs:label "Review Cycle" ;
+    rdfs:comment """A scheduled stewardship review event. Types: Pulse (monthly), Review (quarterly),
+    Audit (annual). Each cycle produces a cycle record: date, domains reviewed, scores,
+    changes noted, and next actions identified.""" .
+
+# --- 6.7 PlanPatch ---
+
+qsm:PlanPatch
+    a owl:Class ;
+    rdfs:label "Plan Patch" ;
+    rdfs:comment """A structured amendment to an active ExecutionPlan or TenureRecord, issued when
+    FAI detects scope change, resource contention, or SLO breach beyond governance threshold.
+    Carries the triggering condition, proposed change, and approval status.""" .
+
+
+# ===================================================================
+# SECTION 7: PROCESS STACK CLASSES (Six Layers)
+# ===================================================================
+
+# --- 7.1 GovernanceLayer ---
+
+qsm:GovernanceLayer
+    a owl:Class ;
+    rdfs:label "Governance Layer" ;
+    rdfs:comment """Layer 1 of the QSM process stack. The authority and policy layer — the invariant
+    frame that keeps all other layers oriented toward what matters. Contains: operating
+    principles, decision rights, domain ownership map, and stewardship charter.
+    Governance sets thresholds; it does not micromanage tasks.""" .
+
+# --- 7.2 SignalSurface ---
+
+qsm:SignalSurface
+    a owl:Class ;
+    rdfs:label "Signal Surface" ;
+    rdfs:comment """Layer 2 of the QSM process stack. The attention allocation layer — a curated,
+    real-time (or near-real-time) view of what deserves action. Reads from PARA/Atlas state.
+    Contains: SLO health indicators, active priority view, cadence anchors, threshold alerts.
+    A view layer, not a container.""" .
+
+# --- 7.3 IntakeItem ---
+
+qsm:IntakeItem
+    a owl:Class ;
+    rdfs:label "Intake Item" ;
+    rdfs:comment """Layer 3 of the QSM process stack. A single captured item in the intake/noise pool.
+    Unprocessed, unassigned, raw. Survives triage to become: a Subproject task, a Routine
+    trigger, a Domain standing concern, a Resource reference, or an archive item.""" .
+
+# --- 7.4 ObservationCycle ---
+
+qsm:ObservationCycle
+    a owl:Class ;
+    rdfs:label "Observation Cycle" ;
+    rdfs:comment """Layer 5 of the QSM process stack. A structured retrospective and pattern-capture
+    event. Outputs flow into DocumentationArtifacts (updated playbooks, revised SOPs)
+    or back into GovernanceLayer as policy amendments. Closes the feedback loop.""" .
+
+# --- 7.5 DocumentationArtifact ---
+
+qsm:DocumentationArtifact
+    a owl:Class ;
+    rdfs:label "Documentation Artifact" ;
+    rdfs:comment """Layer 6 of the QSM process stack. Institutional memory, changelogs, and the
+    pattern library. Types include: SOPs, runbooks, changelogs, asset registers, decision logs,
+    LOCUS/ATLAS exports. What makes the system resilient to turnover across time.""" .
+
+
+# ===================================================================
+# SECTION 8: EXECUTION TAXONOMY CLASSES
+# (Partial layer — execution taxonomy without org-estra internals)
+# ===================================================================
+
+# --- 8.1 ExecutionItem (abstract parent) ---
+
+qsm:ExecutionItem
+    a owl:Class ;
+    rdfs:label "Execution Item" ;
+    rdfs:comment """Abstract parent class for all execution work items in QSM.
+    Subclasses: Subproject (changes state), Routine (confirms state), Subarea (holds state).""" .
+
+# --- 8.2 Subproject ---
+
+qsm:Subproject
+    a owl:Class ;
+    rdfs:subClassOf qsm:ExecutionItem ;
+    rdfs:label "Subproject" ;
+    rdfs:comment """A finite, outcome-bound PARA-style project within a Subarea.
+    Has a defined start, completion, and archive point. Changes Atlas state on completion.
+    Emits AtlasEvents at milestone boundaries (not individual task ticks).
+    Closure writes a terminal event to Atlas updating the parent Subarea's state.""" .
+
+# --- 8.3 Routine ---
+
+qsm:Routine
+    a owl:Class ;
+    rdfs:subClassOf qsm:ExecutionItem ;
+    rdfs:label "Routine" ;
+    rdfs:comment """A cadence-driven or trigger-driven recurring execution pattern.
+    Perpetual lifecycle — generates tasks on schedule or condition.
+    Confirms Atlas state when completed cleanly (nearly invisible at portfolio level).
+    Bubbles up only on exception: missed cadence, failed precondition, or SLO breach.""" .
+
+# --- 8.4 Subarea ---
+
+qsm:Subarea
+    a owl:Class ;
+    rdfs:subClassOf qsm:ExecutionItem ;
+    rdfs:label "Subarea" ;
+    rdfs:comment """A standing area of responsibility — the structural container that holds both
+    Subprojects and Routines. Never 'completes'; only evolves. Surfaces a composite health
+    signal (LocusSlice) to portfolio/governance. Holds Atlas state across time.""" .
+
+# --- 8.5 Task ---
+
+qsm:Task
+    a owl:Class ;
+    rdfs:label "Task" ;
+    rdfs:comment """An atomic, assignable work item within a Subproject or Routine.
+    Inherits Atlas lineage tags from its parent (subarea, domain, context).
+    Emits completion and health events to the Atlas write-back queue as AtlasEvents.""" .
+
+# --- 8.6 AtlasEvent ---
+
+qsm:AtlasEvent
+    a owl:Class ;
+    rdfs:label "Atlas Event" ;
+    rdfs:comment """A typed event emitted to the Atlas write-back queue from any execution layer item.
+    Stamped with source subarea, asset, and pattern reference. Used to update LocusSlices
+    and aggregate domain health without direct task-level exposure at portfolio level.""" .
+
+# --- 8.7 ExecutionPlan ---
+
+qsm:ExecutionPlan
+    a owl:Class ;
+    rdfs:label "Execution Plan" ;
+    rdfs:comment """The assembled, role-assigned, tool-configured plan for a Subproject or Routine.
+    Created at intake. Contains: scope, owner, preconditions, Atlas tag linking to parent
+    Subarea and Locus. All child Tasks inherit Atlas lineage from the plan.""" .
+
+
+# ===================================================================
+# SECTION 9: DATATYPE PROPERTIES
+# ===================================================================
+
+# ---- Inherited from v1 ----
+
+qsm:name
+    a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:comment "Human-readable name of the entity or record." ;
+    rdfs:range xsd:string .
+
+qsm:notes
+    a owl:DatatypeProperty ;
+    rdfs:label "notes" ;
+    rdfs:comment "Additional contextual notes." ;
+    rdfs:range xsd:string .
+
+qsm:last_reviewed
+    a owl:DatatypeProperty ;
+    rdfs:label "last reviewed" ;
+    rdfs:comment "ISO date this entity or record was last reviewed." ;
+    rdfs:range xsd:date .
+
+qsm:health_score
+    a owl:DatatypeProperty ;
+    rdfs:label "health score" ;
+    rdfs:comment "Normalized stewardship health score (0.0–1.0)." ;
+    rdfs:range xsd:decimal .
+
+# Corrected from v1: needs_dimension_primary and health_status are
+# ObjectProperties (they reference named individuals), not DatatypeProperties.
+# They are re-declared as ObjectProperties in Section 10 below.
+
+# ---- New in v2 ----
+
+qsm:version
+    a owl:DatatypeProperty ;
+    rdfs:label "version" ;
+    rdfs:comment "Semantic version string (e.g. '1.0.0') for a record or sub-framework." ;
+    rdfs:range xsd:string .
+
+qsm:created_at
+    a owl:DatatypeProperty ;
+    rdfs:label "created at" ;
+    rdfs:comment "ISO 8601 datetime this record was created." ;
+    rdfs:range xsd:dateTime .
+
+qsm:updated_at
+    a owl:DatatypeProperty ;
+    rdfs:label "updated at" ;
+    rdfs:comment "ISO 8601 datetime this record was last updated." ;
+    rdfs:range xsd:dateTime .
+
+qsm:resolved
+    a owl:DatatypeProperty ;
+    rdfs:label "resolved" ;
+    rdfs:comment "Boolean flag: whether a Gap has been resolved." ;
+    rdfs:domain qsm:Gap ;
+    rdfs:range xsd:boolean .
+
+qsm:resolved_at
+    a owl:DatatypeProperty ;
+    rdfs:label "resolved at" ;
+    rdfs:comment "ISO 8601 datetime a Gap was resolved." ;
+    rdfs:domain qsm:Gap ;
+    rdfs:range xsd:dateTime .
+
+qsm:score_value
+    a owl:DatatypeProperty ;
+    rdfs:label "score value" ;
+    rdfs:comment "Integer score 1–5 on a StewardshipScore or domain card." ;
+    rdfs:domain qsm:StewardshipScore ;
+    rdfs:range xsd:integer .
+
+qsm:target_score
+    a owl:DatatypeProperty ;
+    rdfs:label "target score" ;
+    rdfs:comment "Desired future score (1–5) for a domain." ;
+    rdfs:domain qsm:StewardshipScore ;
+    rdfs:range xsd:integer .
+
+qsm:score_rationale
+    a owl:DatatypeProperty ;
+    rdfs:label "score rationale" ;
+    rdfs:comment "Prose explanation of the score awarded." ;
+    rdfs:domain qsm:StewardshipScore ;
+    rdfs:range xsd:string .
+
+qsm:capacity_score
+    a owl:DatatypeProperty ;
+    rdfs:label "capacity score" ;
+    rdfs:comment "Integer 0–10 representing current capacity of a person or needs set." ;
+    rdfs:domain qsm:CapacityProfile ;
+    rdfs:range xsd:integer .
+
+qsm:capacity_notes
+    a owl:DatatypeProperty ;
+    rdfs:label "capacity notes" ;
+    rdfs:comment "Prose notes on current capacity condition." ;
+    rdfs:domain qsm:CapacityProfile ;
+    rdfs:range xsd:string .
+
+qsm:on_site
+    a owl:DatatypeProperty ;
+    rdfs:label "on site" ;
+    rdfs:comment "Boolean: whether this StakeholderRole is physically on-site." ;
+    rdfs:domain qsm:StakeholderRole ;
+    rdfs:range xsd:boolean .
+
+qsm:slo_definition_of_good
+    a owl:DatatypeProperty ;
+    rdfs:label "SLO definition of good" ;
+    rdfs:comment "Prose description of what 'good' looks like for this SLO." ;
+    rdfs:domain qsm:SLO ;
+    rdfs:range xsd:string .
+
+qsm:slo_failure_response_time
+    a owl:DatatypeProperty ;
+    rdfs:label "SLO failure response time" ;
+    rdfs:comment "Expected time-to-respond when this SLO is breached (e.g. '24h', '1 business day')." ;
+    rdfs:domain qsm:SLO ;
+    rdfs:range xsd:string .
+
+qsm:is_resolved
+    a owl:DatatypeProperty ;
+    rdfs:label "is resolved" ;
+    rdfs:comment "Boolean: whether a PlanPatch has been approved and applied." ;
+    rdfs:domain qsm:PlanPatch ;
+    rdfs:range xsd:boolean .
+
+qsm:locus_score
+    a owl:DatatypeProperty ;
+    rdfs:label "LOCUS score" ;
+    rdfs:comment "Normalized LOCUS readiness score (0–100) for a LocusRecord." ;
+    rdfs:domain qsm:LocusRecord ;
+    rdfs:range xsd:decimal .
+
+qsm:tenure_score
+    a owl:DatatypeProperty ;
+    rdfs:label "TENURE score" ;
+    rdfs:comment "Rolling weighted mean performance score (0–100) for a TenureRecord." ;
+    rdfs:domain qsm:TenureRecord ;
+    rdfs:range xsd:decimal .
+
+qsm:confidence
+    a owl:DatatypeProperty ;
+    rdfs:label "confidence" ;
+    rdfs:comment "Assessor confidence in a DomainState or score (1–5)." ;
+    rdfs:domain qsm:DomainState ;
+    rdfs:range xsd:integer .
+
+qsm:description
+    a owl:DatatypeProperty ;
+    rdfs:label "description" ;
+    rdfs:comment "Full prose description of a Gap, Domain, or other entity." ;
+    rdfs:range xsd:string .
+
+qsm:first_action
+    a owl:DatatypeProperty ;
+    rdfs:label "first action" ;
+    rdfs:comment "The highest-priority next action for a DomainCard." ;
+    rdfs:domain qsm:DomainCard ;
+    rdfs:range xsd:string .
+
+qsm:stewardship_shift_goal
+    a owl:DatatypeProperty ;
+    rdfs:label "stewardship shift goal" ;
+    rdfs:comment "What stewardship improvement the DomainCard is aiming for." ;
+    rdfs:domain qsm:DomainCard ;
+    rdfs:range xsd:string .
+
+
+# ===================================================================
+# SECTION 10: OBJECT PROPERTIES (Relationships)
+# ===================================================================
+
+# ---- Inherited from v1 (domain/range verified and retained) ----
+
+qsm:owns
+    a owl:ObjectProperty ;
+    rdfs:label "owns" ;
+    rdfs:comment "A Person owns a Responsibility." ;
+    rdfs:domain qsm:Person ;
+    rdfs:range qsm:Responsibility .
+
+qsm:manages
+    a owl:ObjectProperty ;
+    rdfs:label "manages" ;
+    rdfs:comment "A Person manages a System." ;
+    rdfs:domain qsm:Person ;
+    rdfs:range qsm:System .
+
+qsm:stewards
+    a owl:ObjectProperty ;
+    rdfs:label "stewards" ;
+    rdfs:comment "A Person stewards a Domain." ;
+    rdfs:domain qsm:Person ;
+    rdfs:range qsm:Domain .
+
+qsm:holds
+    a owl:ObjectProperty ;
+    rdfs:label "holds" ;
+    rdfs:comment "A Person holds a Role." ;
+    rdfs:domain qsm:Person ;
+    rdfs:range qsm:Role .
+
+qsm:parent_space
+    a owl:ObjectProperty ;
+    rdfs:label "parent space" ;
+    rdfs:comment "Parent Space if this Space is nested within another." ;
+    rdfs:domain qsm:Space ;
+    rdfs:range qsm:Space .
+
+qsm:houses
+    a owl:ObjectProperty ;
+    rdfs:label "houses" ;
+    rdfs:comment "A Space houses a System." ;
+    rdfs:domain qsm:Space ;
+    rdfs:range qsm:System .
+
+qsm:contains
+    a owl:ObjectProperty ;
+    rdfs:label "contains" ;
+    rdfs:comment "A Space contains an Asset." ;
+    rdfs:domain qsm:Space ;
+    rdfs:range qsm:Asset .
+
+qsm:responsible_for
+    a owl:ObjectProperty ;
+    rdfs:label "responsible for" ;
+    rdfs:comment "A Role is responsible for a Responsibility." ;
+    rdfs:domain qsm:Role ;
+    rdfs:range qsm:Responsibility .
+
+qsm:belongs_to
+    a owl:ObjectProperty ;
+    rdfs:label "belongs to" ;
+    rdfs:comment "A Responsibility belongs to a Domain." ;
+    rdfs:domain qsm:Responsibility ;
+    rdfs:range qsm:Domain .
+
+qsm:depends_on
+    a owl:ObjectProperty ;
+    rdfs:label "depends on" ;
+    rdfs:comment "A Domain depends on another Domain." ;
+    rdfs:domain qsm:Domain ;
+    rdfs:range qsm:Domain .
+
+qsm:owned_by
+    a owl:ObjectProperty ;
+    rdfs:label "owned by" ;
+    rdfs:comment "An Asset is owned by a Person." ;
+    rdfs:domain qsm:Asset ;
+    rdfs:range qsm:Person .
+
+# ---- v1 corrections: moved from DatatypeProperty to ObjectProperty ----
+
+qsm:needs_dimension_primary
+    a owl:ObjectProperty ;
+    rdfs:label "Needs dimension primary" ;
+    rdfs:comment """Primary needs dimension this entity, domain, or gap addresses.
+    Range is qsm:NeedsDimension — point to the appropriate named individual from
+    whichever needs framework is declared for this context (MaxNeefNeed for SELF,
+    MaslowTier for contexts still using Maslow, etc.).""" ;
+    rdfs:range qsm:NeedsDimension .
+
+qsm:needs_dimension_spanning
+    a owl:ObjectProperty ;
+    rdfs:label "Needs dimensions spanning" ;
+    rdfs:comment "Secondary needs dimensions this entity, domain, or gap also addresses." ;
+    rdfs:range qsm:NeedsDimension .
+
+qsm:health_status
+    a owl:ObjectProperty ;
+    rdfs:label "health status" ;
+    rdfs:comment "Current qualitative health state." ;
+    rdfs:range qsm:HealthStatus .
+
+qsm:attention_cadence
+    a owl:ObjectProperty ;
+    rdfs:label "attention cadence" ;
+    rdfs:comment "Required attention frequency." ;
+    rdfs:range qsm:AttentionCadence .
+
+qsm:stewardship_phase
+    a owl:ObjectProperty ;
+    rdfs:label "stewardship phase" ;
+    rdfs:comment "Which methodology phase introduced this entity." ;
+    rdfs:range qsm:StewardshipPhase .
+
+# ---- New in v2: Sub-Framework relations ----
+
+qsm:binds_to_context
+    a owl:ObjectProperty ;
+    rdfs:label "binds to context" ;
+    rdfs:comment "Links a SubFramework to its canonical stewardship Context." ;
+    rdfs:domain qsm:SubFramework ;
+    rdfs:range qsm:Context .
+
+qsm:implemented_by
+    a owl:ObjectProperty ;
+    rdfs:label "implemented by" ;
+    rdfs:comment "A Context is implemented by a SubFramework." ;
+    rdfs:domain qsm:Context ;
+    rdfs:range qsm:SubFramework ;
+    owl:inverseOf qsm:binds_to_context .
+
+# ---- New in v2: Methodology record relations ----
+
+qsm:has_context
+    a owl:ObjectProperty ;
+    rdfs:label "has context" ;
+    rdfs:comment "A record (LOCUS/ATLAS/TENURE) belongs to a stewardship Context." ;
+    rdfs:range qsm:Context .
+
+qsm:has_subframework
+    a owl:ObjectProperty ;
+    rdfs:label "has sub-framework" ;
+    rdfs:comment "A record is scoped to a specific SubFramework." ;
+    rdfs:range qsm:SubFramework .
+
+qsm:has_status
+    a owl:ObjectProperty ;
+    rdfs:label "has status" ;
+    rdfs:comment "A record has a RecordStatus." ;
+    rdfs:range qsm:RecordStatus .
+
+qsm:has_life_stage
+    a owl:ObjectProperty ;
+    rdfs:label "has life stage" ;
+    rdfs:comment "An entity or record is at a LifeStage." ;
+    rdfs:range qsm:LifeStage .
+
+qsm:produces_record
+    a owl:ObjectProperty ;
+    rdfs:label "produces record" ;
+    rdfs:comment "A LocusRecord, when complete, produces an AtlasRecord." ;
+    rdfs:domain qsm:LocusRecord ;
+    rdfs:range qsm:AtlasRecord .
+
+qsm:produced_from
+    a owl:ObjectProperty ;
+    rdfs:label "produced from" ;
+    rdfs:comment "An AtlasRecord was produced from a LocusRecord." ;
+    rdfs:domain qsm:AtlasRecord ;
+    rdfs:range qsm:LocusRecord ;
+    owl:inverseOf qsm:produces_record .
+
+qsm:activates_tenure
+    a owl:ObjectProperty ;
+    rdfs:label "activates tenure" ;
+    rdfs:comment "An AtlasRecord, when complete, activates a TenureRecord." ;
+    rdfs:domain qsm:AtlasRecord ;
+    rdfs:range qsm:TenureRecord .
+
+qsm:governed_by_atlas
+    a owl:ObjectProperty ;
+    rdfs:label "governed by atlas" ;
+    rdfs:comment "A TenureRecord is governed by an AtlasRecord." ;
+    rdfs:domain qsm:TenureRecord ;
+    rdfs:range qsm:AtlasRecord ;
+    owl:inverseOf qsm:activates_tenure .
+
+qsm:rolls_into
+    a owl:ObjectProperty ;
+    rdfs:label "rolls into" ;
+    rdfs:comment "A TenureRecord rolls into (contributes to) a StewardshipRecord." ;
+    rdfs:domain qsm:TenureRecord ;
+    rdfs:range qsm:StewardshipRecord .
+
+# ---- New in v2: Domain card and scoring relations ----
+
+qsm:has_domain_card
+    a owl:ObjectProperty ;
+    rdfs:label "has domain card" ;
+    rdfs:comment "An AtlasRecord has one or more DomainCards." ;
+    rdfs:domain qsm:AtlasRecord ;
+    rdfs:range qsm:DomainCard .
+
+qsm:scores_domain
+    a owl:ObjectProperty ;
+    rdfs:label "scores domain" ;
+    rdfs:comment "A StewardshipScore assesses a specific Domain." ;
+    rdfs:domain qsm:StewardshipScore ;
+    rdfs:range qsm:Domain .
+
+qsm:has_score
+    a owl:ObjectProperty ;
+    rdfs:label "has score" ;
+    rdfs:comment "A DomainCard or DomainState has a StewardshipScore." ;
+    rdfs:range qsm:StewardshipScore .
+
+qsm:scored_by_role
+    a owl:ObjectProperty ;
+    rdfs:label "scored by role" ;
+    rdfs:comment "A StewardshipScore was assigned by this Role." ;
+    rdfs:domain qsm:StewardshipScore ;
+    rdfs:range qsm:Role .
+
+# ---- New in v2: Gap relations ----
+
+qsm:has_gap
+    a owl:ObjectProperty ;
+    rdfs:label "has gap" ;
+    rdfs:comment "A LocusRecord, AtlasRecord, DomainCard, or Domain has a Gap." ;
+    rdfs:range qsm:Gap .
+
+qsm:gap_type
+    a owl:ObjectProperty ;
+    rdfs:label "gap type" ;
+    rdfs:comment "A Gap is of a specific GapType." ;
+    rdfs:domain qsm:Gap ;
+    rdfs:range qsm:GapType .
+
+qsm:gap_severity
+    a owl:ObjectProperty ;
+    rdfs:label "gap severity" ;
+    rdfs:comment "A Gap has a GapSeverity." ;
+    rdfs:domain qsm:Gap ;
+    rdfs:range qsm:GapSeverity .
+
+qsm:gap_responsible_role
+    a owl:ObjectProperty ;
+    rdfs:label "gap responsible role" ;
+    rdfs:comment "The Role responsible for resolving this Gap." ;
+    rdfs:domain qsm:Gap ;
+    rdfs:range qsm:Role .
+
+qsm:gap_affects_domain
+    a owl:ObjectProperty ;
+    rdfs:label "gap affects domain" ;
+    rdfs:comment "The Domain this Gap resides in." ;
+    rdfs:domain qsm:Gap ;
+    rdfs:range qsm:Domain .
+
+# ---- New in v2: Needs/Values relations ----
+
+qsm:has_needs_value_set
+    a owl:ObjectProperty ;
+    rdfs:label "has needs value set" ;
+    rdfs:comment "An entity, DomainCard, or record has a NeedsValueSet." ;
+    rdfs:range qsm:NeedsValueSet .
+
+qsm:needs_value_for
+    a owl:ObjectProperty ;
+    rdfs:label "needs value for" ;
+    rdfs:comment "A NeedsValueSet describes the needs/values of a Person, Domain, or Context." ;
+    rdfs:domain qsm:NeedsValueSet ;
+    rdfs:range [ owl:unionOf (qsm:Person qsm:Domain qsm:Context) ] .
+
+# ---- New in v2: Stakeholder role relations ----
+
+qsm:has_stakeholder_role
+    a owl:ObjectProperty ;
+    rdfs:label "has stakeholder role" ;
+    rdfs:comment "A LocusRecord or AtlasRecord has a StakeholderRole in its entity register." ;
+    rdfs:range qsm:StakeholderRole .
+
+qsm:role_access_level
+    a owl:ObjectProperty ;
+    rdfs:label "role access level" ;
+    rdfs:comment "A StakeholderRole carries an AccessLevel." ;
+    rdfs:domain qsm:StakeholderRole ;
+    rdfs:range qsm:AccessLevel .
+
+qsm:role_tenure_status
+    a owl:ObjectProperty ;
+    rdfs:label "role tenure status" ;
+    rdfs:comment "A StakeholderRole has a TenureStatus." ;
+    rdfs:domain qsm:StakeholderRole ;
+    rdfs:range qsm:TenureStatus .
+
+qsm:person_in_role
+    a owl:ObjectProperty ;
+    rdfs:label "person in role" ;
+    rdfs:comment "A StakeholderRole is held by a Person." ;
+    rdfs:domain qsm:StakeholderRole ;
+    rdfs:range qsm:Person .
+
+# ---- New in v2: SLO relations ----
+
+qsm:has_slo
+    a owl:ObjectProperty ;
+    rdfs:label "has SLO" ;
+    rdfs:comment "A DomainCard, TenureRecord, or Domain has an SLO." ;
+    rdfs:range qsm:SLO .
+
+qsm:slo_status
+    a owl:ObjectProperty ;
+    rdfs:label "SLO status" ;
+    rdfs:comment "Current adherence status of an SLO." ;
+    rdfs:domain qsm:SLO ;
+    rdfs:range qsm:SLOStatus .
+
+qsm:slo_cadence
+    a owl:ObjectProperty ;
+    rdfs:label "SLO cadence" ;
+    rdfs:comment "Reporting cadence for this SLO." ;
+    rdfs:domain qsm:SLO ;
+    rdfs:range qsm:AttentionCadence .
+
+# ---- New in v2: Review cycle relations ----
+
+qsm:has_review_cycle
+    a owl:ObjectProperty ;
+    rdfs:label "has review cycle" ;
+    rdfs:comment "A TenureRecord has ReviewCycles." ;
+    rdfs:domain qsm:TenureRecord ;
+    rdfs:range qsm:ReviewCycle .
+
+qsm:cycle_type
+    a owl:ObjectProperty ;
+    rdfs:label "cycle type" ;
+    rdfs:comment "A ReviewCycle is of a ReviewCycleType (pulse/review/audit)." ;
+    rdfs:domain qsm:ReviewCycle ;
+    rdfs:range qsm:ReviewCycleType .
+
+qsm:produces_observation
+    a owl:ObjectProperty ;
+    rdfs:label "produces observation" ;
+    rdfs:comment "A ReviewCycle produces an ObservationCycle record." ;
+    rdfs:domain qsm:ReviewCycle ;
+    rdfs:range qsm:ObservationCycle .
+
+# ---- New in v2: Process stack relations ----
+
+qsm:has_process_layer_type
+    a owl:ObjectProperty ;
+    rdfs:label "has process layer type" ;
+    rdfs:comment "Links any process stack class to its canonical ProcessLayerType." ;
+    rdfs:range qsm:ProcessLayerType .
+
+qsm:feeds_into
+    a owl:ObjectProperty ;
+    rdfs:label "feeds into" ;
+    rdfs:comment "An ObservationCycle or DocumentationArtifact feeds back into a GovernanceLayer." ;
+    rdfs:range qsm:GovernanceLayer .
+
+qsm:triages_to
+    a owl:ObjectProperty ;
+    rdfs:label "triages to" ;
+    rdfs:comment "An IntakeItem triages into a Subproject, Routine, Domain, or archive." ;
+    rdfs:domain qsm:IntakeItem ;
+    rdfs:range qsm:ExecutionItem .
+
+qsm:surfaces_in
+    a owl:ObjectProperty ;
+    rdfs:label "surfaces in" ;
+    rdfs:comment "A Gap or SLO breach surfaces in a SignalSurface." ;
+    rdfs:range qsm:SignalSurface .
+
+# ---- New in v2: Execution taxonomy relations ----
+
+qsm:execution_source_type
+    a owl:ObjectProperty ;
+    rdfs:label "execution source type" ;
+    rdfs:comment "Classifies an ExecutionItem as subproject, routine, or subarea." ;
+    rdfs:domain qsm:ExecutionItem ;
+    rdfs:range qsm:ExecutionSourceType .
+
+qsm:belongs_to_subarea
+    a owl:ObjectProperty ;
+    rdfs:label "belongs to subarea" ;
+    rdfs:comment "A Subproject or Routine belongs to a parent Subarea." ;
+    rdfs:domain qsm:ExecutionItem ;
+    rdfs:range qsm:Subarea .
+
+qsm:contains_subproject
+    a owl:ObjectProperty ;
+    rdfs:label "contains subproject" ;
+    rdfs:comment "A Subarea contains Subprojects." ;
+    rdfs:domain qsm:Subarea ;
+    rdfs:range qsm:Subproject ;
+    owl:inverseOf qsm:belongs_to_subarea .
+
+qsm:contains_routine
+    a owl:ObjectProperty ;
+    rdfs:label "contains routine" ;
+    rdfs:comment "A Subarea contains Routines." ;
+    rdfs:domain qsm:Subarea ;
+    rdfs:range qsm:Routine .
+
+qsm:has_task
+    a owl:ObjectProperty ;
+    rdfs:label "has task" ;
+    rdfs:comment "A Subproject or Routine has Tasks." ;
+    rdfs:domain qsm:ExecutionItem ;
+    rdfs:range qsm:Task .
+
+qsm:task_assigned_to
+    a owl:ObjectProperty ;
+    rdfs:label "task assigned to" ;
+    rdfs:comment "A Task is assigned to a Person." ;
+    rdfs:domain qsm:Task ;
+    rdfs:range qsm:Person .
+
+qsm:task_assigned_role
+    a owl:ObjectProperty ;
+    rdfs:label "task assigned role" ;
+    rdfs:comment "A Task is assigned via a Role." ;
+    rdfs:domain qsm:Task ;
+    rdfs:range qsm:Role .
+
+qsm:emits_event
+    a owl:ObjectProperty ;
+    rdfs:label "emits event" ;
+    rdfs:comment "A Task or ExecutionItem emits an AtlasEvent on state change." ;
+    rdfs:range qsm:AtlasEvent .
+
+qsm:event_from_subarea
+    a owl:ObjectProperty ;
+    rdfs:label "event from subarea" ;
+    rdfs:comment "An AtlasEvent is sourced from a Subarea." ;
+    rdfs:domain qsm:AtlasEvent ;
+    rdfs:range qsm:Subarea .
+
+qsm:event_from_domain
+    a owl:ObjectProperty ;
+    rdfs:label "event from domain" ;
+    rdfs:comment "An AtlasEvent is tagged to a Domain." ;
+    rdfs:domain qsm:AtlasEvent ;
+    rdfs:range qsm:Domain .
+
+qsm:updates_locus_slice
+    a owl:ObjectProperty ;
+    rdfs:label "updates locus slice" ;
+    rdfs:comment "An AtlasEvent updates a LocusSlice for its parent Subarea." ;
+    rdfs:domain qsm:AtlasEvent ;
+    rdfs:range qsm:LocusSlice .
+
+qsm:locus_slice_for
+    a owl:ObjectProperty ;
+    rdfs:label "locus slice for" ;
+    rdfs:comment "A LocusSlice is scoped to a Subarea." ;
+    rdfs:domain qsm:LocusSlice ;
+    rdfs:range qsm:Subarea .
+
+qsm:slice_slo_status
+    a owl:ObjectProperty ;
+    rdfs:label "slice SLO status" ;
+    rdfs:comment "A LocusSlice carries an SLOStatus representing cadence adherence." ;
+    rdfs:domain qsm:LocusSlice ;
+    rdfs:range qsm:SLOStatus .
+
+qsm:slice_health_status
+    a owl:ObjectProperty ;
+    rdfs:label "slice health status" ;
+    rdfs:comment "A LocusSlice carries a HealthStatus representing composite domain health." ;
+    rdfs:domain qsm:LocusSlice ;
+    rdfs:range qsm:HealthStatus .
+
+qsm:has_execution_plan
+    a owl:ObjectProperty ;
+    rdfs:label "has execution plan" ;
+    rdfs:comment "A Subproject or Routine is governed by an ExecutionPlan." ;
+    rdfs:domain qsm:ExecutionItem ;
+    rdfs:range qsm:ExecutionPlan .
+
+qsm:plan_linked_subarea
+    a owl:ObjectProperty ;
+    rdfs:label "plan linked subarea" ;
+    rdfs:comment "An ExecutionPlan is Atlas-tagged to its parent Subarea." ;
+    rdfs:domain qsm:ExecutionPlan ;
+    rdfs:range qsm:Subarea .
+
+qsm:plan_linked_domain
+    a owl:ObjectProperty ;
+    rdfs:label "plan linked domain" ;
+    rdfs:comment "An ExecutionPlan is Atlas-tagged to its parent Domain." ;
+    rdfs:domain qsm:ExecutionPlan ;
+    rdfs:range qsm:Domain .
+
+qsm:triggers_plan_patch
+    a owl:ObjectProperty ;
+    rdfs:label "triggers plan patch" ;
+    rdfs:comment "An AtlasEvent beyond a governance threshold triggers a PlanPatch." ;
+    rdfs:domain qsm:AtlasEvent ;
+    rdfs:range qsm:PlanPatch .
+
+qsm:patch_for_plan
+    a owl:ObjectProperty ;
+    rdfs:label "patch for plan" ;
+    rdfs:comment "A PlanPatch amends an ExecutionPlan." ;
+    rdfs:domain qsm:PlanPatch ;
+    rdfs:range qsm:ExecutionPlan .
+
+# ---- New in v2: THRIVE-specific relations ----
+
+qsm:has_capacity_profile
+    a owl:ObjectProperty ;
+    rdfs:label "has capacity profile" ;
+    rdfs:comment "A Person has a CapacityProfile in the THRIVE sub-framework." ;
+    rdfs:domain qsm:Person ;
+    rdfs:range qsm:CapacityProfile .
+
+qsm:has_wellness_record
+    a owl:ObjectProperty ;
+    rdfs:label "has wellness record" ;
+    rdfs:comment "A Person has a WellnessRecord in the THRIVE sub-framework." ;
+    rdfs:domain qsm:Person ;
+    rdfs:range qsm:WellnessRecord .
+
+qsm:has_recovery_plan
+    a owl:ObjectProperty ;
+    rdfs:label "has recovery plan" ;
+    rdfs:comment "A CapacityProfile or Person has a RecoveryPlan." ;
+    rdfs:range qsm:RecoveryPlan .
+
+qsm:thrive_conformance_level
+    a owl:ObjectProperty ;
+    rdfs:label "THRIVE conformance level" ;
+    rdfs:comment "A SelfContext or WellnessRecord is at a THRIVEConformanceLevel (H0–H3)." ;
+    rdfs:range qsm:THRIVEConformanceLevel .
+
+# ---- New in v2: Documentation relations ----
+
+qsm:documents_entity
+    a owl:ObjectProperty ;
+    rdfs:label "documents entity" ;
+    rdfs:comment "A DocumentationArtifact documents a Domain, Asset, System, or ExecutionItem." ;
+    rdfs:domain qsm:DocumentationArtifact ;
+    rdfs:range [ owl:unionOf (qsm:Domain qsm:Asset qsm:System qsm:ExecutionItem) ] .
+
+qsm:changelog_of
+    a owl:ObjectProperty ;
+    rdfs:label "changelog of" ;
+    rdfs:comment "A DocumentationArtifact serves as the changelog for a StewardshipRecord or SubFramework." ;
+    rdfs:domain qsm:DocumentationArtifact ;
+    rdfs:range [ owl:unionOf (qsm:StewardshipRecord qsm:SubFramework) ] .
+
+
+# ===================================================================
+# SECTION 11: CARDINALITY AND ADDITIONAL AXIOMS
+# ===================================================================
+
+# A LocusRecord must have exactly one Context
+qsm:LocusRecord rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty qsm:has_context ;
+      owl:cardinality 1 ] .
+
+# An AtlasRecord must have exactly one LocusRecord as source
+qsm:AtlasRecord rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty qsm:produced_from ;
+      owl:cardinality 1 ] .
+
+# A StewardshipScore must have score_value between 1 and 5 (documented by minInclusive/maxInclusive)
+qsm:StewardshipScore rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty qsm:score_value ;
+      owl:cardinality 1 ] .
+
+# A CapacityProfile must belong to exactly one Person
+qsm:CapacityProfile rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty [ owl:inverseOf qsm:has_capacity_profile ] ;
+      owl:cardinality 1 ] .
+
+# A Subproject belongs to at most one Subarea
+qsm:Subproject rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty qsm:belongs_to_subarea ;
+      owl:maxCardinality 1 ] .
+
+# A Routine belongs to at most one Subarea
+qsm:Routine rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty qsm:belongs_to_subarea ;
+      owl:maxCardinality 1 ] .
+
+# Subproject, Routine, and Subarea are disjoint
+qsm:Subproject owl:disjointWith qsm:Routine, qsm:Subarea .
+qsm:Routine owl:disjointWith qsm:Subarea .
+
+# LocusRecord, AtlasRecord, and TenureRecord are disjoint
+qsm:LocusRecord owl:disjointWith qsm:AtlasRecord, qsm:TenureRecord .
+qsm:AtlasRecord owl:disjointWith qsm:TenureRecord .
+
+# Gap and StewardshipScore are disjoint
+qsm:Gap owl:disjointWith qsm:StewardshipScore .
+
+
+# ===================================================================
+# END OF QSM ONTOLOGY v3.0.0
+# ===================================================================
+# Coverage summary:
+#   Controlled vocabularies:  24 enums, 108 named individuals
+#   Entity classes:            7 core + 14 methodology/stack/THRIVE
+#   Execution taxonomy:        7 classes (partial layer)
+#   Datatype properties:      24
+#   Object properties:        75
+#   SubFramework individuals:  5 (THRIVE, HEARTH, CREST, ROOTS, CHARTER)
+#   Disjointness axioms:      11 pairs
+#   Cardinality restrictions:  6
+#   v3 additions: NeedsDimension, MaxNeefNeed (9), NeedsFramework (5),
+#     SatisfierType (5), WorldDomain (3), ArchitecturalLayer (8),
+#     LifecycleState (4), cross-cutting datatype properties
+# ===================================================================
