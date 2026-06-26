@@ -28,8 +28,13 @@ keywords:
   - world model
   - responsible AI
   - conformance
-version: "1.1.0"
-date-released: "2026-06-22"
+version: "1.2.0"
+date-released: "2026-06-25"
+doi: "10.5281/zenodo.20436570"
 license: CC-BY-4.0
 repository-code: "https://github.com/cinderlit/stewardship-standard"
 url: "https://stewardshipstandard.org"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20436570"
+    description: "Concept DOI for all versions of The Stewardship Standard"
