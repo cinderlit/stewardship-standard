@@ -9,7 +9,7 @@
 **Status:** Final Draft — Ready for Submission  
 **Maintainer:** Caitlin · Excentropy  
 **License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)  
-**DOI:** [pending — Zenodo]  
+**DOI:** [10.5281/zenodo.20436570](https://doi.org/10.5281/zenodo.20436570)  
 **Published:** 2026-06-25  
 **Dependent Specs:** QSM v1.0, TSS v1.1.0
 
