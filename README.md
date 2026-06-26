@@ -4,7 +4,7 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/Spec%20License-CC%20BY%204.0-blue.svg)](LICENSE-SPEC)
 [![License: Apache 2.0](https://img.shields.io/badge/Schema%20License-Apache%202.0-green.svg)](LICENSE-SCHEMAS)
-[![DOI](https://img.shields.io/badge/DOI-pending-lightgrey.svg)](#citation)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.20436570-blue.svg)](https://doi.org/10.5281/zenodo.20436570)
 
 **Author:** Caitlin Stokes
 **Publisher:** Cinderlit ([cinderlit.com](https://cinderlit.com))
@@ -166,9 +166,9 @@ This is an open standard: publicly accessible, implementable by anyone without d
 
 ## Citation
 
-If you reference or build on this standard, please cite it. See [`CITATION.cff`](CITATION.cff). Once the Zenodo DOI is minted, cite:
+If you reference or build on this standard, please cite it. See [`CITATION.cff`](CITATION.cff):
 
-> Stokes, Caitlin. *The Stewardship Standard: QSM, TSS, THRIVE, and QSM-FAI* (v1.2.0). The Stewardship Standard, 2026. DOI: [pending — Zenodo]. https://github.com/cinderlit/stewardship-standard
+> Stokes, Caitlin. *The Stewardship Standard: QSM, TSS, THRIVE, and QSM-FAI* (v1.2.0). The Stewardship Standard, 2026. DOI: [10.5281/zenodo.20436570](https://doi.org/10.5281/zenodo.20436570). https://github.com/cinderlit/stewardship-standard
 
 ---
 
