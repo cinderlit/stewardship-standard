@@ -7,3 +7,7 @@ venv/
 
 # OS
 .DS_Store
+
+# Local prompt / working docs
+CURSOR-*.md
+QSM-*-cursor-prompt.md
