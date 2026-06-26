@@ -5,6 +5,37 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## [1.3.0] — 2026-06-25
+
+Methodology release. Extends the framework-declaration pattern (established in [1.1.0] for
+needs frameworks) to learning and behavior design; adds decision-confidence fields to the record
+schema; adds FiduciaryContext samples for SELF and CHARTER contexts; introduces the conformance
+test suite.
+
+### Specifications added
+- **QSM v1.2.0** — adds SDT as a recommended needs framework for CHARTER contexts (§4.2.1);
+  adds learning-framework mechanism §4.2.2 and Appendix H with rules QSM-LF-01 through
+  QSM-LF-03. Supersedes QSM v1.1.0.
+
+### Reference schemas updated
+- **context.schema.json** (v1.3) — added `learning_framework` field (QSM-LF-01); updated
+  `needs_framework` description to include 'sdt'.
+- **record.schema.json** (v1.2) — added optional decision-confidence fields:
+  `decision_confidence` (0–1 probability at decision time), `expected_outcome`,
+  `actual_outcome`, `outcome_assessed_at`. Apply to decision-type records only; never required.
+- **thrive/routine.schema.json** (v1.1) — added optional `behavior_design` object with `cue`,
+  `cue_type`, `reward`, `implementation_intention`, `anchor_routine_id`.
+
+### Samples added
+- `samples/self-fiduciary-context.json` — FiduciaryContext for a SELF context; T2 scope.
+- `samples/charter-fiduciary-context.json` — FiduciaryContext for a CHARTER context with
+  spending limit.
+
+### Conformance suite added
+- `tests/` — schema validation harness (validates all samples against their schemas) and
+  named-rule assertions for FC-01/04, TEN-01/02, QSM-NF-01, THRIVE-02. See `tests/README.md`.
+- `.github/workflows/conformance.yml` — CI that runs the harness on every PR.
+
 ## [1.2.0] — 2026-06-25
 
 Architecture release. Adds **QSM-ARCH v1.1.0**, the Layer and Engine Operating Model, formalizing

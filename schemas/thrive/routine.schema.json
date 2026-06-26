@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stewardshipstandard.org/schemas/thrive/routine/v1.0.json",
+  "$id": "https://stewardshipstandard.org/schemas/thrive/routine/v1.1.json",
   "title": "THRIVE Routine Schema",
-  "description": "A recurring structure that stabilizes functioning. First-class object. Defined by THRIVE v1.0.1 §8.",
+  "description": "A recurring structure that stabilizes functioning. First-class object. Defined by THRIVE v1.0.1 §8. v1.1: added optional behavior_design object (habit-loop, cue/reward, implementation intention, habit stacking via anchor_routine_id).",
   "type": "object",
   "required": ["id", "label", "type"],
   "properties": {
@@ -16,6 +16,37 @@
     "steps": { "type": "array", "items": { "type": "string" } },
     "expected_duration": { "type": "string" },
     "known_failure_modes": { "type": "array", "items": { "type": "string" } },
-    "fallback_options": { "type": "array", "items": { "type": "string" } }
+    "fallback_options": { "type": "array", "items": { "type": "string" } },
+    "behavior_design": {
+      "type": "object",
+      "description": "Optional. Declares the behavior design structure underlying this routine. Supports habit-loop, implementation-intention, and Tiny Habits-style patterns. Never required for THRIVE conformance.",
+      "properties": {
+        "design_framework": {
+          "type": "string",
+          "description": "The behavior design theory used (e.g., 'habit-loop', 'tiny-habits', 'implementation-intention', 'if-then-planning')."
+        },
+        "cue": {
+          "type": "string",
+          "description": "The trigger that initiates this routine. Should be specific and observable."
+        },
+        "cue_type": {
+          "type": "string",
+          "enum": ["time", "event", "preceding-action", "environment", "internal-state"],
+          "description": "The category of cue. 'preceding-action' supports habit stacking — one routine's completion triggers the next."
+        },
+        "reward": {
+          "type": "string",
+          "description": "The immediate positive outcome that reinforces this routine. Should be immediate, not delayed."
+        },
+        "implementation_intention": {
+          "type": "string",
+          "description": "If-then statement formalizing the cue-routine link: 'When [cue occurs], I will [routine action].' Increases follow-through on intentions."
+        },
+        "anchor_routine_id": {
+          "type": "string",
+          "description": "Optional. If cue_type is 'preceding-action', the id of the routine whose completion triggers this one (habit stacking)."
+        }
+      }
+    }
   }
 }

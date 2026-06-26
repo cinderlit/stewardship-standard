@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stewardshipstandard.org/schemas/record/v1.1.json",
+  "$id": "https://stewardshipstandard.org/schemas/record/v1.2.json",
   "title": "TSS Record Schema",
-  "description": "An append-only auditable entry describing a stewardship event. Defined by TSS v1.1.1 §5.9 and §9. Domain-specific record types (StewardshipRecord, WellnessRecord, TENURE Record) MUST satisfy these rules.",
+  "description": "An append-only auditable entry describing a stewardship event. Defined by TSS v1.1.1 §5.9 and §9. Domain-specific record types (StewardshipRecord, WellnessRecord, TENURE Record) MUST satisfy these rules. v1.2: added optional decision-confidence fields (decision_confidence, expected_outcome, actual_outcome, outcome_assessed_at) for decision records.",
   "type": "object",
   "required": ["id", "event_type", "timestamp"],
   "properties": {
@@ -12,6 +12,25 @@
     "actor_id": { "type": "string" },
     "context_id": { "type": "string" },
     "summary": { "type": "string" },
-    "details": { "type": "object" }
+    "details": { "type": "object" },
+    "decision_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Optional. Estimated probability of desired outcome at decision time, expressed as 0–1. Records epistemic state at the moment of decision, not hindsight. Applies when event_type represents a decision record. See QSM §4.2 and Memory layer contract in QSM-ARCH v1.1.0 §5.4."
+    },
+    "expected_outcome": {
+      "type": "string",
+      "description": "Optional. The outcome this decision was intended to produce, stated at decision time before the outcome is known."
+    },
+    "actual_outcome": {
+      "type": "string",
+      "description": "Optional. The outcome that actually occurred. Populated by the Observation or Adaptation layer after the fact, not at decision time."
+    },
+    "outcome_assessed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Optional. Timestamp of when actual_outcome was recorded. MUST be after timestamp."
+    }
   }
 }
