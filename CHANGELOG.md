@@ -19,10 +19,18 @@ additive to the doctrine and methodology specs — all prior v1.x conformance cl
   ARCH-07/08) and **conformance-scale reconciliation** with QSM/TSS (§8.3); the Memory layer
   clarified as authoritative only for persistent, intentional knowledge (ephemeral state lives in
   Observation, derived views in Signal). Supersedes the v1.0.0 draft.
+- **QSM-GLOSSARY v1.0.0** — canonical vocabulary reference (28 terms, alphabetical).
 
 ### Specifications updated
 - **QSM-LAYER-MATRIX** — Memory authoritative-record rule clarified for persistent intentional
   knowledge; the Intent→Governance rule reworded from an absolute to a conditional SHOULD.
+- **THRIVE v1.1.0** — WorldDomainScope, IdentityIntentProfile, DevelopmentalContext,
+  TemporalCycleProfile (§6.3–6.6); conformance rules THRIVE-06 through THRIVE-08; level H4.
+- **TSS v1.2.0** — context lifecycle cross-ref (§6); governance change classes, deprecation
+  policy, release front matter, and conflict resolution taxonomy (§14.1–14.4); Appendix Z.3
+  (QSM-ARCH A-levels as separate axis).
+- **QSM v1.1.0** — Max-Neef as default SELF needs framework; Appendix G (needs frameworks per
+  context).
 
 The superseded `QSM-ARCH-v1.0.md` remains in `specs/`, marked superseded with a pointer to its
 replacement.
