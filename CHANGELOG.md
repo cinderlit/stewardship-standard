@@ -5,6 +5,28 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## [1.2.0] — 2026-06-25
+
+Architecture release. Adds **QSM-ARCH v1.1.0**, the Layer and Engine Operating Model, formalizing
+the eight-layer architecture (Intent, Governance, Intake, Memory, Practice, Observation, Signal,
+Adaptation) that supersedes the earlier six-layer process-stack vocabulary. This release is
+additive to the doctrine and methodology specs — all prior v1.x conformance claims remain valid.
+
+### Specifications added
+- **QSM-ARCH v1.1.0** — eight structural layers each defined by a full per-layer contract
+  (definition, owns, must-never-own, delegates-to, required artifacts, allowed/prohibited
+  dependencies, anti-patterns); five cross-cutting planes; **context lifecycle** (§6.6, with rules
+  ARCH-07/08) and **conformance-scale reconciliation** with QSM/TSS (§8.3); the Memory layer
+  clarified as authoritative only for persistent, intentional knowledge (ephemeral state lives in
+  Observation, derived views in Signal). Supersedes the v1.0.0 draft.
+
+### Specifications updated
+- **QSM-LAYER-MATRIX** — Memory authoritative-record rule clarified for persistent intentional
+  knowledge; the Intent→Governance rule reworded from an absolute to a conditional SHOULD.
+
+The superseded `QSM-ARCH-v1.0.md` remains in `specs/`, marked superseded with a pointer to its
+replacement.
+
 ## [1.1.0] — 2026-06-22
 
 Amendment release. Every change in this release is additive — no v1.0.x/v1.1.x requirement

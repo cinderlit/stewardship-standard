@@ -48,10 +48,10 @@ These five properties apply to every object across all layers, regardless of con
 
 ## Key rules
 
-- **Memory is the authoritative record.** Signal and Observation are derivative — they surface and sense what Memory holds, but they do not replace it.
+- **Memory is the authoritative record.** Signal and Observation are derivative — they surface and sense what Memory holds, but they do not replace it. Memory is the authoritative record for **persistent, intentional knowledge** — models, decisions, documentation, and curated understanding. It is NOT the authoritative home for ephemeral operational state, transient telemetry, or derived caches. Ephemeral state lives in Observation; derived views live in Signal. An object is promoted to Memory by a deliberate act — logging, documentation, or decision recording — not automatically.
 - **Observation and Adaptation are distinct.** Observation senses what happened. Adaptation changes how the system operates because of it. Collapsing them produces a system that monitors but does not improve.
 - **Documentation lives inside Memory.** It is a stabilization function — the way things get persisted so Memory can hold them — not a peer layer.
-- **Intent must precede Governance.** You cannot write good policy without knowing what the context is for. Governance constrains and enables Intent; it does not replace it.
+- **Intent should precede Governance.** Conformant implementations SHOULD establish Intent before formalizing Governance. Governance without declared purpose tends to produce constraint without direction — rules that restrict without orienting. In practice, Intent and Governance may co-evolve; what this rule prohibits is a governance layer that has no declared Intent to ground itself in.
 - **Adaptation dispatches improvements to other layers.** Its outputs are not just records — they are instructions that update policies (Governance), operating models (Practice), thresholds (Observation), and knowledge (Memory).
 
 ---
