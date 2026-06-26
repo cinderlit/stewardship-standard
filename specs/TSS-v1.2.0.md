@@ -312,6 +312,8 @@ A context declaration MUST include:
 
 A context without an explicit boundary is not conformant.
 
+Context lifecycle — creation, state transitions (draft / active / suspended / retired), and object disposition on retirement — is defined in QSM-ARCH §6.6.
+
 ### 6.1 Context types
 
 The standard recognizes, at minimum:
@@ -676,16 +678,43 @@ A conformance claim MUST specify:
 
 ## 14. Governance and Change Control
 
-TSS follows semantic versioning.
+TSS and the stewardship stack follow semantic versioning across three distinct version tracks:
 
-- **MAJOR** changes are breaking changes to required objects or conformance.
-- **MINOR** changes add new context types, object types, or optional capabilities.
-- **PATCH** changes clarify language or correct errors without altering conformance.
+| Track | Example | Scope |
+|---|---|---|
+| **Spec version** | QSM-ARCH 1.1.0 | The architecture or normative standard itself |
+| **Profile version** | QSM-HOUSEHOLD 1.0.0 | Domain-specific adaptations and context profiles |
+| **Implementation version** | tooling, schemas, templates | Machine-readable artifacts and reference implementations |
+
+### 14.1 Change classes
+
+- **MAJOR** — layer added or removed, layer semantics changed, invariants changed, or breaking changes to required objects or conformance.
+- **MINOR** — new examples, new non-breaking guidance, new optional artifacts, new context types, object types, or optional capabilities.
+- **PATCH** — wording fixes, clarifications, typographical corrections without altering conformance.
+
+### 14.2 Deprecation policy
+
+Deprecated terms and constructs MUST remain in the spec with a `deprecated since:` notice for at least one major version before removal. A migration appendix MUST list each deprecated term, its successor, and the version in which it was removed.
+
+### 14.3 Release front matter
+
+Every spec release MUST carry: version number, date, changelog, rationale, compatibility notes, and migration guidance.
 
 Proposed amendments SHOULD be accompanied by example data and at least one use case.
 
----
+### 14.4 Conflict resolution
 
+When disputes arise about the standard, implementations SHOULD classify the conflict before attempting resolution:
+
+| Conflict type | Description | First resolution step |
+|---|---|---|
+| **Interpretation conflict** | Two parties read the same rule differently | Structured review against the normative text |
+| **Boundary conflict** | Disagreement about which layer or spec owns something | Layer definition + anti-pattern check |
+| **Version conflict** | Competing edits or incompatible releases | Versioning rules in TSS (§14.1–14.3) |
+| **Authority conflict** | Disagreement about who has decision rights | Spec steward determination |
+| **Compliance conflict** | An implementation diverges from the standard | Conformance check against the relevant spec |
+
+Core semantics can only be changed through a formal versioned release, not through informal resolution of individual conflicts.
 
 ---
 
@@ -710,6 +739,10 @@ Implementations SHOULD aim for aligned levels when possible. A typical operation
 QSM C-level, THRIVE H-level, and QSM-FAI L-level are domain-specific interpretations of the same conformance tier.
 
 An implementation claiming "TSS T2" MAY also claim "QSM C2", "THRIVE H2", and "QSM-FAI L2" if it satisfies the respective domain-level rules.
+
+### Z.3 QSM-ARCH A-levels (separate axis)
+
+QSM-ARCH conformance levels (A0–A3) measure **architectural completeness** — how many layers and cross-cutting planes an implementation supports. They are independent of the C/T/H/L ladder above. An implementation MAY claim any combination (e.g., T2 + A1). For the relationship between scales, see QSM-ARCH §8.3.
 
 ## Appendix A: Submission Bundle — Sample Package
 

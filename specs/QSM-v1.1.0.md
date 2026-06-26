@@ -169,6 +169,8 @@ This includes:
 - Service levels.
 - Urgency and tolerance thresholds.
 
+QSM implementations MUST declare which needs framework they are using for each context type. The needs framework is not universal across context types — different contexts use different frameworks as appropriate to the entity being stewarded. QSM implementations using the SELF context SHOULD use Max-Neef's taxonomy of fundamental human needs as the default framework.
+
 #### 4.2.1 Needs Frameworks (informative)
 
 QSM does not itself define a needs-tiering theory, but conformant implementations consistently
@@ -178,7 +180,7 @@ context types:
 
 | Context type | Commonly used framework | Why |
 |---|---|---|
-| SELF | Maslow's hierarchy of needs | Tiers map naturally onto personal needs from safety through self-actualization |
+| SELF | Max-Neef fundamental human needs | Nine simultaneous, non-hierarchical needs; satisfiers vary by person and context |
 | HEARTH | WELL (or an equivalent household-wellness framework) | Designed around the physical/social conditions of a dwelling and its occupants |
 | CHARTER (business/organizational) | ERG (Existence–Relatedness–Growth) or Pink's autonomy/mastery/purpose | Suited to organizational and ownership-relationship motivation structures |
 | CREST / ESTATE | Context-specific; no single default | Episodic and portfolio-scale contexts vary too much for one default framework |
@@ -522,3 +524,15 @@ Where this document uses these terms, the intended force is normative, not advis
 ## Appendix F: Conformance Statement Template
 
 > This implementation conforms to QSM v1.1.0 at level C2 for the HEARTH context. It represents contexts, entities, needs, values, roles, relationships, risks, actions, and records using an explicit machine-readable schema. It preserves context boundaries and produces auditable outputs.
+
+## Appendix G: Needs Frameworks per Context
+
+QSM implementations declare a needs framework per context type. The following table lists recommended frameworks:
+
+| Context | Recommended needs framework | Notes |
+|---|---|---|
+| SELF | Max-Neef Fundamental Human Needs | Non-hierarchical; 9 simultaneous needs |
+| HEARTH | Building Performance Hierarchy | Systems-based; 5 levels |
+| ESTATE | WELL Building Standard | Parallel domains; breadth-based |
+| CHARTER | Alderfer ERG Theory | 3 levels; allows simultaneous activation |
+| CREST | To be determined per implementation | No universal default |
