@@ -496,15 +496,18 @@ qsm:cycle_audit  a owl:NamedIndividual, qsm:ReviewCycleType ; rdfs:label "audit"
 
 qsm:ProcessLayerType
     a owl:Class ;
+    owl:deprecated true ;
     rdfs:label "Process Layer Type" ;
-    rdfs:comment "The six canonical layers of the QSM process stack." .
+    rdfs:comment """Deprecated as of QSM-ARCH v1.0. Formerly enumerated the six canonical layers of the QSM process stack (Governance, Dashboard/Signal, Intake, Execution/Practice, Observation, Documentation/Memory). Superseded by qsm:ArchitecturalLayer, which enumerates all eight layers using final names. Existing individuals retained for backward compatibility.""" .
 
-qsm:layer_governance    a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "governance" .
-qsm:layer_signal        a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "signal_surface" .
-qsm:layer_intake        a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "intake" .
-qsm:layer_execution     a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "execution" .
-qsm:layer_observation   a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "observation" .
-qsm:layer_documentation a owl:NamedIndividual, qsm:ProcessLayerType ; rdfs:label "documentation" .
+# Deprecated six-layer individuals — retained for backward compatibility.
+# Use qsm:arch_layer_* individuals (qsm:ArchitecturalLayer) for new work.
+qsm:layer_governance    a owl:NamedIndividual, qsm:ProcessLayerType ; owl:deprecated true ; rdfs:label "governance" ; rdfs:seeAlso qsm:arch_layer_governance .
+qsm:layer_signal        a owl:NamedIndividual, qsm:ProcessLayerType ; owl:deprecated true ; rdfs:label "signal_surface" ; rdfs:comment "Was 'Dashboard' in earlier naming. See qsm:arch_layer_dashboard_signal." ; rdfs:seeAlso qsm:arch_layer_dashboard_signal .
+qsm:layer_intake        a owl:NamedIndividual, qsm:ProcessLayerType ; owl:deprecated true ; rdfs:label "intake" ; rdfs:seeAlso qsm:arch_layer_intake .
+qsm:layer_execution     a owl:NamedIndividual, qsm:ProcessLayerType ; owl:deprecated true ; rdfs:label "execution" ; rdfs:comment "Renamed to 'Practice' in QSM-ARCH v1.0. See qsm:arch_layer_execution." ; rdfs:seeAlso qsm:arch_layer_execution .
+qsm:layer_observation   a owl:NamedIndividual, qsm:ProcessLayerType ; owl:deprecated true ; rdfs:label "observation" ; rdfs:seeAlso qsm:arch_layer_observation .
+qsm:layer_documentation a owl:NamedIndividual, qsm:ProcessLayerType ; owl:deprecated true ; rdfs:label "documentation" ; rdfs:comment "Renamed to 'Memory' in QSM-ARCH v1.0. Documentation is now a function within Memory, not a peer layer. See qsm:arch_layer_knowledge." ; rdfs:seeAlso qsm:arch_layer_knowledge .
 
 # --- 1.16 THRIVE Conformance Level ---
 
@@ -807,7 +810,10 @@ qsm:PlanPatch
 
 
 # ===================================================================
-# SECTION 7: PROCESS STACK CLASSES (Six Layers)
+# SECTION 7: PROCESS STACK CLASSES (Deprecated — Six-Layer Era)
+# These OWL classes represent the original six-layer process stack predating QSM-ARCH v1.0.
+# They are retained for backward compatibility. For current eight-layer architecture, see
+# qsm:ArchitecturalLayer individuals in Section 1.2.6.
 # ===================================================================
 
 # --- 7.1 GovernanceLayer ---
@@ -815,7 +821,7 @@ qsm:PlanPatch
 qsm:GovernanceLayer
     a owl:Class ;
     rdfs:label "Governance Layer" ;
-    rdfs:comment """Layer 1 of the QSM process stack. The authority and policy layer — the invariant
+    rdfs:comment """[Deprecated — pre-QSM-ARCH layer numbering] Layer 1 of the QSM process stack. The authority and policy layer — the invariant
     frame that keeps all other layers oriented toward what matters. Contains: operating
     principles, decision rights, domain ownership map, and stewardship charter.
     Governance sets thresholds; it does not micromanage tasks.""" .
@@ -825,7 +831,7 @@ qsm:GovernanceLayer
 qsm:SignalSurface
     a owl:Class ;
     rdfs:label "Signal Surface" ;
-    rdfs:comment """Layer 2 of the QSM process stack. The attention allocation layer — a curated,
+    rdfs:comment """[Deprecated — pre-QSM-ARCH layer numbering] Layer 2 of the QSM process stack. The attention allocation layer — a curated,
     real-time (or near-real-time) view of what deserves action. Reads from PARA/Atlas state.
     Contains: SLO health indicators, active priority view, cadence anchors, threshold alerts.
     A view layer, not a container.""" .
@@ -835,7 +841,7 @@ qsm:SignalSurface
 qsm:IntakeItem
     a owl:Class ;
     rdfs:label "Intake Item" ;
-    rdfs:comment """Layer 3 of the QSM process stack. A single captured item in the intake/noise pool.
+    rdfs:comment """[Deprecated — pre-QSM-ARCH layer numbering] Layer 3 of the QSM process stack. A single captured item in the intake/noise pool.
     Unprocessed, unassigned, raw. Survives triage to become: a Subproject task, a Routine
     trigger, a Domain standing concern, a Resource reference, or an archive item.""" .
 
@@ -844,7 +850,7 @@ qsm:IntakeItem
 qsm:ObservationCycle
     a owl:Class ;
     rdfs:label "Observation Cycle" ;
-    rdfs:comment """Layer 5 of the QSM process stack. A structured retrospective and pattern-capture
+    rdfs:comment """[Deprecated — pre-QSM-ARCH layer numbering] Layer 5 of the QSM process stack. A structured retrospective and pattern-capture
     event. Outputs flow into DocumentationArtifacts (updated playbooks, revised SOPs)
     or back into GovernanceLayer as policy amendments. Closes the feedback loop.""" .
 
@@ -853,7 +859,7 @@ qsm:ObservationCycle
 qsm:DocumentationArtifact
     a owl:Class ;
     rdfs:label "Documentation Artifact" ;
-    rdfs:comment """Layer 6 of the QSM process stack. Institutional memory, changelogs, and the
+    rdfs:comment """[Deprecated — pre-QSM-ARCH layer numbering] Layer 6 of the QSM process stack. Institutional memory, changelogs, and the
     pattern library. Types include: SOPs, runbooks, changelogs, asset registers, decision logs,
     LOCUS/ATLAS exports. What makes the system resilient to turnover across time.""" .
 

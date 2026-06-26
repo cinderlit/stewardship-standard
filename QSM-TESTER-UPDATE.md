@@ -39,7 +39,7 @@ Max-Neef fixes this. All nine needs are always present. What varies is which *sa
 
 The change also adds a "satisfier type" dimension — whether a practice genuinely addresses a need, addresses multiple needs at once (synergic), or only appears to while actually not helping (pseudo). This is analytically useful in a way Maslow couldn't be.
 
-**What this means for you:** If you built a SELF model against Maslow levels, your management categories are still valid — they just need re-tagging to the new need vocabulary. The categories themselves don't change much; only their classification does.
+**What this means for you:** If you built a SELF model against Maslow levels, your management categories are still valid — they just need re-tagging to the new need vocabulary. The SELF model now has **16 management categories** (up from 15): Information & Digital Management was split into Information & Knowledge Management and Digital Autonomy & Privacy Management to give the Digital world domain and Freedom need adequate Primary coverage.
 
 ---
 
@@ -75,7 +75,7 @@ The THRIVE spec now formally supports three concepts that were missing:
 
 **What was there:** The six-layer operating model existed in the Excel working models but not as a normative document. It was implied, not specified.
 
-**What's there now:** QSM-ARCH v1.0 — a fifth specification document that defines the eight layers, the engines within each layer, and five cross-cutting planes that apply to every object across all layers (Lifecycle State, Ownership, Versioning/Provenance, Metrics/Thresholds, Security/Privacy).
+**What's there now:** QSM-ARCH v1.1.0 — a specification document that defines the eight layers (each with a full per-layer contract and anti-patterns), the engines within each layer, five cross-cutting planes that apply to every object across all layers (Lifecycle State, Ownership, Versioning/Provenance, Metrics/Thresholds, Security/Privacy), context lifecycle (§6.6), and conformance-scale reconciliation with QSM/TSS (§8.3).
 
 This matters for anyone building tools on top of QSM or writing conformance statements. The architecture was always there conceptually — now it has the same standing as the other specs.
 
@@ -96,7 +96,8 @@ This matters for anyone building tools on top of QSM or writing conformance stat
 | **SELF needs framework** | Maslow (5 hierarchical levels) | Max-Neef (9 simultaneous needs) |
 | **Operating layers** | 6 | 8 (same 6 renamed + Intent + Adaptation) |
 | **THRIVE world domains** | Implied physical only | Physical, Digital, Metaphysical declared explicitly |
-| **Architecture spec** | Implied in Excel models | QSM-ARCH v1.0 (formal specification) |
+| **Architecture spec** | Implied in Excel models | QSM-ARCH v1.1.0 (formal specification) |
+| **SELF management categories** | 15 (Maslow-era) | 16 (Max-Neef; digital category split) |
 | **Entry point** | QSM spec directly | QSM-OVERVIEW (conceptual front door) |
 | **Existing conformance claims** | — | All still valid |
 | **Context types** | SELF, HEARTH, ESTATE, CHARTER, CREST | Unchanged |
@@ -108,7 +109,7 @@ This matters for anyone building tools on top of QSM or writing conformance stat
 
 If you built against the original six-layer model or the first eight-layer draft, use this table to reconcile your implementation:
 
-| Original name | New name (QSM-ARCH v1.0) |
+| Original name | New name (QSM-ARCH v1.1.0) |
 |---|---|
 | Identity / Intent | **Intent** |
 | Governance | Governance (unchanged) |
@@ -119,7 +120,7 @@ If you built against the original six-layer model or the first eight-layer draft
 | Dashboard / Signal | **Signal** |
 | Feedback / Learning | **Adaptation** |
 
-See [QSM-LAYER-MATRIX.md](Docs%20from%20Perplexity/stewardship-stack-v1/QSM-LAYER-MATRIX.md) for the question mapping, key structural rules, and cross-cutting planes.
+See [QSM-LAYER-MATRIX.md](specs/QSM-LAYER-MATRIX.md) for the question mapping, key structural rules, and cross-cutting planes.
 
 ---
 
