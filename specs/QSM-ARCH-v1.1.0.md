@@ -1,16 +1,14 @@
-> **Superseded.** This is an archived version. The current specification is
-> [QSM-ARCH v1.1.0](./QSM-ARCH-v1.1.0.md). See `CHANGELOG.md` [1.2.0] for what changed and why.
-
-# QSM-ARCH v1.0
+# QSM-ARCH v1.1
 ## Layer and Engine Operating Model
 ### Normative Specification for QSM Implementation Architecture
 
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** Final Draft — Ready for Submission  
 **Maintainer:** Caitlin · Excentropy  
 **License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)  
 **DOI:** [pending — Zenodo]  
 **Published:** 2026-06-25  
+**Changelog (1.1.0):** Added context lifecycle (§6.6) and conformance-scale reconciliation with QSM/TSS (§8.3).  
 **Dependent Specs:** QSM v1.0, TSS v1.1.0
 
 ---
@@ -53,6 +51,8 @@ Each layer has a distinct job. Layers MUST NOT be collapsed when conformance is 
 
 The Memory layer is the authoritative record. Signal and Observation are derivative views.
 
+Memory is the authoritative record for **persistent, intentional knowledge** — models, decisions, documentation, and curated understanding. It is NOT the authoritative home for ephemeral operational state, transient telemetry, or derived caches. Ephemeral state lives in Observation; derived views live in Signal. An object is promoted to Memory by a deliberate act — logging, documentation, or decision recording — not automatically.
+
 ### 3.3 Intent before practice
 
 SELF context implementations MUST NOT omit the Intent layer.
@@ -82,11 +82,11 @@ Lifecycle, ownership, provenance, metrics, and privacy properties SHOULD apply u
 
 ## 5. The Eight Layers
 
-Each layer is defined by purpose, primary input, primary output, and engines. See also [QSM-LAYER-MATRIX.md](QSM-LAYER-MATRIX.md) for the question mapping, cross-cutting planes, and key structural rules.
+Each layer is defined by a per-layer contract: definition, primary input, primary output, engines, what it owns, what it must never own, what it delegates to, required artifacts, allowed and prohibited dependencies, and anti-patterns. The "must never own" and "prohibited dependencies" fields are the boundary tests that keep layers from collapsing into one another. See also [QSM-LAYER-MATRIX.md](QSM-LAYER-MATRIX.md) for the question mapping, cross-cutting planes, and key structural rules.
 
 ### 5.1 Intent
 
-**Purpose:** Declares who/what this context is and what it is oriented toward.
+**Definition:** Declares who/what this context is and what it is oriented toward.
 
 **Primary input:** Stated values, goals, commitments, context boundaries.
 
@@ -94,11 +94,25 @@ Each layer is defined by purpose, primary input, primary output, and engines. Se
 
 **Engines:** Mission framing, role definition, boundary-setting, priority selection, horizon-setting.
 
+**Owns:** Purpose and orientation, declared values, role definitions, priority ordering, horizon declaration, the context's boundary.
+
+**Must never own:** Policies and constraints (Governance), execution of work (Practice), records of what happened (Memory and Observation).
+
+**Delegates to:** Governance, which turns orientation into policy and constraint.
+
+**Required artifacts:** Orientation/purpose statement, named values, role definitions, priority ordering, declared horizon.
+
+**Allowed dependencies:** Originating layer — requires no upstream input; MAY receive improvement dispatches from Adaptation.
+
+**Prohibited dependencies:** MUST NOT take operational direction from Practice, Signal, or Intake.
+
+**Anti-patterns:** Becoming a goals list or task backlog rather than an orientation statement.
+
 **Why it matters:** Without this layer, stewardship executes against unstated purposes. For SELF, this is the "who am I trying to become" layer.
 
 ### 5.2 Governance
 
-**Purpose:** Authority, policy, constraints, review, escalation.
+**Definition:** Defines authority, policy, constraints, review cadence, and escalation paths.
 
 **Primary input:** Values and priorities from Intent; exceptions and anomalies from Observation.
 
@@ -106,9 +120,23 @@ Each layer is defined by purpose, primary input, primary output, and engines. Se
 
 **Engines:** Policy engine, exception engine, approval engine, rights/permissions engine, audit engine.
 
+**Owns:** Policy, approvals, constraints, rights/permissions, review cadence, audit authority, and authorization of context state transitions.
+
+**Must never own:** The purpose it serves (Intent), the work itself (Practice), the authoritative knowledge record (Memory).
+
+**Delegates to:** Intake and Practice, which operate within its policies.
+
+**Required artifacts:** Policy set, approval/decision records, constraint declarations, escalation paths, audit records.
+
+**Allowed dependencies:** Intent (values and priorities); Observation (exceptions and anomalies); Adaptation (policy updates).
+
+**Prohibited dependencies:** MUST NOT derive policy from Signal summaries alone.
+
+**Anti-patterns:** Writing policy without consulting Intent (governance without declared purpose).
+
 ### 5.3 Intake
 
-**Purpose:** Capture signals and objects from the world into the system.
+**Definition:** Captures signals and objects from the world and routes them into the system in normalized, classified form.
 
 **Primary input:** Raw world events (requests, alerts, arrivals, triggers).
 
@@ -116,9 +144,23 @@ Each layer is defined by purpose, primary input, primary output, and engines. Se
 
 **Engines:** Ingestion, triage, classification, normalization, deduplication, routing.
 
+**Owns:** Ingestion, triage, classification, normalization, deduplication, and routing of arriving objects.
+
+**Must never own:** Long-term storage of objects (Memory), execution of the work (Practice), policy decisions (Governance).
+
+**Delegates to:** Memory for persistence and Practice for action, per routing.
+
+**Required artifacts:** Classification scheme, normalization rules, routing map, deduplication log.
+
+**Allowed dependencies:** Governance (routing policy); Intent (triage priority).
+
+**Prohibited dependencies:** MUST NOT depend on Signal or Adaptation for routing decisions.
+
+**Anti-patterns:** Retaining objects permanently (Intake becoming storage instead of routing).
+
 ### 5.4 Memory
 
-**Purpose:** Meaning, memory, models, and reference truth.
+**Definition:** Holds meaning, models, decisions, and reference truth — the authoritative record for persistent, intentional knowledge.
 
 **Primary input:** Classified objects from Intake; observations from Observation; learning from Adaptation.
 
@@ -126,11 +168,25 @@ Each layer is defined by purpose, primary input, primary output, and engines. Se
 
 **Engines:** Modeling, linking, synthesis, retrieval, decision memory, documentation stabilization.
 
-**Note:** Documentation is a function inside Memory, not a standalone layer.
+**Owns:** Models, decisions, documentation, curated understanding, and the authoritative record of persistent, intentional knowledge.
+
+**Must never own:** Ephemeral operational state and transient telemetry (which live in Observation until deliberately promoted), and derived views or caches (which live in Signal).
+
+**Delegates to:** Practice and Signal, which consume Memory; supplies retrieved context on request.
+
+**Required artifacts:** Models, decision records, documentation, provenance and versioning metadata.
+
+**Allowed dependencies:** Intake (classified objects); Observation (promoted findings); Adaptation (updated knowledge).
+
+**Prohibited dependencies:** MUST NOT treat Signal output as a source of authoritative truth.
+
+**Anti-patterns:** Claiming ephemeral operational state and transient telemetry as authoritative records — Memory is the authoritative record for *persistent, intentional* knowledge only; ephemeral state lives in Observation until deliberately promoted.
+
+**Note:** Documentation is a function inside Memory, not a standalone layer. Memory is the authoritative home for persistent, intentional knowledge — models, decisions, documentation, and curated understanding. It is NOT the authoritative home for ephemeral operational state, transient telemetry, or derived caches. Ephemeral state lives in Observation; derived views live in Signal. An object is promoted to Memory by a deliberate act — logging, documentation, or decision recording — not automatically.
 
 ### 5.5 Practice
 
-**Purpose:** Convert intent into outcomes.
+**Definition:** Converts intent into outcomes — the sustained work of stewardship.
 
 **Primary input:** Priorities from Governance; context from Memory; tasks from Intake.
 
@@ -138,9 +194,23 @@ Each layer is defined by purpose, primary input, primary output, and engines. Se
 
 **Engines:** Planning, orchestration, workflow, automation, task dispatch, fulfillment.
 
+**Owns:** Planning, orchestration, workflow, automation, task dispatch, fulfillment, and completed actions.
+
+**Must never own:** Its own governing priorities (Governance/Intent), the authoritative record (Memory), policy (Governance).
+
+**Delegates to:** Observation, which senses the results of its work.
+
+**Required artifacts:** Plans, dispatched-work records, completion outputs, updated states.
+
+**Allowed dependencies:** Governance (priorities); Memory (context); Intake (tasks).
+
+**Prohibited dependencies:** MUST NOT generate its own governing priorities independent of Governance or Intent.
+
+**Anti-patterns:** Generating its own priorities without grounding them in Governance or Intent (runaway execution).
+
 ### 5.6 Observation
 
-**Purpose:** Sense what happened and what is happening.
+**Definition:** Senses what happened and what is happening — current state, completion, anomalies, verified conditions.
 
 **Primary input:** World state; Practice outputs; system telemetry.
 
@@ -148,11 +218,25 @@ Each layer is defined by purpose, primary input, primary output, and engines. Se
 
 **Engines:** Monitoring, sensing, validation, audit trail, anomaly detection, verification.
 
+**Owns:** Monitoring, sensing, validation, audit trails, anomaly flags, and ephemeral operational state.
+
+**Must never own:** Decisions or actions based on what it senses (Practice/Governance), and the authoritative knowledge record (Memory, until deliberate promotion).
+
+**Delegates to:** Signal for surfacing and Governance for exceptions; promotes deliberate findings to Memory.
+
+**Required artifacts:** Verified state records, audit trails, anomaly flags, completion records.
+
+**Allowed dependencies:** World state; Practice outputs; system telemetry.
+
+**Prohibited dependencies:** MUST NOT take direction from Signal.
+
+**Anti-patterns:** Making decisions based on what it senses (Observation becoming decision-making).
+
 **Important:** Observation is distinct from Adaptation. Observation is sensing; Adaptation is adapting.
 
 ### 5.7 Signal
 
-**Purpose:** Present state and trigger appropriate attention.
+**Definition:** Presents current state and routes attention to what matters.
 
 **Primary input:** Observation outputs; Memory state.
 
@@ -160,17 +244,45 @@ Each layer is defined by purpose, primary input, primary output, and engines. Se
 
 **Engines:** Summarization, alerting, status surfacing, drill-down, attention routing.
 
+**Owns:** Summarization, alerting, status surfacing, drill-down, attention routing, and derived views.
+
+**Must never own:** The authoritative record (always Memory and Observation), and decisions or policy.
+
+**Delegates to:** Human or agent stewards (attention), and back into Governance and Practice as triggers.
+
+**Required artifacts:** Summaries, alerts, status views, drill-down surfaces.
+
+**Allowed dependencies:** Observation outputs; Memory state.
+
+**Prohibited dependencies:** MUST NOT be consumed authoritatively by Memory.
+
+**Anti-patterns:** Becoming the record of truth — Signal is always derivative of Memory and Observation.
+
 **Note:** Signal is derivative — the Memory layer is always the authoritative record.
 
 ### 5.8 Adaptation
 
-**Purpose:** Adapt the system over time based on what it learned.
+**Definition:** Adapts how the system operates over time based on what it learned.
 
 **Primary input:** Observation outputs; Signal patterns; retrospection inputs.
 
 **Primary output:** Updated operating assumptions, calibrated thresholds, improvement dispatches to other layers.
 
 **Engines:** Review, retrospection, calibration, metric analysis, pattern recognition, improvement dispatch.
+
+**Owns:** Review, retrospection, calibration, metric analysis, pattern recognition, and improvement dispatch.
+
+**Must never own:** Direct, undocumented mutation of records or policy — changes must be governed and recorded.
+
+**Delegates to:** Intent, Governance, Memory, Practice, and Observation, via improvement dispatches.
+
+**Required artifacts:** Review records, calibrated thresholds, improvement dispatches with provenance.
+
+**Allowed dependencies:** Observation outputs; Signal patterns; retrospection inputs.
+
+**Prohibited dependencies:** MUST NOT bypass Governance to enact changes.
+
+**Anti-patterns:** Making undocumented or ungoverned changes to the system (Adaptation becoming undocumented churn).
 
 **Note:** This layer closes the loop. Without it, QSM monitors but does not adapt.
 
@@ -207,6 +319,31 @@ Engines and layers SHOULD declare health metrics and alert thresholds where oper
 ### 6.5 Security / Privacy
 
 Objects containing personal or sensitive data MUST declare a sensitivity level and access policy reference.
+
+### 6.6 Context Lifecycle
+
+Context-level lifecycle extends the object-level `lifecycle_state` plane to the bounded stewardship domain itself. A context uses the same four states: **draft**, **active**, **suspended**, and **retired**.
+
+| State | Meaning |
+|---|---|
+| **draft** | Context is being defined; not yet operational. Objects may be created but Practice SHOULD NOT dispatch against them. |
+| **active** | Context is operational. All layers function according to declared scope. |
+| **suspended** | Context is temporarily paused. Memory objects are retained and frozen (read-only); Practice MUST NOT dispatch new work; Signal MAY surface status only. |
+| **retired** | Context is closed. Memory objects are preserved as archival record; Practice and Signal cease; Observation stops. |
+
+**Transition triggers and authorization:**
+
+- Transitions from **draft → active** SHOULD be authorized by Governance, informed by Intent (declared scope and steward are complete).
+- Transitions to **suspended** SHOULD be authorized by Governance (e.g., steward absence, capacity overload, seasonal pause).
+- Transitions to **retired** MUST be authorized by Governance and SHOULD be informed by Intent (the context's purpose has ended or been superseded).
+- Transitions from **suspended → active** SHOULD be authorized by Governance after review.
+
+**Object disposition on context state change:**
+
+- On **suspend:** Memory objects are retained unchanged but frozen. No new Practice dispatches. Existing Observation MAY continue for monitoring only.
+- On **retire:** Memory objects MUST be preserved as archival record and MUST NOT be deleted. <!-- REVIEW: whether retired contexts allow read-only Signal access for historical review --> Practice and Signal cease. Observation stops except for archival integrity checks.
+
+Retiring a SELF context means the person's stewardship model for that bounded domain is closed — records are preserved for audit and reflection, but the context no longer accepts new stewardship activity.
 
 ---
 
@@ -245,6 +382,21 @@ A system MAY claim QSM-ARCH conformance if it satisfies the rules below.
 - **ARCH-04:** All objects in a conformant implementation SHOULD carry a `lifecycle_state` property.
 - **ARCH-05:** All objects in a conformant implementation that contains personal or sensitive data MUST declare a `sensitivity_level`.
 - **ARCH-06:** The Memory layer MUST be treated as the authoritative record; Signal and Observation are derivative.
+- **ARCH-07:** A context MUST NOT be retired without preserving its Memory records as archival record.
+- **ARCH-08:** Context state transitions MUST be recorded in Memory with provenance (who authorized, when, and rationale).
+
+### 8.3 Relationship to QSM and TSS conformance
+
+QSM-ARCH A-levels (A0–A3) and QSM C-levels / TSS T-levels / THRIVE H-levels / QSM-FAI L-levels measure **different things** and are **independent scales**.
+
+| Scale | What it measures |
+|---|---|
+| **A-level** (QSM-ARCH) | Architectural completeness — how many layers and cross-cutting planes are implemented |
+| **C/T/H/L-level** (QSM, TSS, THRIVE, QSM-FAI) | Spec and object conformance — whether required concepts, structures, and rules are satisfied |
+
+An implementation MAY claim any combination (e.g., C2 + A1 is coherent: strong object conformance with partial architectural coverage). Implementations SHOULD aim for aligned levels where practical — an A2 implementation with C0 would be unusual but not contradictory.
+
+For the C/T/H/L alignment ladder, see TSS Appendix Z. A-levels are a separate architectural axis and are not part of the T-level audit standard.
 
 ---
 

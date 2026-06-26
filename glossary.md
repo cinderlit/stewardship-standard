@@ -1,5 +1,7 @@
 # Glossary
 
+> **Canonical glossary:** [specs/QSM-GLOSSARY.md](specs/QSM-GLOSSARY.md) is the single source of truth for defined terms across the stewardship stack. This file retains a legacy table format for backward compatibility.
+
 A consolidated reference of normative terms used across The Stewardship
 Standard stack. Where a term is defined by a specific spec, the source is
 noted. In case of conflict, the cited spec governs.

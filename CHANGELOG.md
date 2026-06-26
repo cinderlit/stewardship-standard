@@ -5,6 +5,36 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## [1.2.0] — 2026-06-25
+
+Architecture release. Adds **QSM-ARCH v1.1.0**, the Layer and Engine Operating Model, formalizing
+the eight-layer architecture (Intent, Governance, Intake, Memory, Practice, Observation, Signal,
+Adaptation) that supersedes the earlier six-layer process-stack vocabulary. This release is
+additive to the doctrine and methodology specs — all prior v1.x conformance claims remain valid.
+
+### Specifications added
+- **QSM-ARCH v1.1.0** — eight structural layers each defined by a full per-layer contract
+  (definition, owns, must-never-own, delegates-to, required artifacts, allowed/prohibited
+  dependencies, anti-patterns); five cross-cutting planes; **context lifecycle** (§6.6, with rules
+  ARCH-07/08) and **conformance-scale reconciliation** with QSM/TSS (§8.3); the Memory layer
+  clarified as authoritative only for persistent, intentional knowledge (ephemeral state lives in
+  Observation, derived views in Signal). Supersedes the v1.0.0 draft.
+- **QSM-GLOSSARY v1.0.0** — canonical vocabulary reference (28 terms, alphabetical).
+
+### Specifications updated
+- **QSM-LAYER-MATRIX** — Memory authoritative-record rule clarified for persistent intentional
+  knowledge; the Intent→Governance rule reworded from an absolute to a conditional SHOULD.
+- **THRIVE v1.1.0** — WorldDomainScope, IdentityIntentProfile, DevelopmentalContext,
+  TemporalCycleProfile (§6.3–6.6); conformance rules THRIVE-06 through THRIVE-08; level H4.
+- **TSS v1.2.0** — context lifecycle cross-ref (§6); governance change classes, deprecation
+  policy, release front matter, and conflict resolution taxonomy (§14.1–14.4); Appendix Z.3
+  (QSM-ARCH A-levels as separate axis).
+- **QSM v1.1.0** — Max-Neef as default SELF needs framework; Appendix G (needs frameworks per
+  context).
+
+The superseded `QSM-ARCH-v1.0.md` remains in `specs/`, marked superseded with a pointer to its
+replacement.
+
 ## [1.1.0] — 2026-06-22
 
 Amendment release. Every change in this release is additive — no v1.0.x/v1.1.x requirement

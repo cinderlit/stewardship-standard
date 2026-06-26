@@ -199,6 +199,77 @@ A THRIVE implementation MUST begin with an explicit SelfContext declaration.
 
 These types MAY be used individually or in combination.
 
+### 6.3 World Domain Scope
+
+A THRIVE implementation SHOULD declare which world domains the SelfContext is actively stewarding.
+
+**World domains:**
+- **Physical** — body, space, material environment, sensory experience, movement, health, sleep, nutrition.
+- **Digital** — online presence, data assets, digital tools, attention management, notification load, digital identity, information diet, privacy, digital obligations, and digital relationships.
+- **Metaphysical** — meaning, values, spiritual practice, psychological interior, purpose, and the relationship to uncertainty and growth.
+
+A person exists simultaneously in all three domains. A conformant implementation SHOULD at minimum declare which domains are actively being stewarded and at what intensity. Domains that are not actively stewarded SHOULD be noted as out of scope rather than omitted silently.
+
+**WorldDomainScope required fields:**
+- Domain identifier (physical / digital / metaphysical).
+- Active stewardship status (active / passive / out-of-scope).
+- Known constraints or risks in this domain, if any.
+
+The digital domain is frequently omitted in personal stewardship models. This is a structural gap. A conformant THRIVE implementation SHOULD treat digital stewardship as a first-class domain with its own capacity costs (attention is the primary resource), hygiene requirements (data, security, information diet), and management categories.
+
+### 6.4 Identity and Intent Profile
+
+A THRIVE implementation SHOULD include an explicit IdentityIntentProfile that orients all other stewardship decisions.
+
+**Purpose:** Without an articulated orientation, stewardship becomes task execution against unstated purposes. The IdentityIntentProfile is not a goals list — it is the answer to "who is this person trying to become and what values orient their choices."
+
+**Required fields:**
+- Declared orientation or purpose statement (free text, updated on review).
+- Core values list (≥2, ≤7 named values).
+- Horizon scope (the timeframe the orientation addresses: seasonal / annual / multi-year).
+- Last reviewed date.
+
+**Rules:**
+- The IdentityIntentProfile MUST NOT be a productivity target or output metric.
+- It SHOULD be expressed in terms of being and becoming, not doing and achieving.
+- It MUST be treated as a living document, reviewed at the cadence declared in the SelfContext.
+- All major stewardship decisions SHOULD be legible against the IdentityIntentProfile.
+
+### 6.5 Developmental Context
+
+A THRIVE implementation MAY declare a developmental context that modifies how needs and satisfiers are interpreted.
+
+**Purpose:** Stage models (psychosocial stages, life stages, role stages) act as modifiers on needs assessment. The fundamental needs do not change by developmental stage, but what counts as an appropriate satisfier, what the competence thresholds look like, and what is salient in the current period all shift.
+
+**DevelopmentalContext fields:**
+- Declared life stage (free text or using a named stage framework).
+- Stage framework used (optional — e.g., Erikson psychosocial stages, Kegan constructive development, or a custom model).
+- Current developmental focus or tension (free text).
+- Effective date of last stage review.
+
+**Rules:**
+- Implementations MUST NOT use developmental stage to rank needs as more or less important — stage modifies satisfiers, not needs.
+- Implementations SHOULD review developmental context at major life transitions.
+- QSM-FAI MUST treat DevelopmentalContext declarations as protected context inputs.
+
+### 6.6 Temporal Cycle Profile
+
+A THRIVE implementation SHOULD declare known temporal cycles that affect capacity baseline.
+
+**Purpose:** Biological and time-based cycles (circadian rhythm, hormonal cycles, seasonal affect, recovery cycles from illness or overload) affect **capacity**, not needs. They belong in the CapacityProfile and Routine modeling, providing the rhythmic substrate that governs when capacity peaks, when it troughs, and what triggers recovery.
+
+**TemporalCycleProfile fields:**
+- Cycle identifier and label.
+- Cycle type (circadian / hormonal / seasonal / illness-recovery / life-stage / other).
+- Approximate period (hours / days / weeks / months / years).
+- Capacity effect (modifier on baseline capacity during this phase).
+- Known high-capacity phases and low-capacity phases.
+
+**Rules:**
+- Temporal cycles MUST inform CapacityProfile baselines and Routine trigger conditions.
+- Low-capacity phases MUST trigger reduced-friction defaults, not increased demands.
+- Cycle data MUST NOT be used punitively or to assign blame for reduced output.
+
 ---
 
 ## 7. Capacity and Load Model
@@ -218,13 +289,13 @@ A conformant implementation SHOULD be able to represent:
 #### 7.1.1 Relationship to QSM needs frameworks *(added v1.1.0)*
 
 THRIVE deliberately does not prescribe a needs-tiering theory of its own — see QSM §4.2.1,
-which names the needs frameworks (Maslow, ERG, Pink, WELL) that QSM-conformant implementations
-commonly select per context type, and notes that SELF contexts most often use Maslow's
-hierarchy. Where a THRIVE SelfContext is also a QSM Context (per §13), the capacity dimensions
+which names the needs frameworks (Max-Neef, ERG, Pink, WELL) that QSM-conformant implementations
+commonly select per context type, and notes that SELF contexts most often use Max-Neef's
+fundamental human needs. Where a THRIVE SelfContext is also a QSM Context (per §13), the capacity dimensions
 above SHOULD be interpretable against that Context's declared `needs_framework` rather than
-introducing a second, parallel tiering scheme. For example, under Maslow, Physical capacity
-maps most directly to physiological/safety tiers, Social capacity to belonging, and Recovery
-capacity supports whichever tier is currently under strain. This is guidance for consistency
+introducing a second, parallel tiering scheme. For example, under Max-Neef, Physical capacity
+maps most directly to Subsistence and Protection needs, Social capacity to Affection and Participation, and Recovery
+capacity supports whichever need is currently under strain. This is guidance for consistency
 across the stack, not a new conformance requirement: THRIVE-02 (below) is satisfied by
 representing capacity and load at all, regardless of whether a framework mapping is declared.
 
@@ -355,6 +426,7 @@ A system MAY claim conformance if it satisfies the following.
 | **H1** | Structured | Uses explicit capacity, need, and routine objects |
 | **H2** | Supportive | Maintains records and pattern support |
 | **H3** | Normative | Fully supports SelfContext declarations, load/capacity modeling, and review loops |
+| **H4** | Integrated | Fully supports all of H3 plus WorldDomainScope, IdentityIntentProfile, DevelopmentalContext, and TemporalCycleProfile |
 
 ### 12.2 Minimum conformance rules
 
@@ -363,6 +435,9 @@ A system MAY claim conformance if it satisfies the following.
 - **THRIVE-03:** A conformant implementation MUST support records and reflection.
 - **THRIVE-04:** A conformant implementation MUST preserve dignity and avoid punitive framing.
 - **THRIVE-05:** A conformant implementation SHOULD support routines and recovery planning.
+- **THRIVE-06:** A conformant implementation SHOULD declare WorldDomainScope for at least the physical domain.
+- **THRIVE-07:** A conformant implementation SHOULD include an IdentityIntentProfile.
+- **THRIVE-08:** A conformant implementation using the SELF context SHOULD use Max-Neef's fundamental human needs as the needs framework.
 
 ---
 
