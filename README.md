@@ -37,6 +37,11 @@ The standard is composed of interdependent specifications. **TSS is the normativ
 | **[THRIVE](specs/THRIVE-v1.1.0.md)** | 1.1.0 | **Self and Wellness Context Layer** — personal capacity, load, needs, routines, and recovery. Supplies the SELF context. |
 | **[QSM-FAI](specs/QSM-FAI-v1.1.0.md)** | 1.1.0 | **Fiduciary AI Interface** — conditions under which an AI agent may act as a fiduciary within a stewardship context. |
 | **[QSM-GLOSSARY](specs/QSM-GLOSSARY.md)** | 1.0.0 | **Vocabulary reference** — canonical definitions for terms used across the stack (non-normative). |
+| **[QSM-LAYER-MATURITY](specs/QSM-LAYER-MATURITY.md)** | 1.0.0 | **Layer Maturity scale (M0–M3)** — per-layer practice maturity, independent of T/C/H/L and A-levels. |
+
+### Conformance
+
+The **[Stewardship Conformance Authority](conformance/CONFORMANCE.md)** maintains the multi-axis conformance framework, [claim registry](conformance/registry/), and [reference evaluator](conformance/tools/evaluate_claim.py). T-level is the primary audit standard; see TSS Appendix Z for the full axis model.
 
 Previous versions remain available in `specs/`, each marked superseded with a pointer
 to its replacement. See [`CHANGELOG.md`](CHANGELOG.md) for what changed and why.

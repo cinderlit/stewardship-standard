@@ -396,7 +396,7 @@ QSM-ARCH A-levels (A0–A3) and QSM C-levels / TSS T-levels / THRIVE H-levels / 
 
 An implementation MAY claim any combination (e.g., C2 + A1 is coherent: strong object conformance with partial architectural coverage). Implementations SHOULD aim for aligned levels where practical — an A2 implementation with C0 would be unusual but not contradictory.
 
-For the C/T/H/L alignment ladder, see TSS Appendix Z. A-levels are a separate architectural axis and are not part of the T-level audit standard.
+For the C/T/H/L alignment ladder, see TSS Appendix Z. A-levels are a separate architectural axis and are not part of the T-level audit standard. M-levels (per-layer maturity) are a third independent axis — see [`QSM-LAYER-MATURITY.md`](QSM-LAYER-MATURITY.md) and TSS Appendix Z.4.
 
 ---
 

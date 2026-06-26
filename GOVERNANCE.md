@@ -36,11 +36,24 @@ Proposed amendments SHOULD include example data and at least one use case.
 
 ## Conformance authority
 
+The **Stewardship Conformance Authority (SCA)** is the conformance and
+attestation function of the stack, documented in
+[`conformance/CONFORMANCE.md`](conformance/CONFORMANCE.md). It is distinct
+from spec authorship: the standards body writes the rules; the SCA helps
+implementations declare, validate, and discover claims against those rules.
+
 **TSS T-level is the primary audit standard** for the stack. QSM (C-level),
 THRIVE (H-level), and QSM-FAI (L-level) define domain-specific interpretations
-of the same conformance tiers, as specified in TSS Appendix Z. A conformance
-claim is self-declared and must be explicit and versioned (TSS §12.2); the
-standard does not currently operate a central certification body.
+of the same conformance tiers, as specified in TSS Appendix Z. QSM-ARCH
+(A-level) measures architectural completeness. Layer Maturity (M-level)
+measures per-layer practice maturity — see
+[`specs/QSM-LAYER-MATURITY.md`](specs/QSM-LAYER-MATURITY.md).
+
+A conformance claim is self-declared and must be explicit and versioned
+(TSS §12.2). Claims are published in
+[`conformance/registry/`](conformance/registry/). The SCA does not currently
+operate a paid certification body; spec authors must not self-certify at T2+
+or A2+ without independent review (see CONFORMANCE.md §Attestation).
 
 ## Trademarks
 

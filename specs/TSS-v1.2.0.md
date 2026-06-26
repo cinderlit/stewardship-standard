@@ -744,6 +744,16 @@ An implementation claiming "TSS T2" MAY also claim "QSM C2", "THRIVE H2", and "Q
 
 QSM-ARCH conformance levels (A0–A3) measure **architectural completeness** — how many layers and cross-cutting planes an implementation supports. They are independent of the C/T/H/L ladder above. An implementation MAY claim any combination (e.g., T2 + A1). For the relationship between scales, see QSM-ARCH §8.3.
 
+### Z.4 Layer Maturity M-levels (separate axis)
+
+**Layer Maturity (M0–M3)** measures how mature a **specific layer** is within an implementation. It is defined normatively in [`specs/QSM-LAYER-MATURITY.md`](QSM-LAYER-MATURITY.md).
+
+M-level is **not** the same as A-level:
+- **A0–A3** = overall architectural coverage (how many layers exist)
+- **M0–M3** = per-layer practice maturity (how well each layer operates)
+
+An implementation MAY include a `layer_maturity` map in its conformance claim. The reference evaluator checks consistency between claimed A-level and per-layer M-levels.
+
 ## Appendix A: Submission Bundle — Sample Package
 
 A submission-ready TSS package SHOULD include:

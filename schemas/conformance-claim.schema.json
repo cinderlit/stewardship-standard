@@ -1,20 +1,97 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stewardshipstandard.org/schemas/conformance-claim/v1.1.json",
+  "$id": "https://stewardshipstandard.org/schemas/conformance-claim/v1.2.json",
   "title": "TSS ConformanceClaim Schema",
-  "description": "A versioned, explicit claim of conformance to TSS. Defined by TSS v1.1.1 §5.11 and §12. TSS T-level is the primary audit standard; QSM C-level, THRIVE H-level, and QSM-FAI L-level are domain interpretations of the same tier (see TSS Appendix Z).",
+  "description": "A versioned, explicit claim of conformance to TSS and related specs. Defined by TSS v1.2.0 §5.11 and §12, extended for multi-axis claims (v1.2). TSS T-level is the primary audit standard; QSM C-level, THRIVE H-level, QSM-FAI L-level, QSM-ARCH A-level, and Layer Maturity M-level are independent axes (see TSS Appendix Z and specs/QSM-LAYER-MATURITY.md).",
   "type": "object",
   "required": ["id", "tss_version", "context_types", "conformance_level"],
   "properties": {
-    "id": { "type": "string" },
-    "tss_version": { "type": "string" },
+    "id": {
+      "type": "string",
+      "description": "Unique claim identifier (TSS-CONF-01)"
+    },
+    "tss_version": {
+      "type": "string",
+      "description": "TSS version claimed against (TSS-CONF-02)"
+    },
     "context_types": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string",
+        "enum": ["SELF", "HEARTH", "ESTATE", "CHARTER", "CREST"]
+      },
+      "minItems": 1,
+      "description": "Context types supported (TSS-CONF-03)"
     },
-    "conformance_level": { "type": "string", "enum": ["T0", "T1", "T2", "T3"] },
-    "deviations": { "type": "array", "items": { "type": "string" } },
-    "claimant": { "type": "string" },
-    "claimed_at": { "type": "string", "format": "date-time" }
+    "conformance_level": {
+      "type": "string",
+      "enum": ["T0", "T1", "T2", "T3"],
+      "description": "Primary TSS audit level (TSS-CONF-04)"
+    },
+    "qsm_level": {
+      "type": "string",
+      "enum": ["C0", "C1", "C2", "C3"],
+      "description": "QSM object conformance level (TSS Appendix Z)"
+    },
+    "thrive_level": {
+      "type": "string",
+      "enum": ["H0", "H1", "H2", "H3"],
+      "description": "THRIVE domain conformance level (TSS Appendix Z)"
+    },
+    "fai_level": {
+      "type": "string",
+      "enum": ["L0", "L1", "L2", "L3"],
+      "description": "QSM-FAI domain conformance level (TSS Appendix Z)"
+    },
+    "arch_level": {
+      "type": "string",
+      "enum": ["A0", "A1", "A2", "A3"],
+      "description": "QSM-ARCH architectural completeness level (QSM-ARCH §8.1)"
+    },
+    "layer_maturity": {
+      "type": "object",
+      "description": "Per-layer maturity (M-level) — see specs/QSM-LAYER-MATURITY.md",
+      "properties": {
+        "intent": { "$ref": "#/definitions/mLevel" },
+        "governance": { "$ref": "#/definitions/mLevel" },
+        "intake": { "$ref": "#/definitions/mLevel" },
+        "memory": { "$ref": "#/definitions/mLevel" },
+        "practice": { "$ref": "#/definitions/mLevel" },
+        "observation": { "$ref": "#/definitions/mLevel" },
+        "signal": { "$ref": "#/definitions/mLevel" },
+        "adaptation": { "$ref": "#/definitions/mLevel" }
+      },
+      "additionalProperties": { "$ref": "#/definitions/mLevel" }
+    },
+    "deviations": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit partial implementations (TSS-CONF-05)"
+    },
+    "claimant": {
+      "type": "string",
+      "description": "Entity or person filing the claim"
+    },
+    "claimed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the claim was filed"
+    },
+    "implementation_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL of the implementation this claim describes"
+    },
+    "registry_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical registry entry URL"
+    }
+  },
+  "definitions": {
+    "mLevel": {
+      "type": "string",
+      "enum": ["M0", "M1", "M2", "M3"]
+    }
   }
 }
