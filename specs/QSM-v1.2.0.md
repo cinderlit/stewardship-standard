@@ -1,18 +1,16 @@
-> **Superseded.** This is QSM v1.1.0. The current version is [QSM v1.2.0](QSM-v1.2.0.md). See `CHANGELOG.md` [1.3.0] for what changed and why.
-
-# QSM v1.1.0
+# QSM v1.2.0
 ## Quantified Stewardship Model
 ### Domain-Agnostic Ontology and Methodology for Legible Stewardship
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Status:** Final Draft — Ready for Submission
 **Author:** Caitlin Stokes
 **Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)
 **License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)
 **DOI:** [10.5281/zenodo.20436569](https://doi.org/10.5281/zenodo.20436569)
 **Published:** 2026-05-28
-**Amended:** 2026-06-22 (v1.1.0 — see `CHANGELOG.md`)
-**Related Specs:** TSS v1.2.0, THRIVE v1.1.0, QSM-FAI v1.1.0
+**Amended:** 2026-06-25 (v1.2.0 — see `CHANGELOG.md`)
+**Related Specs:** TSS v1.2.0, THRIVE v1.1.0, QSM-FAI v1.1.0, QSM-ARCH v1.1.0
 
 ---
 
@@ -184,7 +182,7 @@ context types:
 |---|---|---|
 | SELF | Max-Neef fundamental human needs | Nine simultaneous, non-hierarchical needs; satisfiers vary by person and context |
 | HEARTH | WELL (or an equivalent household-wellness framework) | Designed around the physical/social conditions of a dwelling and its occupants |
-| CHARTER (business/organizational) | ERG (Existence–Relatedness–Growth) or Pink's autonomy/mastery/purpose | Suited to organizational and ownership-relationship motivation structures |
+| CHARTER (business/organizational) | ERG (Existence–Relatedness–Growth), Pink's autonomy/mastery/purpose, or SDT (autonomy/competence/relatedness) | ERG and Pink suit organizational motivation structures; SDT is well-validated for contexts where intrinsic motivation and role fit are central |
 | CREST / ESTATE | Context-specific; no single default | Episodic and portfolio-scale contexts vary too much for one default framework |
 
 A QSM implementation SHOULD:
@@ -211,6 +209,40 @@ A QSM implementation SHOULD:
 This subsection is informative rather than normative: it names a real, recurring pattern so
 implementers are not left to invent framework selection independently, without requiring any
 specific framework or formula for conformance.
+
+#### 4.2.2 Learning Frameworks (informative)
+
+QSM does not itself define a learning theory, but implementations that declare an Adaptation
+layer (see QSM-ARCH v1.1.0 §5.8) consistently need a structured approach to how the system
+learns from experience and updates operating assumptions. Without a declared framework, two
+conformant implementations can both claim Adaptation while one runs annual retrospectives and
+one runs Kolb loops after every significant action — and the conformance claim is silent on
+which.
+
+This subsection provides the same declarative mechanism as needs frameworks (§4.2.1): name
+the theory you are using so implementers and agents can align.
+
+| Context type | Commonly used learning framework | Why |
+|---|---|---|
+| SELF | Kolb's Experiential Learning Cycle | Four-stage cycle (Experience → Reflect → Conceptualize → Experiment); maps well to personal review cadences |
+| HEARTH | After-action review | Episodic; triggered by events rather than fixed cadence |
+| CHARTER | PDCA (Plan–Do–Check–Act) | Standard operational improvement cycle; familiar in organizational contexts |
+| CREST / ESTATE | Double-loop learning or context-specific | Portfolio-level learning often requires questioning governing assumptions, not just operational adjustment |
+
+A QSM implementation SHOULD:
+
+- **QSM-LF-01:** Declare which learning framework (if any) it uses for each Context type that
+  implements an Adaptation layer.
+- **QSM-LF-02:** Allow an individual Context to override the default learning framework when its
+  nature warrants a different approach (e.g., a CHARTER context may use Kolb for a learning-
+  intensive team).
+- **QSM-LF-03:** Document the review trigger used: time-based (weekly, quarterly), event-based
+  (triggered by anomaly or milestone), threshold-based (triggered when a metric crosses a
+  threshold), or on-demand.
+
+This subsection is informative rather than normative: QSM-LF-01 through QSM-LF-03 are SHOULDs,
+not MUSTs. Implementations may conform to QSM without declaring a learning framework, but doing
+so is recommended wherever an Adaptation layer is implemented.
 
 ### 4.3 Relationship and action layer
 
@@ -536,5 +568,21 @@ QSM implementations declare a needs framework per context type. The following ta
 | SELF | Max-Neef Fundamental Human Needs | Non-hierarchical; 9 simultaneous needs |
 | HEARTH | Building Performance Hierarchy | Systems-based; 5 levels |
 | ESTATE | WELL Building Standard | Parallel domains; breadth-based |
-| CHARTER | Alderfer ERG Theory | 3 levels; allows simultaneous activation |
+| CHARTER | Alderfer ERG Theory, Pink's autonomy/mastery/purpose, or SDT | ERG: 3 levels, allows simultaneous activation; SDT: autonomy/competence/relatedness, well-validated for intrinsic motivation |
 | CREST | To be determined per implementation | No universal default |
+
+---
+
+## Appendix H: Learning Frameworks per Context
+
+QSM implementations that declare an Adaptation layer SHOULD declare which learning framework
+structures their review and calibration cycles. The following table lists recommended frameworks:
+
+| Context | Recommended learning framework | Review trigger |
+|---|---|---|
+| SELF | Kolb's Experiential Learning Cycle | Weekly or cadence-based; after significant events |
+| HEARTH | After-action review | Event-triggered (incident, seasonal transition, major change) |
+| CHARTER | PDCA (Plan–Do–Check–Act) | Sprint or operational cycle; outcome-triggered |
+| ESTATE / CREST | Double-loop learning | Quarterly or milestone-triggered; questions governing assumptions |
+
+See §4.2.2 for normative rules QSM-LF-01 through QSM-LF-03.

@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stewardshipstandard.org/schemas/context/v1.2.json",
+  "$id": "https://stewardshipstandard.org/schemas/context/v1.3.json",
   "title": "TSS Context Schema",
-  "description": "A bounded stewardship domain with explicit scope. Defined by TSS v1.2.0 §5.1 and §6. v1.2: relaxed `stewards` to accept a single steward reference or an array; added is_template, template_id, needs_framework, stewardship_phase; added QSM_META to the type enum.",
+  "description": "A bounded stewardship domain with explicit scope. Defined by TSS v1.2.0 §5.1 and §6. v1.2: relaxed `stewards` to accept a single steward reference or an array; added is_template, template_id, needs_framework, stewardship_phase; added QSM_META to the type enum. v1.3: added learning_framework (QSM §4.2.2); updated needs_framework notes to include 'sdt'.",
   "type": "object",
   "required": ["id", "name", "type", "stewards", "effective_date", "scope", "version"],
   "properties": {
@@ -35,7 +35,11 @@
     },
     "needs_framework": {
       "type": ["string", "null"],
-      "description": "Added v1.2.0. The default needs framework for entities in this Context, e.g. 'maslow', 'well', 'erg', 'pink'. See QSM §4.2.1. Informative; not required for conformance."
+      "description": "Added v1.2.0. The default needs framework for entities in this Context, e.g. 'maslow', 'well', 'erg', 'pink', 'sdt'. See QSM §4.2.1. Informative; not required for conformance."
+    },
+    "learning_framework": {
+      "type": ["string", "null"],
+      "description": "Added v1.2.0 (QSM-LF-01). The learning framework used by this Context's Adaptation layer, e.g. 'kolb', 'pdca', 'after-action-review', 'double-loop'. See QSM §4.2.2. Informative; not required for conformance."
     },
     "stewardship_phase": {
       "type": "string",
