@@ -10,7 +10,7 @@
 **Author:** Caitlin Stokes  
 **Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)  
 **License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)  
-**DOI:** [pending — Zenodo]  
+**DOI:** [10.5281/zenodo.20436570](https://doi.org/10.5281/zenodo.20436570)  
 **Published:** 2026-05-28  
 **Related Specs:** TSS v1.1.1, THRIVE v1.0.1, QSM-FAI v1.0.1
 
