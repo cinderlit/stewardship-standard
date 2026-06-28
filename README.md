@@ -110,6 +110,7 @@ stewardship-standard/
 │   ├── rationale.schema.json
 │   ├── tenure-entry.schema.json
 │   ├── escalation-outbox-entry.schema.json
+│   ├── scenario-pattern.schema.json
 │   └── thrive/
 │       ├── self-context.schema.json
 │       ├── capacity-profile.schema.json
@@ -121,7 +122,8 @@ stewardship-standard/
     ├── hearth-fiduciary-context.json
     ├── default-conformance-claim.json
     ├── charter-template-and-instance.json
-    └── escalation-outbox-entry.json
+    ├── escalation-outbox-entry.json
+    └── scenario-pattern.json
 ```
 
 ---

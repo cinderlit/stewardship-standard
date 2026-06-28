@@ -16,6 +16,7 @@ SAMPLE_SCHEMA_MAP = {
     "charter-fiduciary-context.json": "fiduciary-context.schema.json",
     "default-conformance-claim.json": "conformance-claim.schema.json",
     "escalation-outbox-entry.json": "escalation-outbox-entry.schema.json",
+    "scenario-pattern.json": "scenario-pattern.schema.json",
 }
 
 

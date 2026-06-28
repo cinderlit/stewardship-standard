@@ -1,0 +1,24 @@
+{
+  "id": "scenario_caregiving_week",
+  "label": "Caregiving week",
+  "context_id": "ctx_hearth_example",
+  "triggers": [
+    "A household member becomes a primary caregiver for 3+ consecutive days",
+    "A dependent's care needs spike (illness, recovery, new diagnosis)"
+  ],
+  "defaults": {
+    "priorities": [
+      "Protect the caregiver's recovery time and capacity",
+      "Keep essential household routines running with reduced effort"
+    ],
+    "risks": [
+      "Caregiver burnout from sustained executive-function load",
+      "Neglected maintenance routines accumulating into larger failures"
+    ]
+  },
+  "involved_entities": ["entity_caregiver", "entity_dependent"],
+  "involved_roles": ["role_primary_caregiver", "role_backup_support"],
+  "departures": [
+    "When external respite care is available, the caregiver-recovery priority is met without scope reduction"
+  ]
+}

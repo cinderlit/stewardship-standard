@@ -5,6 +5,19 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## [Unreleased]
+
+### Reference schemas added
+- **scenario-pattern.schema.json** (v1.0) — first dedicated schema for the TSS `ScenarioPattern`
+  object (TSS v1.2.0 §5.10, §8), previously carried only as the context-level `patterns: []` array
+  with no schema. Covers TSS-SCEN-01 through TSS-SCEN-04: required `id`, `label`, `triggers`, and
+  `defaults` (priorities and/or risks), plus optional `context_id`, `involved_entities`,
+  `involved_roles`, and `departures`. Proposed alongside the Orgestra Pattern/Approach method layer.
+
+### Samples added
+- `samples/scenario-pattern.json` — worked "Caregiving week" ScenarioPattern; validated by the
+  conformance test suite.
+
 ## [1.3.0] — 2026-06-25
 
 Methodology release. Extends the framework-declaration pattern (established in [1.1.0] for
