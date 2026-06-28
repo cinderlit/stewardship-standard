@@ -56,4 +56,4 @@ These five properties apply to every object across all layers, regardless of con
 
 ---
 
-*QSM Layer Matrix — © 2026 Excentropy · CC BY 4.0*
+*QSM Layer Matrix — © 2026 Caitlin Stokes / Cinderlit · CC BY 4.0*

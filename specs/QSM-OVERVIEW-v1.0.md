@@ -353,6 +353,6 @@ Read this document and the spec you are reviewing. Evaluate: Does the spec answe
 ---
 
 *Quantified Stewardship — Conceptual Overview v1.0*  
-*© 2026 Excentropy — CC BY 4.0*  
+*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*  
 *First published: 2026-06-25*  
 *This document is part of the stewardship stack specification package.*

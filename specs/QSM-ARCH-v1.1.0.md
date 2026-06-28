@@ -495,5 +495,5 @@ QSM ontology v3.0 maps architectural layers to `qsm:ArchitecturalLayer` individu
 > This implementation conforms to QSM-ARCH v1.0 at level A2 for the SELF context. It implements all eight layers, treats Memory as authoritative, separates Observation from Adaptation, and includes Intent for personal stewardship.
 
 *QSM-ARCH v1.0 — Layer and Engine Operating Model*  
-*© 2026 Excentropy — CC BY 4.0*  
+*© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*  
 *First published: 2026-06-25*
