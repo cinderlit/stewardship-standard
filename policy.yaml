@@ -1,0 +1,70 @@
+schema_version: "1.0"
+policy_id: stewardship-standard-policy
+brand_id: qsm
+registry_id: stewardship-standard
+version: "0.1.0"
+last_updated: "2026-06-30"
+
+governance:
+  authority_model:
+    source_of_truth: policy.yaml
+    supporting_spec: brand-style.json
+    human_editorial: GOVERNANCE.md
+    escalation_owner_role: brand-governance-lead
+    kill_switch_owner_role: portfolio-owner
+  decision_principles:
+    - "Normative spec changes follow GOVERNANCE.md amendment process."
+    - "Agents may draft proposals and examples; maintainers ratify versioned changes."
+    - "private/ notes are never substituted for published spec text."
+
+risk_tiers:
+  low:
+    description: "Private notes, draft examples, internal research."
+    approval_required: false
+  medium:
+    description: "Clarifications, non-normative docs, PATCH-level errata proposals."
+    approval_required: true
+    approver_roles: [content-owner]
+  high:
+    description: "Normative spec changes, conformance rules, trademark usage, attestation claims."
+    approval_required: true
+    approver_roles: [brand-governance-lead, legal]
+    block_publish_without_approval: true
+
+content_channels:
+  spec_document:
+    default_risk_tier: high
+    requires_brand_style: true
+    requires_example_data: true
+  conformance_registry:
+    default_risk_tier: high
+    path: conformance/registry/
+  internal_doc:
+    default_risk_tier: low
+    path: private/
+
+rules:
+  claims:
+    require_evidence_for: [conformance assertions, compliance claims, performance claims]
+    prohibited_without_legal_review: [certifications, guarantees, trademark endorsement claims]
+  amendment:
+    major_requires_migration: true
+    minor_must_be_backward_compatible: true
+  privacy:
+    prohibit: [customer data in public examples]
+
+workflow_controls:
+  pre_publish_checks:
+    - brand_style_loaded
+    - policy_loaded
+    - changelog_updated
+    - example_data_present
+  approval_matrix:
+    low:
+      human_required: false
+    medium:
+      human_required: true
+      minimum_approvers: 1
+    high:
+      human_required: true
+      minimum_approvers: 2

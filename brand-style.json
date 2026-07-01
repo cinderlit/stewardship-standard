@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "brand_id": "qsm",
+  "brand_name": "Quantified Stewardship Model / The Stewardship Standard",
+  "registry_id": "stewardship-standard",
+  "version": "0.1.0",
+  "last_updated": "2026-06-30",
+  "purpose": "Define the formal model that keeps stewardship tools and implementations consistent.",
+  "mission": "Make governance, operations, and decision-making legible, actionable, and auditable.",
+  "vision": "An open standard for stewardship that is measurable, explainable, and safely automatable.",
+  "audiences": ["spec-implementers", "founders", "systems-thinkers", "conformance-auditors", "ai-agents-under-oversight"],
+  "voice": {
+    "attributes": ["clear", "precise", "calm", "systems-aware", "accountable", "formal"],
+    "style_notes": [
+      "Normative spec language where required; plain language in overview docs.",
+      "Separate facts, assumptions, and recommendations.",
+      "Version every decision-bearing change."
+    ],
+    "do": [
+      "Use active voice and name constraints explicitly.",
+      "Include example data with proposals.",
+      "Cite spec sections and conformance tiers precisely."
+    ],
+    "dont": [
+      "Do not claim certification without independent review.",
+      "Do not use hype or vague inspirational language.",
+      "Do not self-certify at T2+ or A2+ without SCA process."
+    ]
+  },
+  "terminology": {
+    "preferred_terms": ["stewardship", "conformance", "context", "ontology", "fiduciary"],
+    "avoid_terms": ["best practice", "guaranteed outcomes", "magic bullet"],
+    "canonical_phrases": {
+      "tss": "The Stewardship Standard",
+      "qsm": "Quantified Stewardship Model",
+      "sca": "Stewardship Conformance Authority"
+    }
+  },
+  "examples": {
+    "good": [
+      "A conformance claim is self-declared and must be explicit and versioned (TSS §12.2).",
+      "MAJOR changes require a documented migration path."
+    ],
+    "bad": [
+      "This standard guarantees better outcomes for every organization.",
+      "Certified compliant out of the box."
+    ]
+  },
+  "agent_instructions": {
+    "summary": "Spec authority repo. Follow GOVERNANCE.md amendment process for normative changes.",
+    "retrieval_hints": ["conformance tiers", "amendment process", "SCA attestation"],
+    "fallback_behavior": [
+      "If guidance conflicts, prefer policy.yaml and GOVERNANCE.md.",
+      "Propose spec changes via issues with example data — do not silently edit normative text.",
+      "High-risk claims require legal and maintainer review."
+    ]
+  }
+}
