@@ -1,0 +1,1 @@
+-e ../mind-over-meta-parent/packages/governance-validators

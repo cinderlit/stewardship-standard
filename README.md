@@ -1,5 +1,7 @@
 # The Stewardship Standard
 
+**Registry ID:** `stewardship-standard` · **Brand:** `qsm` · **Family:** `qsm-method`
+
 **An open standard for making stewardship legible, measurable, and safely automatable — and the first open standard designed explicitly as a fiduciary AI substrate.**
 
 [![License: CC BY 4.0](https://img.shields.io/badge/Spec%20License-CC%20BY%204.0-blue.svg)](LICENSE-SPEC)
@@ -162,6 +164,13 @@ This is an open standard: publicly accessible, implementable by anyone without d
 
 - **Openness.** Specification text under [CC BY 4.0](LICENSE-SPEC); reference schemas under [Apache 2.0](LICENSE-SCHEMAS). No discriminatory use restrictions.
 - **Governance.** Maintained by Cinderlit (Excentropy as implementation partner). Changes are proposed and reviewed publicly via the issue tracker, recorded in [`CHANGELOG.md`](CHANGELOG.md), and ratified on a quarterly maintainer cycle. Full process in [`GOVERNANCE.md`](GOVERNANCE.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
+- **Repo governance bundle.** `policy.yaml`, `brand-style.json`, and `validators/` follow the [stewardship stack](https://gitlab.com/cinderlit/mind-over-meta/-/blob/main/STEWARDSHIP-STACK.md) Layer 2 pattern. Validators delegate to shared package `cinderlit-governance` in mind-over-meta-parent.
+
+```bash
+pip install -r requirements-dev.txt   # path install when sibling checkout exists
+python validators/agent_health.py --repo .
+```
+
 - **Use of AI-assisted tools.** AI tools were used substantially and under human supervision in drafting and formalizing this standard, including normative text and schemas. The author defined the framework, reviewed and validated all output, and holds full accountability; AI is not an author. The complete disclosure is in [`AI-USE.md`](AI-USE.md) and in the front matter of each specification.
 
 ## License

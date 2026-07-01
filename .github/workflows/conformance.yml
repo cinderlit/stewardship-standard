@@ -23,5 +23,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r tests/requirements-test.txt
 
+      - name: Install governance validators
+        run: |
+          git clone --depth 1 https://gitlab.com/cinderlit/mind-over-meta.git /tmp/mind-over-meta-parent || true
+          if [ -d /tmp/mind-over-meta-parent/packages/governance-validators ]; then
+            pip install -e /tmp/mind-over-meta-parent/packages/governance-validators
+            cinderlit-agent-health --repo .
+            cinderlit-policy-lint policy.yaml
+            cinderlit-brand-lint brand-style.json
+          fi
+
       - name: Run conformance suite
         run: pytest tests/ -v --tb=short
