@@ -4,6 +4,8 @@
 **Date:** 2026-06-30
 **Deciders:** Caitlin
 **Related:** QSM-ARCH v1.1.0, `CHANGELOG.md` [1.2.0], superseded location `governance/decisions/ADR-001-layer-naming-L4-L5-L8.md`
+**Confidence:** High — each rename is argued per-layer on semantic grounds, not just on spec precedent.
+**Review Date:** No fixed date — reopen only if a future standard revision proposes a fourth naming scheme with its own documented trade-offs.
 
 ## Context
 
@@ -55,6 +57,26 @@ title, or heading.
 ### Option C: Mind Over Meta simplified vocabulary as parallel standard
 **Pros:** Could reduce jargon on MoM surfaces. **Cons:** MoM glossary does not use L1–L8 names today; inventing a dual vocabulary would add a second naming scheme without existing convention to preserve.
 
+## Knowns and Unknowns
+
+### What we know
+- The rename to Memory/Practice/Adaptation already happened at spec level (v1.1.0); drift is empirically documented on two independent surfaces (qsm-self vault, quantifiedly.com).
+
+### What we don't know
+- Whether the audit pass (Action Items 1-2) actually gets completed before a third surface is built using the old names.
+
+### What would change our mind
+- A future standard revision proposing a fourth naming scheme with its own documented trade-offs — already named as the explicit Revisit condition below.
+
+## Pre-mortem
+
+### Failure modes
+- FM-1: The audit pass never completes, and the same "changelog states the rename as fact, nobody executes it" pattern repeats — the exact root cause this ADR diagnosed. Likelihood: medium, since this ADR itself had to be written because a prior rename half-propagated · Impact: medium — confusing public copy, not a functional break · Mitigation: Action Items 1-2, explicit and trackable · Owner: Caitlin/Cursor
+- FM-2: A new surface gets built using outdated names copied from an unaudited file before Action Items 1-2 land. Likelihood: medium while those items stay open · Impact: low-medium · Mitigation: none named beyond completing the audit promptly · Owner: whoever builds new layer-referencing content
+
+### Kill criteria
+- If old-name drift is found on a third independent surface after this ADR, that's a signal enforcement (a lint check on layer names) is needed, not just a one-time audit.
+
 ## Trade-off Analysis
 
 Per-layer, the new names were checked against the old ones on their own merits, not just on
@@ -97,3 +119,18 @@ drift; enforcement has to be active, not assumed.
 1. [ ] Update `quantifiedly/src/data/layers.js` — card titles for ids 4, 5, 8 still read the old names
 2. [ ] Update `cinderlit-work-system/work-system/qsm-mapping.md` — cross-context mapping doc still headed with legacy names
 3. [ ] Mind Over Meta — adopt Memory / Practice / Adaptation if/when it adopts L1–L8 layer language
+
+## Post-Decision Monitoring
+
+### Success signals
+- Action Items 1-2 completed; no further surfaces found using legacy names.
+
+### Guardrail signals
+- Any new instance of "Knowledge"/"Execution"/"Feedback" as a displayed layer name found after this ADR.
+
+### Review cadence
+- No fixed date — only if a fourth naming scheme is proposed.
+
+## Decision Review / Calibration
+
+Not yet reached — Action Items 1-2 are still open as of this writing.
