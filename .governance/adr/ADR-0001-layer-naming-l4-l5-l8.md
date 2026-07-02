@@ -1,9 +1,9 @@
-Moved to `.governance/adr/ADR-0001-layer-naming-l4-l5-l8.md`.
+# ADR-0001: Layer Naming — Memory / Practice / Adaptation (L4, L5, L8)
 
-# ADR-001 — Layer Naming: Memory / Practice / Adaptation (L4, L5, L8)
-
-**Date:** 2026-06-30
 **Status:** Accepted
+**Date:** 2026-06-30
+**Deciders:** Caitlin
+**Related:** QSM-ARCH v1.1.0, `CHANGELOG.md` [1.2.0], superseded location `governance/decisions/ADR-001-layer-naming-L4-L5-L8.md`
 
 ## Context
 
@@ -44,7 +44,18 @@ legacy filenames/slugs where renaming isn't immediately feasible (e.g. `qsm-self
 kept for Obsidian link stability pending a manual rename) — never as a displayed layer name, card
 title, or heading.
 
-## Rationale
+## Options Considered
+
+### Option A: Retain Knowledge / Execution / Feedback (legacy v1.0 names)
+**Pros:** No migration work; matches older docs and some live UI card titles. **Cons:** Semantic collision between "Knowledge" (L4) and L8's learning domain; "Execution" fits CHARTER poorly for SELF/HEARTH routines; "Feedback" overlaps L6/L7 signal vocabulary; drift already proven across qsm-self and quantifiedly.com.
+
+### Option B: Memory / Practice / Adaptation (v1.1.0 names — chosen)
+**Pros:** Resolves L4 vs L8 ambiguity; "Practice" fits recurring SELF/HEARTH rhythms and CHARTER OKR cycles; "Adaptation" names system-level change, not passive input. **Cons:** Requires audit pass on every surface that predates v1.1.0.
+
+### Option C: Mind Over Meta simplified vocabulary as parallel standard
+**Pros:** Could reduce jargon on MoM surfaces. **Cons:** MoM glossary does not use L1–L8 names today; inventing a dual vocabulary would add a second naming scheme without existing convention to preserve.
+
+## Trade-off Analysis
 
 Per-layer, the new names were checked against the old ones on their own merits, not just on
 spec precedent:
@@ -53,29 +64,19 @@ spec precedent:
   learns" / Adaptation). A reader scanning eight layer names sees two that both sound like
   "knowing things," with no cue that one is the static record and the other is the
   change-mechanism. "Memory" claims the narrower, more accurate territory — *the persisted
-  record* — and frees "knowledge/learning" language to live unambiguously at L8. This matches
-  the layer's own contract ("the authoritative record of persistent, intentional knowledge");
-  "Memory" names the *mechanism*, "Knowledge" names the *content*, and the layer is more
-  precisely the former.
+  record* — and frees "knowledge/learning" language to live unambiguously at L8.
 - **L5 — Practice, not Execution.** "Execution" is corporate/project vocabulary — it reads as
   "ship the thing once," which fits CHARTER contexts but sits oddly against what this layer
   actually holds for SELF and HEARTH: recurring routines, daily/weekly rhythms, household
-  upkeep. "Practice" (as in "a daily practice," "best practices," "medical practice") natively
-  carries the idea of sustained, repeated, disciplined activity — which is the actual definition
-  ("the sustained work of stewardship"). It's also the more context-portable word: "Execution"
-  sounds wrong applied to a morning routine; "Practice" doesn't sound wrong applied to a
-  quarterly business review.
+  upkeep. "Practice" natively carries sustained, repeated, disciplined activity — the actual
+  definition ("the sustained work of stewardship").
 - **L8 — Adaptation, not Feedback (or Feedback/Learning).** "Feedback" names an *input* (a
   signal arriving), not what this layer *does* with it — already a source of ambiguity with
-  Signal (L7) and Observation (L6), which also handle incoming information. "Learning" is
-  overloaded by ML/AI usage and reads as passive/individual ("a person learning"), not as the
-  deliberate, dispatched, system-level change this layer is defined to produce. "Adaptation"
-  names the actual mechanism — the system changing how it operates — and pairs cleanly as the
-  *output* of feedback rather than competing with it as a synonym for the same noun.
+  Signal (L7) and Observation (L6). "Learning" is overloaded by ML/AI usage. "Adaptation"
+  names the actual mechanism — the system changing how it operates.
 
-Net effect: the rename isn't cosmetic. It resolves a real ambiguity (Knowledge vs. the
-Adaptation layer's "learning"), and for L5 in particular it's a better fit for a model that has
-to describe both a CHARTER's quarterly OKR cycle and a SELF's morning routine with the same word.
+Net effect: the rename isn't cosmetic. It resolves real ambiguity and fits cross-context copy
+better than the v1.0 vocabulary.
 
 ## Consequences
 
@@ -89,11 +90,10 @@ Practice than Execution.
 needs an audit pass — this ADR exists in part because the first rename wasn't enough to prevent
 drift; enforcement has to be active, not assumed.
 
-**Open follow-ups (tracked outside this ADR):**
-- `quantifiedly/src/data/layers.js` — card titles for ids 4, 5, 8 still read the old names.
-- `cinderlit-work-system/work-system/qsm-mapping.md` — cross-context mapping doc still headed
-  "L4 · Knowledge," "L5 · Execution," "L8 · Feedback / Learning" throughout.
-- Mind Over Meta — no action needed yet (doesn't use layer names), but should adopt Memory /
-  Practice / Adaptation if/when it does.
+**Revisit:** Re-open only if a future standard revision proposes a fourth naming scheme with documented trade-offs.
 
-*Stewardship Standard — © 2026 Caitlin Stokes / Cinderlit · CC BY 4.0*
+## Action Items
+
+1. [ ] Update `quantifiedly/src/data/layers.js` — card titles for ids 4, 5, 8 still read the old names
+2. [ ] Update `cinderlit-work-system/work-system/qsm-mapping.md` — cross-context mapping doc still headed with legacy names
+3. [ ] Mind Over Meta — adopt Memory / Practice / Adaptation if/when it adopts L1–L8 layer language
