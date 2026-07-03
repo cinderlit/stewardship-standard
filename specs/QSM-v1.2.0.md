@@ -183,7 +183,7 @@ context types:
 | SELF | Max-Neef fundamental human needs | Nine simultaneous, non-hierarchical needs; satisfiers vary by person and context |
 | HEARTH | WELL (or an equivalent household-wellness framework) | Designed around the physical/social conditions of a dwelling and its occupants |
 | CHARTER (business/organizational) | ERG (Existence–Relatedness–Growth), Pink's autonomy/mastery/purpose, or SDT (autonomy/competence/relatedness) | ERG and Pink suit organizational motivation structures; SDT is well-validated for contexts where intrinsic motivation and role fit are central |
-| CREST / ESTATE | Context-specific; no single default | Episodic and portfolio-scale contexts vary too much for one default framework |
+| CREST / ESTATE | Context-specific; no single default | Portfolio and collective-governance contexts vary too much for one default framework |
 
 A QSM implementation SHOULD:
 
@@ -291,18 +291,9 @@ A declaration that lacks boundary definition is incomplete and SHOULD be treated
 
 - **SELF** — personal well-being, executive function, habits, and life maintenance.
 - **HEARTH** — home and household stewardship.
-- **ESTATE** — multi-property or portfolio-scale stewardship. ESTATE contexts are typically
-  long-lived and structural: the same property portfolio, reviewed continuously.
-- **CHARTER** — organizational governance or leadership context.
-- **CREST** — recurring seasonal or episodic responsibility context. CREST is distinguished
-  from ESTATE by *shape*, not scale: a CREST context exists to govern a responsibility that
-  recurs on a cycle (a wildfire season, an HOA's annual budget cycle, a holiday-hosting
-  rotation) and may go dormant between cycles, whereas an ESTATE context is continuously active
-  property/portfolio stewardship. A multi-property HOA-style context that is continuously
-  active should be modeled as ESTATE; a seasonal or cyclical responsibility scoped to that same
-  property should be modeled as CREST. Implementations MAY layer a CREST context on top of an
-  ESTATE context (e.g., an annual wildfire-readiness cycle governed within a continuously
-  active estate).
+- **ESTATE** — stewardship of a property or asset, single-property through portfolio scale. Continuously active and structural (maintenance, systems, compliance, financial performance). Held by one or more identified stewards (an owner or co-owners); **does not contain other contexts**. Extends HEARTH: where HEARTH is a lived-in household, ESTATE is property/asset stewardship.
+- **CHARTER** — organizational governance or leadership context, authority held by a defined steward or leadership.
+- **CREST** — a governance context whose authority is **distributed** across a board, collective, or community rather than held by a single steward (e.g. an HOA board, a civic organization). CREST is the distributed-authority variant of CHARTER. CREST is distinguished from ESTATE by the **nature of the entity**: CREST governs a *collective/community*, ESTATE stewards an *asset*. (Scale and cyclicality are not the discriminator.)
 - **QSM_META** *(added v1.1.0)* — a singleton, non-steward-owned context representing the
   governance/ontology layer itself (rules, templates, cross-context policy) rather than a
   stewarded entity. A QSM_META context MUST NOT be duplicated via the template mechanism in
@@ -583,6 +574,6 @@ structures their review and calibration cycles. The following table lists recomm
 | SELF | Kolb's Experiential Learning Cycle | Weekly or cadence-based; after significant events |
 | HEARTH | After-action review | Event-triggered (incident, seasonal transition, major change) |
 | CHARTER | PDCA (Plan–Do–Check–Act) | Sprint or operational cycle; outcome-triggered |
-| ESTATE / CREST | Double-loop learning | Quarterly or milestone-triggered; questions governing assumptions |
+| ESTATE / CREST | Double-loop learning or context-specific | Portfolio-level or collective-governance learning often requires questioning governing assumptions, not just operational adjustment |
 
 See §4.2.2 for normative rules QSM-LF-01 through QSM-LF-03.

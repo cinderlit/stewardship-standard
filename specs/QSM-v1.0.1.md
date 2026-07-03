@@ -212,9 +212,9 @@ A declaration that lacks boundary definition is incomplete and SHOULD be treated
 
 - **SELF** — personal well-being, executive function, habits, and life maintenance.
 - **HEARTH** — home and household stewardship.
-- **ESTATE** — multi-property or portfolio-scale stewardship.
-- **CHARTER** — organizational governance or leadership context.
-- **CREST** — recurring seasonal or episodic responsibility context.
+- **ESTATE** — stewardship of a property or asset (single-property through portfolio scale), held by identified stewards, containing no other contexts. Extends HEARTH.
+- **CHARTER** — organizational governance or leadership context with defined leadership.
+- **CREST** — a governance context with authority distributed across a board/collective/community; the distributed-authority variant of CHARTER (e.g. an HOA).
 
 ---
 

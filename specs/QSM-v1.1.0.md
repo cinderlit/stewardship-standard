@@ -259,18 +259,9 @@ A declaration that lacks boundary definition is incomplete and SHOULD be treated
 
 - **SELF** — personal well-being, executive function, habits, and life maintenance.
 - **HEARTH** — home and household stewardship.
-- **ESTATE** — multi-property or portfolio-scale stewardship. ESTATE contexts are typically
-  long-lived and structural: the same property portfolio, reviewed continuously.
-- **CHARTER** — organizational governance or leadership context.
-- **CREST** — recurring seasonal or episodic responsibility context. CREST is distinguished
-  from ESTATE by *shape*, not scale: a CREST context exists to govern a responsibility that
-  recurs on a cycle (a wildfire season, an HOA's annual budget cycle, a holiday-hosting
-  rotation) and may go dormant between cycles, whereas an ESTATE context is continuously active
-  property/portfolio stewardship. A multi-property HOA-style context that is continuously
-  active should be modeled as ESTATE; a seasonal or cyclical responsibility scoped to that same
-  property should be modeled as CREST. Implementations MAY layer a CREST context on top of an
-  ESTATE context (e.g., an annual wildfire-readiness cycle governed within a continuously
-  active estate).
+- **ESTATE** — stewardship of a property or asset, single-property through portfolio scale. Continuously active and structural (maintenance, systems, compliance, financial performance). Held by one or more identified stewards (an owner or co-owners); **does not contain other contexts**. Extends HEARTH: where HEARTH is a lived-in household, ESTATE is property/asset stewardship.
+- **CHARTER** — organizational governance or leadership context, authority held by a defined steward or leadership.
+- **CREST** — a governance context whose authority is **distributed** across a board, collective, or community rather than held by a single steward (e.g. an HOA board, a civic organization). CREST is the distributed-authority variant of CHARTER. CREST is distinguished from ESTATE by the **nature of the entity**: CREST governs a *collective/community*, ESTATE stewards an *asset*. (Scale and cyclicality are not the discriminator.)
 - **QSM_META** *(added v1.1.0)* — a singleton, non-steward-owned context representing the
   governance/ontology layer itself (rules, templates, cross-context policy) rather than a
   stewarded entity. A QSM_META context MUST NOT be duplicated via the template mechanism in
