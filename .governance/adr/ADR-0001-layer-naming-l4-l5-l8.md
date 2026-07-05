@@ -116,9 +116,9 @@ drift; enforcement has to be active, not assumed.
 
 ## Action Items
 
-1. [ ] Update `quantifiedly/src/data/layers.js` — card titles for ids 4, 5, 8 still read the old names
-2. [ ] Update `cinderlit-work-system/work-system/qsm-mapping.md` — cross-context mapping doc still headed with legacy names
-3. [ ] Mind Over Meta — adopt Memory / Practice / Adaptation if/when it adopts L1–L8 layer language
+1. [ ] Update `quantifiedly/src/data/layers.js` — card titles for ids 4, 5, 8 still read the old names. Confirmed still open 2026-07-02 (live fetch of quantifiedly.com shows the model page's layer cards labeled Knowledge/Execution/Feedback & Learning while body copy already uses the correct names). This is application source code — Cursor job, not a doc fix.
+2. [x] Update `cinderlit-work-system/work-system/qsm-mapping.md` — cross-context mapping doc still headed with legacy names. **Verified done 2026-07-02** — file already reads "L4 · Memory," "L5 · Practice," "L8 · Adaptation" throughout. Checkbox was stale; no further action needed.
+3. [ ] Mind Over Meta — adopt Memory / Practice / Adaptation if/when it adopts L1–L8 layer language. Still N/A as of 2026-07-02 — mindovermeta.com's live site uses its own Plan/Measure/Review/Adjust framing, not L1–L8 names.
 
 ## Post-Decision Monitoring
 
