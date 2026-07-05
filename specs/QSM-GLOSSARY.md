@@ -22,9 +22,19 @@ For normative requirements, see the relevant spec document cited in each entry.
 
 **Adaptation** — The layer responsible for changing how a system operates based on accumulated experience. Distinct from Observation, which only senses. (QSM-ARCH)
 
-**Context** — A bounded domain of stewardship — one of five types: SELF, HEARTH, ESTATE, CHARTER, CREST. A context has declared scope, stewards, and a needs framework. (QSM)
+**Context** — A bounded domain of stewardship — one of five stewarded types: SELF, HEARTH, ESTATE, CHARTER, CREST. A context has declared scope, stewards, and a needs framework. (QSM)
 
-**Context type** — One of the five categories of stewardship domain recognized by QSM: SELF, HEARTH, ESTATE, CHARTER, CREST. (QSM)
+**Context type** — One of the five stewarded categories recognized by QSM: SELF, HEARTH, ESTATE, CHARTER, CREST — plus **QSM_META** (a singleton, non-steward context excluded from stewarded views per QSM-META-01). Public "five contexts" copy refers to the five stewarded types. (QSM)
+
+**CHARTER** — an organization/entity/business governance context with defined leadership. (QSM)
+
+**CREST** — a governance context with authority distributed across a board/collective/community; the distributed-authority variant of CHARTER (e.g. an HOA). (QSM)
+
+**ESTATE** — stewardship of a property or asset (single-property through portfolio scale), held by identified stewards, containing no other contexts. Extends HEARTH. (QSM)
+
+**HEARTH** — a lived-in household: one or more stewards sharing household systems and operations. (QSM)
+
+**SELF** — an individual's own stewardship context; steward is the person themselves. (QSM)
 
 **Decision** — A recorded choice made within a context, with provenance, rationale, and lifecycle state. Decisions live in the Memory layer. (QSM-ARCH)
 
