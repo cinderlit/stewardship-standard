@@ -11,3 +11,7 @@ venv/
 # Local prompt / working docs
 CURSOR-*.md
 QSM-*-cursor-prompt.md
+
+# Internal-only material — MUST NOT be committed to this public repo.
+# Enforced by the "Guard against tracked private material" CI step.
+private/

@@ -9,7 +9,6 @@
 | Specifications | `specs/` | Normative TSS, QSM, THRIVE, QSM-FAI |
 | Schemas | `schemas/` | Apache 2.0 JSON schemas |
 | Conformance | `conformance/` | SCA registry and attestation rules |
-| Private notes | `private/` | Research; not normative |
 
 ## Conformance authority
 

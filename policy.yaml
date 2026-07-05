@@ -15,11 +15,11 @@ governance:
   decision_principles:
     - "Normative spec changes follow GOVERNANCE.md amendment process."
     - "Agents may draft proposals and examples; maintainers ratify versioned changes."
-    - "private/ notes are never substituted for published spec text."
+    - "Internal/working notes are never committed to this public repo (see .gitignore) and never substituted for published spec text."
 
 risk_tiers:
   low:
-    description: "Private notes, draft examples, internal research."
+    description: "Draft examples and internal research (kept outside this public repo)."
     approval_required: false
   medium:
     description: "Clarifications, non-normative docs, PATCH-level errata proposals."
@@ -39,9 +39,6 @@ content_channels:
   conformance_registry:
     default_risk_tier: high
     path: conformance/registry/
-  internal_doc:
-    default_risk_tier: low
-    path: private/
 
 rules:
   claims:

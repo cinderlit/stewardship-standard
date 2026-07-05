@@ -15,6 +15,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Guard against tracked private material
+        run: |
+          tracked_private="$(git ls-files private/)"
+          if [ -n "$tracked_private" ]; then
+            echo "ERROR: internal-only material is tracked under private/ in this PUBLIC repo:" >&2
+            echo "$tracked_private" >&2
+            echo "private/ is gitignored and must never be committed here. Remove it (e.g. git rm -r --cached private/)." >&2
+            exit 1
+          fi
+          echo "OK: no tracked files under private/."
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
