@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stewardshipstandard.org/schemas/fiduciary-context/v1.1.json",
+  "title": "QSM-FAI FiduciaryContext (FC) Schema",
+  "description": "An agent's license to act within a stewardship context. Every QSM-FAI-conformant agent MUST hold a valid, active FiduciaryContext before taking any action. Defined by QSM-FAI v1.2.0 §3. Strict superset of v1.0; v1.0 instances remain valid.",
+  "type": "object",
+  "required": ["id", "version", "context_type", "declared_by", "delegation_chain", "constraints", "status"],
+  "properties": {
+    "id": { "type": "string", "description": "FiduciaryContext identifier, e.g. fc-[uuid]." },
+    "version": { "type": "string" },
+    "context_type": {
+      "type": "string",
+      "enum": ["HEARTH", "CREST", "CHARTER", "SELF", "ESTATE"],
+      "description": "The hardened context this FC operates within."
+    },
+    "label": { "type": "string", "description": "Human-readable name for this context." },
+    "declared_by": {
+      "type": "object",
+      "required": ["steward_id", "declared_at"],
+      "properties": {
+        "steward_id": { "type": "string" },
+        "steward_name": { "type": "string" },
+        "declared_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "delegation_chain": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Ordered list of stewards/agents authorized to act. MUST include at least one primary steward (FC-04).",
+      "items": {
+        "type": "object",
+        "required": ["steward_id", "role", "authorized_at", "scope"],
+        "properties": {
+          "steward_id": { "type": "string" },
+          "role": { "type": "string", "enum": ["primary", "delegate", "observer"] },
+          "authorized_at": { "type": "string", "format": "date-time" },
+          "scope": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["read", "recommend", "notify", "act", "delegate"] },
+            "minItems": 1
+          },
+          "availability": {
+            "type": "string",
+            "enum": ["available", "limited", "unavailable"],
+            "description": "Projection of Steward Availability Record per QSM-ARCH §6.2.1; absent means available."
+          },
+          "track_record": {
+            "type": "object",
+            "properties": {
+              "accepted_count": { "type": "integer", "minimum": 0 },
+              "rejected_count": { "type": "integer", "minimum": 0 },
+              "superseded_count": { "type": "integer", "minimum": 0 },
+              "last_updated_at": { "type": ["string", "null"], "format": "date-time" }
+            }
+          }
+        }
+      }
+    },
+    "entity_set_ref": { "type": "string", "description": "Reference to LOCUS document ID." },
+    "atlas_ref": { "type": "string", "description": "Reference to ATLAS document ID." },
+    "tenure_log_ref": { "type": "string", "description": "Reference to active TENURE log." },
+    "constraints": {
+      "type": "object",
+      "required": ["max_action_tier", "require_human_approval_above_tier"],
+      "properties": {
+        "max_action_tier": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "require_human_approval_above_tier": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "spending_limit_usd": { "type": ["number", "null"] },
+        "notification_required_for": { "type": "array", "items": { "type": "string" } },
+        "prohibited_domains": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "continuity": {
+      "type": "object",
+      "description": "Optional continuity designation per QSM-FAI §3.4.",
+      "properties": {
+        "policy": { "type": "string", "enum": ["designated", "none_accepted"] },
+        "declared_by": { "type": "string" },
+        "declared_at": { "type": "string", "format": "date-time" },
+        "continuity_ref": { "type": ["string", "null"] },
+        "backups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "steward_id", "order", "activation", "scope_on_activation"],
+            "properties": {
+              "kind": { "type": "string", "enum": ["human", "agent"] },
+              "steward_id": { "type": "string" },
+              "order": { "type": "integer", "minimum": 1 },
+              "function_scope": {
+                "type": ["array", "null"],
+                "items": { "type": "string" }
+              },
+              "activation": {
+                "type": "object",
+                "required": ["mode", "declared_by", "declared_at"],
+                "properties": {
+                  "mode": { "type": "string", "enum": ["explicit", "timeout"] },
+                  "timeout_window": { "type": ["string", "null"] },
+                  "declared_by": { "type": "string" },
+                  "declared_at": { "type": "string", "format": "date-time" }
+                }
+              },
+              "scope_on_activation": {
+                "type": "array",
+                "items": { "type": "string", "enum": ["read", "recommend", "notify", "act"] },
+                "minItems": 1
+              },
+              "agent_fc_ref": { "type": "string", "description": "REQUIRED when kind is agent." },
+              "failure_triggers": {
+                "type": "object",
+                "properties": {
+                  "liveness": {
+                    "type": "object",
+                    "properties": {
+                      "heartbeat_interval": { "type": "string" },
+                      "misses_to_unavailable": { "type": "integer", "minimum": 1 }
+                    }
+                  },
+                  "escalation_patterns": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["reason", "count", "window"],
+                      "properties": {
+                        "reason": { "type": "string" },
+                        "count": { "type": "integer", "minimum": 1 },
+                        "window": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "status": { "type": "string", "enum": ["active", "suspended", "revoked", "expired"] },
+    "expires_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}

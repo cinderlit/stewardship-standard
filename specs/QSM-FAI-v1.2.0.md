@@ -1,20 +1,17 @@
-> **Superseded.** This is an archived version. The current specification is
-> [QSM-FAI v1.2.0](./QSM-FAI-v1.2.0.md). See `CHANGELOG.md` [1.3.0] for what changed and why.
-
-# QSM-FAI v1.1.0
+# QSM-FAI v1.2.0
 ## Quantified Stewardship Model — Fiduciary AI Interface
 ### Normative Specification
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Status:** Final Draft — Ready for Submission
 **Author:** Caitlin Stokes
 **Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)
 **License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)
 **DOI:** [10.5281/zenodo.20436569](https://doi.org/10.5281/zenodo.20436569)
 **Published:** 2026-05-28
-**Amended:** 2026-06-22 (v1.1.0 — see `CHANGELOG.md`)
+**Amended:** 2026-07-06 (v1.2.0 — see `CHANGELOG.md`)
 **First Hardened Context:** HEARTH (Quantified Home)
-**Dependent Specs:** QSM v1.1.0, TSS v1.2.0, THRIVE v1.1.0
+**Dependent Specs:** QSM v1.1.0, TSS v1.2.0, THRIVE v1.1.0, QSM-ARCH v1.2.0
 
 ---
 
@@ -48,6 +45,14 @@ QSM_META governance contexts from agent action (§9, PROHIB-06). All changes are
 optional; no v1.0.1 requirement was removed or tightened, and v1.0.1 conformance claims remain
 valid under v1.1.0. See `CHANGELOG.md` [1.1.0] for the full amendment record and implementation
 evidence.
+
+**v1.2.0 amendment note:** this revision adds an optional Continuity block to the
+FiduciaryContext (§3.4) covering steward availability, backup designation, and
+agent-as-backup-steward; adds `steward_unavailable` to the Escalation Taxonomy
+(§4.2); names `continuity_event` as an optional TENURE `entry_type` (§6.1); and
+adds PROHIB-07 (§9). All changes are additive or optional; no v1.1.0 requirement
+was removed or tightened, and v1.0.1 and v1.1.0 conformance claims remain valid
+under v1.2.0. See `CHANGELOG.md` [1.3.0] for the amendment record.
 
 ## Use of AI-Assisted Tools in the Development of This Specification
 
@@ -145,6 +150,9 @@ target for agent action — see PROHIB-06.
 | **Hardened Context** | A context with a fully populated LOCUS, a validated ATLAS, and at least one TENURE cycle |
 | **Escalation Outbox** *(added v1.1.0)* | A standing, queryable collection of unresolved escalations awaiting steward attention (see §4.3) |
 | **Track Record** *(added v1.1.0)* | An optional, rolling summary of a delegate's accepted/rejected/superseded outcome history (see §3.3) |
+| **Backup Steward** *(added v1.2.0)* | A human or agent designated to assume bounded operational authority for a steward's scope upon continuity activation (see §3.4) |
+| **Continuity Activation** *(added v1.2.0)* | The recorded event by which a backup steward gains its pre-declared authority, triggered by an availability transition (QSM-ARCH §6.2.1) |
+| **Steward Availability** *(added v1.2.0)* | A steward's declared or detected capacity state within a context: `available`, `limited`, or `unavailable` (QSM-ARCH §6.2.1) |
 
 ---
 
@@ -157,7 +165,7 @@ any action. This object is the agent's "license to act."
 
 ```json
 {
-  "$schema": "https://stewardshipstandard.org/schemas/fiduciary-context/v1.0.json",
+  "$schema": "https://stewardshipstandard.org/schemas/fiduciary-context/v1.1.json",
   "id": "fc-[uuid]",
   "version": "1.0",
   "context_type": "HEARTH | CREST | CHARTER | SELF | ESTATE",
@@ -173,6 +181,7 @@ any action. This object is the agent's "license to act."
       "role": "primary | delegate | observer",
       "authorized_at": "ISO8601 timestamp",
       "scope": ["read", "recommend", "act", "delegate"],
+      "availability": "available | limited | unavailable",
       "track_record": {
         "accepted_count": 0,
         "rejected_count": 0,
@@ -190,6 +199,37 @@ any action. This object is the agent's "license to act."
     "spending_limit_usd": null,
     "notification_required_for": ["tier-2-actions", "entity-state-changes"],
     "prohibited_domains": []
+  },
+  "continuity": {
+    "policy": "designated | none_accepted",
+    "declared_by": "steward_id",
+    "declared_at": "ISO8601 timestamp",
+    "continuity_ref": "string — Memory record for the continuity plan | null",
+    "backups": [
+      {
+        "kind": "human | agent",
+        "steward_id": "string",
+        "order": 1,
+        "function_scope": ["string — implementation-defined function labels"],
+        "activation": {
+          "mode": "explicit | timeout",
+          "timeout_window": "ISO8601 duration | null — REQUIRED when mode: timeout",
+          "declared_by": "steward_id",
+          "declared_at": "ISO8601 timestamp"
+        },
+        "scope_on_activation": ["read", "recommend", "notify", "act"],
+        "agent_fc_ref": "string — REQUIRED when kind: agent; the standing FiduciaryContext bounding the agent during continuity operation",
+        "failure_triggers": {
+          "liveness": {
+            "heartbeat_interval": "ISO8601 duration",
+            "misses_to_unavailable": 2
+          },
+          "escalation_patterns": [
+            { "reason": "tool_failure", "count": 3, "window": "P1D" }
+          ]
+        }
+      }
+    ]
   },
   "status": "active | suspended | revoked | expired",
   "expires_at": "ISO8601 timestamp | null"
@@ -222,6 +262,254 @@ own TENURE Records (§6.1).
   without yet specifying how that history should affect autonomy. A future MAJOR or MINOR
   version may formalize `track_record` as an input to tier policy once more implementations have
   produced evidence on how to do so safely.
+
+### 3.4 Continuity *(added v1.2.0)*
+
+A FiduciaryContext MAY declare a `continuity` block designating what happens when a
+steward in its delegation chain becomes `limited` or `unavailable` (QSM-ARCH §6.2.1).
+Continuity transfers *operation*, never fiduciary responsibility: responsibility
+remains with the human steward of record throughout.
+
+- **CONT-01:** `continuity` is OPTIONAL. Its absence means continuity is
+  *undeclared* — implementations SHOULD surface undeclared continuity on an active
+  FiduciaryContext as a Tier 1 Recommendation. Absence MUST NOT be interpreted as
+  `none_accepted`.
+- **CONT-02:** `policy: none_accepted` is a valid, conformant state: an explicit,
+  recorded decision to operate without a backup. It MUST carry `declared_by` and
+  `declared_at`.
+- **CONT-03:** Every entry in `backups` MUST declare `kind` (`human` or `agent`).
+- **CONT-04:** Every continuity activation — either mode, either kind — MUST
+  produce a TENURE entry (`entry_type: continuity_event`, §6.1) recording who or
+  what activated, under which trigger, and with what scope.
+- **CONT-05:** A backup's authority on activation is `scope_on_activation`
+  intersected with the FiduciaryContext's `constraints`. Activation MUST NOT raise
+  `max_action_tier` or widen any constraint beyond what was declared before the
+  triggering availability change.
+- **CONT-06:** Human-kind backups activate per QSM-ARCH §6.2.2: `explicit` by
+  default; `timeout` only where pre-declared with an explicit window by the steward
+  it applies to.
+- **CONT-07:** An agent-kind backup MUST reference, via `agent_fc_ref`, a standing
+  FiduciaryContext declared in advance by a human steward. That context's
+  constraints — including `max_action_tier` — bound the agent during continuity
+  operation, SHOULD default to the agent's normal operating tier, MAY exceed it
+  only where the human steward pre-declared the wider grant, and MUST NOT be
+  computed or raised at activation time.
+- **CONT-08:** An agent-kind backup's availability uses the same states as any
+  steward (QSM-ARCH §6.2.1), but transitions MAY additionally be *detected*: the
+  agent MUST be treated as `unavailable` when it fails its declared liveness checks
+  or matches a declared `escalation_patterns` trigger. On agent unavailability,
+  activation passes to the next `order` in `backups`.
+- **CONT-09:** In any FiduciaryContext that declares an agent-kind backup, at least
+  one human steward MUST hold `role: primary` in `delegation_chain` (see PROHIB-07
+  for the activation-conflict rule).
+
+#### 3.4.1 Reference example A: human backup chain (CHARTER, Excentropy)
+
+Non-normative. Encodes Part C answer 1 — primary steward with two function-split backups. Code labels only; engagement referenced as `818A`.
+
+```json
+{
+  "id": "fc-charter-excentropy-001",
+  "version": "1.1",
+  "context_type": "CHARTER",
+  "label": "Excentropy — Consulting Practice Stewardship Context",
+  "declared_by": {
+    "steward_id": "person_caitlin",
+    "steward_name": "Primary Steward",
+    "declared_at": "2026-07-06T00:00:00Z"
+  },
+  "delegation_chain": [
+    {
+      "steward_id": "person_caitlin",
+      "role": "primary",
+      "authorized_at": "2026-07-06T00:00:00Z",
+      "scope": ["read", "recommend", "act", "delegate"],
+      "availability": "available"
+    },
+    {
+      "steward_id": "person_james",
+      "role": "delegate",
+      "authorized_at": "2026-07-06T00:00:00Z",
+      "scope": ["read", "recommend", "notify", "act"],
+      "availability": "available"
+    }
+  ],
+  "constraints": {
+    "max_action_tier": 3,
+    "require_human_approval_above_tier": 2,
+    "spending_limit_usd": null,
+    "notification_required_for": ["tier-2-actions", "entity-state-changes"],
+    "prohibited_domains": []
+  },
+  "continuity": {
+    "policy": "designated",
+    "declared_by": "person_caitlin",
+    "declared_at": "2026-07-06T00:00:00Z",
+    "continuity_ref": "mem-continuity-plan-excentropy",
+    "backups": [
+      {
+        "kind": "human",
+        "steward_id": "person_henry",
+        "order": 1,
+        "function_scope": ["on-site"],
+        "activation": {
+          "mode": "explicit",
+          "timeout_window": null,
+          "declared_by": "person_caitlin",
+          "declared_at": "2026-07-06T00:00:00Z"
+        },
+        "scope_on_activation": ["read", "recommend", "notify", "act"]
+      },
+      {
+        "kind": "human",
+        "steward_id": "person_marie",
+        "order": 1,
+        "function_scope": ["admin"],
+        "activation": {
+          "mode": "explicit",
+          "timeout_window": null,
+          "declared_by": "person_caitlin",
+          "declared_at": "2026-07-06T00:00:00Z"
+        },
+        "scope_on_activation": ["read", "recommend", "notify"]
+      }
+    ]
+  },
+  "status": "active",
+  "expires_at": null
+}
+```
+
+Both backups share `order: 1` because they activate together, split by function — the on-site/admin split from Part C, not a seniority ladder. Obligation-level continuity for the delegate function (James's on-site work → Caitlin order 1, Henry order 2) rides the ARCH Ownership plane (§2.5 above) and composes with this FC-level block.
+
+#### 3.4.2 Reference example B: agentic-primary continuity (CHARTER, Cinderlit)
+
+Non-normative. Encodes Part C answer 2 — agent as primary continuity mechanism, human fallback only if the agentic layer itself fails. Household co-steward stays role-labeled per naming convention.
+
+```json
+{
+  "id": "fc-charter-cinderlit-001",
+  "version": "1.1",
+  "context_type": "CHARTER",
+  "label": "Cinderlit — Umbrella Stewardship Context",
+  "declared_by": {
+    "steward_id": "person_caitlin",
+    "steward_name": "Primary Steward",
+    "declared_at": "2026-07-06T00:00:00Z"
+  },
+  "delegation_chain": [
+    {
+      "steward_id": "person_caitlin",
+      "role": "primary",
+      "authorized_at": "2026-07-06T00:00:00Z",
+      "scope": ["read", "recommend", "act", "delegate"],
+      "availability": "available"
+    },
+    {
+      "steward_id": "agent_cos_cinderlit",
+      "role": "delegate",
+      "authorized_at": "2026-07-06T00:00:00Z",
+      "scope": ["read", "recommend", "notify"],
+      "availability": "available"
+    }
+  ],
+  "constraints": {
+    "max_action_tier": 1,
+    "require_human_approval_above_tier": 1,
+    "spending_limit_usd": null,
+    "notification_required_for": ["tier-2-actions", "entity-state-changes"],
+    "prohibited_domains": []
+  },
+  "continuity": {
+    "policy": "designated",
+    "declared_by": "person_caitlin",
+    "declared_at": "2026-07-06T00:00:00Z",
+    "continuity_ref": "mem-continuity-plan-cinderlit",
+    "backups": [
+      {
+        "kind": "agent",
+        "steward_id": "agent_cos_cinderlit",
+        "order": 1,
+        "function_scope": null,
+        "activation": {
+          "mode": "timeout",
+          "timeout_window": "P7D",
+          "declared_by": "person_caitlin",
+          "declared_at": "2026-07-06T00:00:00Z"
+        },
+        "scope_on_activation": ["read", "recommend", "notify", "act"],
+        "agent_fc_ref": "fc-cinderlit-continuity-001",
+        "failure_triggers": {
+          "liveness": {
+            "heartbeat_interval": "P1D",
+            "misses_to_unavailable": 2
+          },
+          "escalation_patterns": [
+            { "reason": "tool_failure", "count": 3, "window": "P1D" },
+            { "reason": "uncertain_decision", "count": 5, "window": "P1D" }
+          ]
+        }
+      },
+      {
+        "kind": "human",
+        "steward_id": "person_household_costeward",
+        "order": 2,
+        "function_scope": null,
+        "activation": {
+          "mode": "explicit",
+          "timeout_window": null,
+          "declared_by": "person_caitlin",
+          "declared_at": "2026-07-06T00:00:00Z"
+        },
+        "scope_on_activation": ["read", "recommend", "notify", "act"]
+      }
+    ]
+  },
+  "status": "active",
+  "expires_at": null
+}
+```
+
+And the standing continuity FC the agent activates into (the CONT-07 bounded context — note the pre-declared tier is *wider* than the agent's day-to-day Tier 1, because Caitlin granted it in advance; it is still narrower than what a human backup receives):
+
+```json
+{
+  "id": "fc-cinderlit-continuity-001",
+  "version": "1.1",
+  "context_type": "CHARTER",
+  "label": "Cinderlit — Agent Continuity Context (standing, activates per CONT-07)",
+  "declared_by": {
+    "steward_id": "person_caitlin",
+    "steward_name": "Primary Steward",
+    "declared_at": "2026-07-06T00:00:00Z"
+  },
+  "delegation_chain": [
+    {
+      "steward_id": "person_caitlin",
+      "role": "primary",
+      "authorized_at": "2026-07-06T00:00:00Z",
+      "scope": ["read", "recommend", "act", "delegate"]
+    },
+    {
+      "steward_id": "agent_cos_cinderlit",
+      "role": "delegate",
+      "authorized_at": "2026-07-06T00:00:00Z",
+      "scope": ["read", "recommend", "notify", "act"]
+    }
+  ],
+  "constraints": {
+    "max_action_tier": 2,
+    "require_human_approval_above_tier": 2,
+    "spending_limit_usd": 5,
+    "notification_required_for": ["tier-2-actions", "entity-state-changes", "critical-urgency"],
+    "prohibited_domains": ["financial-commitments-new"]
+  },
+  "status": "suspended",
+  "expires_at": null
+}
+```
+
+The standing FC sits `suspended` until continuity activation flips it `active` (recorded per CONT-04); on human return it re-suspends. `spending_limit_usd` is set to **$5** (Caitlin, 2026-07-06) — a nominal ceiling, not an operating budget; per PROHIB-04 the agent can execute financial transactions only within that limit while operating under this FC, and any actual spending need surfaces as a Tier 2 escalation to the human fallback rather than being expected to clear on its own. The human fallback (order 2) fires through CONT-08: two missed daily heartbeats or a matched escalation pattern marks the agent `unavailable`, and the household co-steward is next in the chain.
 
 ---
 
@@ -261,6 +549,7 @@ reasons:
 | `timeout_exceeded` | A task or action was not completed within its expected window (implementations commonly use a multiplier of the expected duration, e.g. 2×, as the threshold) |
 | `tool_failure` | An external tool or system the agent depends on returned an error or unexpected result |
 | `concurrent_write_risk` | The agent is about to write to a record or file that another agent or process may also be writing to |
+| `steward_unavailable` *(added v1.2.0)* | A steward in the delegation chain (or the steward of a referenced object) has become `limited` or `unavailable` and continuity handling requires attention |
 
 - **ESC-01:** Every escalation MUST be classified under exactly one reason from the table above,
   or under an implementation-declared extension (see ESC-04).
@@ -330,8 +619,8 @@ Every agent action, recommendation, and escalation MUST produce a TENURE Record 
     "fc_id": "string — FiduciaryContext.id",
     "agent_id": "string",
     "timestamp": "ISO8601",
-    "entry_type": "action | recommendation | escalation | notification | read",
-    "escalation_reason": "uncertain_decision | scope_violation | rule_conflict | timeout_exceeded | tool_failure | concurrent_write_risk | string | null",
+    "entry_type": "action | recommendation | escalation | notification | read | continuity_event",
+    "escalation_reason": "uncertain_decision | scope_violation | rule_conflict | timeout_exceeded | tool_failure | concurrent_write_risk | steward_unavailable | string | null",
     "entity_refs": ["entity_id_1"],
     "summary": "string",
     "rationale_ref": "rationale object or id",
@@ -343,6 +632,10 @@ Every agent action, recommendation, and escalation MUST produce a TENURE Record 
   }
 }
 ```
+
+`continuity_event` *(added v1.2.0)* records a continuity activation or deactivation
+per CONT-04; it MUST reference the availability transition or failure trigger that
+caused it.
 
 `escalation_reason` is present only when `entry_type: escalation`; it MUST be one of the
 Escalation Taxonomy values in §4.2 or an implementation-declared extension string.
@@ -416,6 +709,13 @@ under QSM-FAI and serves as the reference implementation.
     "notification_required_for": ["tier-2-actions", "safety-domain-changes", "critical-urgency"],
     "prohibited_domains": []
   },
+  "continuity": {
+    "policy": "none_accepted",
+    "declared_by": "steward-001",
+    "declared_at": "2026-07-06T00:00:00Z",
+    "continuity_ref": null,
+    "backups": []
+  },
   "status": "active",
   "expires_at": null
 }
@@ -461,6 +761,13 @@ Regardless of delegation scope, a QSM-FAI-conformant agent MUST NOT:
 - **PROHIB-06 *(added v1.1.0):*** Hold or act under a FiduciaryContext whose `context_type` is
   `QSM_META` (QSM §6.1). QSM_META represents the governance/ontology layer itself, not a
   stewarded entity, and per QSM-META-01 MUST NOT be treated as an actionable Entity Set.
+- **PROHIB-07 *(added v1.2.0):*** Declare, authorize, or effect the availability
+  transition of a human steward where that transition activates the agent's own
+  continuity authority — except under a `timeout` activation the affected human
+  steward pre-declared with explicit parameters (window and scope). On any timeout
+  activation the agent MUST, as its first act, issue a Tier 2 notification to every
+  human steward in the delegation chain and create an Escalation Outbox entry
+  (`status: awaiting_human_review`, reason `steward_unavailable`).
 
 ---
 
@@ -486,6 +793,8 @@ Regardless of delegation scope, a QSM-FAI-conformant agent MUST NOT:
 - [ ] Conformance level declared in system manifest
 - [ ] Escalations are classified under the Escalation Taxonomy (§4.2) or a declared extension
 - [ ] Agent does not act under a QSM_META FiduciaryContext (PROHIB-06)
+- [ ] Continuity state on active FiduciaryContexts is declared (`designated` or `none_accepted`), or its absence is surfaced as a Tier 1 recommendation (CONT-01)
+- [ ] Agent-kind backups reference a standing, human-pre-declared FiduciaryContext and never gain authority from their own availability determination (CONT-07, PROHIB-07)
 
 ---
 
@@ -496,10 +805,11 @@ Regardless of delegation scope, a QSM-FAI-conformant agent MUST NOT:
 | **QSM v1.1.0** | Core ontology and modeling framework; QSM-FAI is a dependent spec |
 | **TSS v1.2.0** | The Stewardship Standard; normative open standard QSM-FAI implements |
 | **THRIVE v1.1.0** | Human wellness and Self context layer; informs occupant need modeling in HEARTH |
-| **QSM-FAI v1.1.0** | This document |
+| **QSM-ARCH v1.2.0** | Layer and engine operating model; steward availability and continuity designation |
+| **QSM-FAI v1.2.0** | This document |
 
 ---
 
-*QSM-FAI v1.1.0 — Quantified Stewardship Model: Fiduciary AI Interface*
+*QSM-FAI v1.2.0 — Quantified Stewardship Model: Fiduciary AI Interface*
 *© 2026 Caitlin Stokes / Cinderlit — CC BY 4.0*
-*First published: 2026-05-28 · Amended: 2026-06-22*
+*First published: 2026-05-28 · Amended: 2026-07-06*

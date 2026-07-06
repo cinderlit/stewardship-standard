@@ -5,6 +5,26 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## [1.3.0] — 2026-07-06
+
+Steward continuity release. Adds steward availability and continuity designation
+(QSM-ARCH v1.2.0 §6.2.1–6.2.2, ARCH-09/10) and the FiduciaryContext Continuity block with
+agent-as-backup-steward rules (QSM-FAI v1.2.0 §3.4, PROHIB-07). All changes
+additive; all prior conformance claims remain valid.
+
+### Specifications updated
+- **QSM-ARCH v1.2.0** (was 1.1.0) — steward availability records (§6.2.1), continuity designation (§6.2.2), availability/lifecycle orthogonality (§6.6), ARCH-09/10.
+- **QSM-FAI v1.2.0** (was 1.1.0) — Continuity block (§3.4, CONT-01..09), agent backup rules, `steward_unavailable` escalation, `continuity_event` TENURE type, PROHIB-07.
+
+### Reference schemas
+- Added: `fiduciary-context-v1.1.schema.json` — strict superset of v1.0; optional `continuity` block and `delegation_chain[].availability`.
+
+### Notes
+- QSM core (v1.1.0), TSS (v1.2.0), and THRIVE (v1.1.0) are unchanged in this bundle.
+- Superseded: `QSM-ARCH-v1.1.0.md`, `QSM-FAI-v1.1.0.md` (marked with pointers).
+
+[1.3.0]: https://github.com/cinderlit/stewardship-standard/releases/tag/v1.3.0
+
 ## [1.2.0] — 2026-06-25
 
 Architecture release. Adds **QSM-ARCH v1.1.0**, the Layer and Engine Operating Model, formalizing

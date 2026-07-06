@@ -1,18 +1,16 @@
-> **Superseded.** This is an archived version. The current specification is
-> [QSM-ARCH v1.2.0](./QSM-ARCH-v1.2.0.md). See `CHANGELOG.md` [1.3.0] for what changed and why.
-
-# QSM-ARCH v1.1
+# QSM-ARCH v1.2
 ## Layer and Engine Operating Model
 ### Normative Specification for QSM Implementation Architecture
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Status:** Final Draft — Ready for Submission  
 **Maintainer:** Caitlin · Excentropy  
 **License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)  
 **DOI:** [10.5281/zenodo.20436569](https://doi.org/10.5281/zenodo.20436569)  
 **Published:** 2026-06-25  
 **Changelog (1.1.0):** Added context lifecycle (§6.6) and conformance-scale reconciliation with QSM/TSS (§8.3).  
-**Dependent Specs:** QSM v1.0, TSS v1.1.0
+**Changelog (1.2.0):** Extended the Ownership plane with steward availability and continuity designation (§6.2.1–6.2.2), added availability/lifecycle orthogonality note (§6.6), added rules ARCH-09 and ARCH-10.  
+**Dependent Specs:** QSM v1.1.0, TSS v1.2.0, QSM-FAI v1.2.0
 
 ---
 
@@ -298,7 +296,7 @@ These planes apply across all layers and all major QSM objects.
 | Plane | Applies to | Required properties |
 |---|---|---|
 | **Lifecycle State** | All objects | `lifecycle_state` (draft / active / suspended / retired) |
-| **Ownership** | All objects | `steward_ref` — identifier of responsible party |
+| **Ownership** | All objects | `steward_ref` — identifier of responsible party; OPTIONAL `backup_steward_ref`, `continuity_ref`, `continuity_policy` (§6.2.2) |
 | **Versioning / Provenance** | All records and schemas | `schema_version`, `provenance_source`, `created_at`, `modified_at` |
 | **Metrics / Thresholds** | All engines and layers | `health_metric`, `alert_threshold`, `last_assessed` |
 | **Security / Privacy** | All objects with personal data | `sensitivity_level`, `access_policy_ref` |
@@ -310,6 +308,65 @@ Every major object SHOULD declare a lifecycle state. States are: draft, active, 
 ### 6.2 Ownership
 
 Every major object SHOULD identify a steward or responsible role via `steward_ref`.
+
+#### 6.2.1 Steward availability *(added 1.2.0)*
+
+Availability is a property of a steward within a context, not of individual objects.
+A context SHOULD maintain at most one **Steward Availability Record** per distinct
+`steward_ref` it uses; objects inherit availability through `steward_ref`, and any
+object-level copy of availability is a derivative view, never authoritative.
+
+| Property | Values / type | Meaning |
+|---|---|---|
+| `steward_ref` | identifier | The steward this record describes |
+| `availability` | `available` / `limited` / `unavailable` | Absence of a record means `available` |
+| `capacity_scope` | list of function labels (implementation-defined, e.g. `on-site`, `admin`) | When `limited`: the functions the steward can still cover |
+| `declared_by`, `declared_at` | identifier, timestamp | Provenance of the declaration |
+| `review_by` | timestamp, optional | A `limited` or `unavailable` record SHOULD carry one, so reduced availability cannot silently persist |
+
+Availability transitions SHOULD be declared by the steward themselves or authorized
+by Governance, and MUST be recorded per ARCH-09. Where the steward is an agent
+governed by QSM-FAI, transitions MAY additionally be *detected* under declared
+failure triggers — see QSM-FAI §3.4, which governs agent availability and
+continuity activation.
+
+**Interaction with context lifecycle (§6.6):** a steward becoming `limited` or
+`unavailable` does not change the context's `lifecycle_state`. The context remains
+`active`; Practice MAY continue dispatching to available stewards and activated
+backups. Governance MAY separately decide to suspend the context under §6.6 —
+a governed decision, never an automatic consequence of an availability change.
+
+When a steward is `limited` or `unavailable`, objects carrying that `steward_ref`
+with no applicable continuity designation (§6.2.2) SHOULD be surfaced by Signal
+as at-risk.
+
+#### 6.2.2 Continuity designation *(added 1.2.0)*
+
+Any object that carries `steward_ref` MAY additionally carry:
+
+| Property | Values / type | Meaning |
+|---|---|---|
+| `continuity_policy` | `designated` / `none_accepted` | `none_accepted` is an explicit, recorded decision that no backup exists and the responsible steward accepts the risk. **Absence of this property means undeclared — a gap to surface, NOT equivalent to `none_accepted`.** |
+| `backup_steward_ref` | ordered list of backup entries | Present when `continuity_policy: designated` |
+| `continuity_ref` | identifier, optional | Reference to a continuity plan record in Memory (procedures, contacts, activation detail) |
+
+Each `backup_steward_ref` entry:
+
+| Field | Values / type | Meaning |
+|---|---|---|
+| `steward_ref` | identifier | The backup |
+| `kind` | `human` / `agent` | REQUIRED. Agent-kind backups are governed by QSM-FAI §3.4 |
+| `order` | integer, 1 = first activated | Entries MAY share an `order` when they split by function |
+| `function_scope` | list of function labels, optional | Which functions this backup covers; absent = all |
+| `activation` | `explicit` (default) / `timeout` | See below |
+
+**Activation.** Under `explicit`, a backup gains authority only when the primary's
+availability record transitions through a declared §6.2.1 change. Under `timeout`
+— which MUST be pre-declared in the continuity plan with an explicit window by the
+steward it applies to — the backup MAY assume authority after the primary has been
+unresponsive for the declared window. In both modes the activation MUST be recorded
+per ARCH-09, and the backup acts within its own pre-declared scope: activation
+never silently confers the primary's full authority.
 
 ### 6.3 Versioning / Provenance
 
@@ -345,6 +402,15 @@ Context-level lifecycle extends the object-level `lifecycle_state` plane to the 
 
 - On **suspend:** Memory objects are retained unchanged but frozen. No new Practice dispatches. Existing Observation MAY continue for monitoring only.
 - On **retire:** Memory objects MUST be preserved as archival record and MUST NOT be deleted. <!-- REVIEW: whether retired contexts allow read-only Signal access for historical review --> Practice and Signal cease. Observation stops except for archival integrity checks.
+
+**Steward availability is orthogonal to context lifecycle** *(added 1.2.0)*:
+`suspended` describes the context, not a steward. One steward becoming unavailable
+within a multi-steward or continuity-designated context leaves the context `active`
+— availability is handled by the Ownership plane (§6.2.1) and continuity
+designation (§6.2.2). The "steward absence" suspension trigger above applies to the
+governed judgment that the context *as a whole* cannot operate (for example, a sole
+steward with `continuity_policy: none_accepted`), not to any individual
+availability change.
 
 Retiring a SELF context means the person's stewardship model for that bounded domain is closed — records are preserved for audit and reflection, but the context no longer accepts new stewardship activity.
 
@@ -387,6 +453,12 @@ A system MAY claim QSM-ARCH conformance if it satisfies the rules below.
 - **ARCH-06:** The Memory layer MUST be treated as the authoritative record; Signal and Observation are derivative.
 - **ARCH-07:** A context MUST NOT be retired without preserving its Memory records as archival record.
 - **ARCH-08:** Context state transitions MUST be recorded in Memory with provenance (who authorized, when, and rationale).
+- **ARCH-09:** Steward availability transitions and continuity activations MUST be
+  recorded in Memory with provenance (who declared or authorized, when, and
+  rationale) — the same standard ARCH-08 sets for context state transitions.
+- **ARCH-10:** An implementation supporting continuity designation MUST distinguish
+  `continuity_policy: none_accepted` from an undeclared state, and MUST NOT treat
+  the absence of a continuity declaration as acceptance of the risk.
 
 ### 8.3 Relationship to QSM and TSS conformance
 
@@ -407,11 +479,11 @@ For the C/T/H/L alignment ladder, see TSS Appendix Z. A-levels are a separate ar
 
 | Document | Role |
 |---|---|
-| **QSM v1.0** | Core ontology and stewardship model |
-| **TSS v1.1.0** | Normative umbrella and audit framework |
+| **QSM v1.1.0** | Core ontology and stewardship model |
+| **TSS v1.2.0** | Normative umbrella and audit framework |
 | **THRIVE v1.1.0** | Self and wellness context layer |
-| **QSM-FAI v1.0** | Fiduciary AI interface for acting within the stack |
-| **QSM-ARCH v1.0** | Layer and engine operating model |
+| **QSM-FAI v1.2.0** | Fiduciary AI interface for acting within the stack |
+| **QSM-ARCH v1.2.0** | Layer and engine operating model |
 
 QSM-ARCH extends but does not replace references to the six-layer process stack in existing QSM documentation. The six-layer model (Governance, Dashboard, Intake, Execution, Observation, Documentation) remains valid; QSM-ARCH formalizes an eight-layer operating model that adds Intent, separates Memory from Documentation, and adds Adaptation.
 
@@ -495,8 +567,8 @@ QSM ontology v3.0 maps architectural layers to `qsm:ArchitecturalLayer` individu
 
 ## Appendix C: Conformance Statement Template
 
-> This implementation conforms to QSM-ARCH v1.0 at level A2 for the SELF context. It implements all eight layers, treats Memory as authoritative, separates Observation from Adaptation, and includes Intent for personal stewardship.
+> This implementation conforms to QSM-ARCH v1.2.0 at level A2 for the SELF context. It implements all eight layers, treats Memory as authoritative, separates Observation from Adaptation, and includes Intent for personal stewardship.
 
-*QSM-ARCH v1.0 — Layer and Engine Operating Model*  
+*QSM-ARCH v1.2.0 — Layer and Engine Operating Model*  
 *© 2026 Excentropy — CC BY 4.0*  
 *First published: 2026-06-25*
