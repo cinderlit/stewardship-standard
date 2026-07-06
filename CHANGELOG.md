@@ -5,6 +5,23 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## [1.4.0] — 2026-07-06
+
+Governance closure spec rider. Adds optional `action_tier` on TENURE entries
+(QSM-FAI v1.3.0 §6.1) for tier-filtered audit queries. Declined amendments
+(Escalation Outbox SHOULD→MUST; numeric confidence on escalation taxonomy) recorded
+with revisit triggers in the bundle notes. All changes additive; all prior
+conformance claims remain valid.
+
+### Specifications updated
+- **QSM-FAI v1.3.0** (was 1.2.0) — optional `action_tier` on TENURE entries (§6.1).
+
+### Notes
+- QSM core (v1.1.0), TSS (v1.2.0), THRIVE (v1.1.0), and QSM-ARCH (v1.2.0) are unchanged in this bundle.
+- Superseded: `QSM-FAI-v1.2.0.md` (marked with pointer).
+
+[1.4.0]: https://github.com/cinderlit/stewardship-standard/releases/tag/v1.4.0
+
 ## [1.3.0] — 2026-07-06
 
 Steward continuity release. Adds steward availability and continuity designation

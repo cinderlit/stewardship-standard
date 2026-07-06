@@ -1,18 +1,15 @@
-> **Superseded.** This is an archived version. The current specification is
-> [QSM-FAI v1.3.0](./QSM-FAI-v1.3.0.md). See `CHANGELOG.md` [1.4.0] for what changed and why.
-
-# QSM-FAI v1.2.0
+# QSM-FAI v1.3.0
 ## Quantified Stewardship Model — Fiduciary AI Interface
 ### Normative Specification
 
-**Version:** 1.2.0
+**Version:** 1.3.0
 **Status:** Final Draft — Ready for Submission
 **Author:** Caitlin Stokes
 **Affiliation:** Cinderlit (cinderlit.com) · The Stewardship Standard (stewardshipstandard.org)
 **License:** CC BY 4.0 (specification) · Apache 2.0 (reference schemas)
 **DOI:** [10.5281/zenodo.20436569](https://doi.org/10.5281/zenodo.20436569)
 **Published:** 2026-05-28
-**Amended:** 2026-07-06 (v1.2.0 — see `CHANGELOG.md`)
+**Amended:** 2026-07-06 (v1.3.0 — see `CHANGELOG.md`)
 **First Hardened Context:** HEARTH (Quantified Home)
 **Dependent Specs:** QSM v1.1.0, TSS v1.2.0, THRIVE v1.1.0, QSM-ARCH v1.2.0
 
@@ -56,6 +53,12 @@ agent-as-backup-steward; adds `steward_unavailable` to the Escalation Taxonomy
 adds PROHIB-07 (§9). All changes are additive or optional; no v1.1.0 requirement
 was removed or tightened, and v1.0.1 and v1.1.0 conformance claims remain valid
 under v1.2.0. See `CHANGELOG.md` [1.3.0] for the amendment record.
+
+**v1.3.0 amendment note:** this revision adds optional `action_tier` on TENURE entries
+(§6.1) for audit queries by Action Tier without a join. Declined amendments from the
+governance-closure review (Escalation Outbox SHOULD→MUST; numeric confidence on
+escalation taxonomy) are recorded in `CHANGELOG.md` [1.4.0] with revisit triggers.
+All changes are additive or optional; no v1.2.0 requirement was removed or tightened.
 
 ## Use of AI-Assisted Tools in the Development of This Specification
 
@@ -623,6 +626,7 @@ Every agent action, recommendation, and escalation MUST produce a TENURE Record 
     "agent_id": "string",
     "timestamp": "ISO8601",
     "entry_type": "action | recommendation | escalation | notification | read | continuity_event",
+    "action_tier": "0 | 1 | 2 | 3 | 4 | null",
     "escalation_reason": "uncertain_decision | scope_violation | rule_conflict | timeout_exceeded | tool_failure | concurrent_write_risk | steward_unavailable | string | null",
     "entity_refs": ["entity_id_1"],
     "summary": "string",
@@ -642,6 +646,15 @@ caused it.
 
 `escalation_reason` is present only when `entry_type: escalation`; it MUST be one of the
 Escalation Taxonomy values in §4.2 or an implementation-declared extension string.
+
+`action_tier` *(added v1.3.0)* is the Action Tier (§4) at which the logged action,
+recommendation, or escalation was executed or proposed. It is OPTIONAL, but SHOULD
+be populated when `entry_type` is `action`, `recommendation`, or `escalation`, so
+that audit queries by tier ("all Tier 3 actions by agent X") require no join.
+`urgency` deliberately remains on the Rationale object (§5.1) and MUST NOT be
+duplicated onto TENURE entries: TEN-02 makes entries append-only, so a mis-copied
+urgency could never be corrected. Implementations wanting urgency-filtered queries
+SHOULD inline the rationale object (permitted by `rationale_ref`) and index it.
 
 ### 6.2 TENURE Conformance Rules
 
