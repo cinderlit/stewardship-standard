@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# Local prompt / working docs
+CURSOR-*.md
+QSM-*-cursor-prompt.md
+
+# Internal-only material — MUST NOT be committed to this public repo.
+private/
