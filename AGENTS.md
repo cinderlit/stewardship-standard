@@ -31,7 +31,3 @@ Read [`CANON.md`](../cinderlit-work-system/work-system/CANON.md) first (fact-cla
 ## Repo-specific
 
 _(refine by hand below this line)_
-
-## Repo-specific
-
-_(refine by hand below this line)_
