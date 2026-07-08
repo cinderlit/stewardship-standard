@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "brand_id": "REPLACE_BRAND_ID",
+  "brand_name": "REPLACE_BRAND_NAME",
+  "registry_id": "REPLACE_REGISTRY_ID",
+  "version": "0.1.0",
+  "last_updated": "2026-06-30",
+  "purpose": "One sentence purpose.",
+  "mission": "One sentence mission.",
+  "vision": "One sentence vision.",
+  "audiences": ["primary-audience"],
+  "voice": {
+    "attributes": ["clear", "precise", "calm", "systems-aware", "accountable"],
+    "style_notes": [
+      "Prefer concrete language over abstraction.",
+      "Name constraints explicitly.",
+      "Treat uncertainty as a first-class concept."
+    ],
+    "do": [
+      "Use active voice.",
+      "Separate facts, assumptions, and recommendations."
+    ],
+    "dont": [
+      "Do not use hype or vague inspiration.",
+      "Do not claim certainty where there is only a working model."
+    ]
+  },
+  "terminology": {
+    "preferred_terms": ["stewardship", "governance", "operating model"],
+    "avoid_terms": ["growth hack", "magic bullet", "best practice"],
+    "canonical_phrases": {}
+  },
+  "examples": {
+    "good": ["This workflow defines decision rights and audit logging for asset changes."],
+    "bad": ["This system will revolutionize everything overnight."]
+  },
+  "agent_instructions": {
+    "summary": "Use this file as the voice source of truth for content generation.",
+    "retrieval_hints": ["mission", "voice", "terminology"],
+    "fallback_behavior": [
+      "If guidance conflicts, prefer policy.yaml over this file.",
+      "If a request is high-risk, stop and request approval."
+    ]
+  }
+}

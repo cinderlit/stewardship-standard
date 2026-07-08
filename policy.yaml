@@ -1,0 +1,64 @@
+schema_version: "1.0"
+policy_id: "REPLACE-policy"
+brand_id: "REPLACE_BRAND_ID"
+registry_id: "REPLACE_REGISTRY_ID"
+version: "0.1.0"
+last_updated: "2026-06-30"
+
+governance:
+  authority_model:
+    source_of_truth: policy.yaml
+    supporting_spec: brand-style.json
+    escalation_owner_role: brand-governance-lead
+    kill_switch_owner_role: portfolio-owner
+  decision_principles:
+    - "Human approval is required for high-risk outputs."
+    - "Agents may draft, classify, summarize, and suggest."
+    - "Agents may not publish externally without passing policy checks."
+
+risk_tiers:
+  low:
+    description: "Internal drafting, private notes, low-stakes summaries."
+    approval_required: false
+  medium:
+    description: "Public-facing content with limited risk."
+    approval_required: true
+    approver_roles: [content-owner, brand-governance-lead]
+  high:
+    description: "Customer-facing, legal-adjacent, or operationally sensitive outputs."
+    approval_required: true
+    approver_roles: [brand-governance-lead, legal, executive-owner]
+    block_publish_without_approval: true
+
+content_channels:
+  website_public:
+    default_risk_tier: medium
+    requires_brand_style: true
+    requires_accessibility_check: true
+  internal_doc:
+    default_risk_tier: low
+    requires_brand_style: false
+
+rules:
+  voice:
+    must_follow: [clear, precise, calm, accountable]
+    must_avoid: [hype, exaggeration, unsupported certainty]
+  privacy:
+    prohibit: [personal data in public assets, secrets in prompts]
+  accessibility:
+    required_for_public_assets: true
+
+workflow_controls:
+  pre_publish_checks:
+    - brand_style_loaded
+    - policy_loaded
+    - risk_tier_assigned
+  approval_matrix:
+    low:
+      human_required: false
+    medium:
+      human_required: true
+      minimum_approvers: 1
+    high:
+      human_required: true
+      minimum_approvers: 2
