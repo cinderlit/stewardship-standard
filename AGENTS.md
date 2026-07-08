@@ -12,6 +12,8 @@
 
 **Portfolio:** `qsm_core` · QSM stack: `spec` · family `qsm-method`
 
+**Family head:** member
+
 - → `orgestra` (`spec-for`) — Orgestra implements the QSM spec this entity is the normative home for — Caitlin, 2026-07-08.
 
 ## State
