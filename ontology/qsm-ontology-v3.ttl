@@ -1,3 +1,26 @@
+# ===================================================================
+# STALE — superseded by qsm-ontology-v4.ttl (same directory)
+# ===================================================================
+# canonical: archive
+# source-of-record: ontology/qsm-ontology-v4.ttl
+# superseded: 2026-07-09 (Cowork session — ontology documentation pass)
+#
+# This file predates ADR-0010 (2026-07-02, CREST/CHARTER/ESTATE taxonomy)
+# and ADR-0011 (LOCUS/ATLAS/TENURE dual-use). Known drift, confirmed by
+# direct read 2026-07-08/09:
+#   - Four contexts only (Self/Home/Community/Organization) + ROOTS —
+#     ROOTS is a closed dead branch (see glossary.md, work-system);
+#     ESTATE is missing entirely; CREST is modeled as a "community"
+#     sub-framework rather than the distributed-authority variant of
+#     CHARTER that ADR-0010 defines.
+#   - Zero owl:TransitiveProperty declarations (part-of/has-part should
+#     be transitive; v4 declares this).
+# Kept in place (not deleted) per stewardship-standard's own convention
+# of retaining prior spec versions side by side (see specs/QSM-ARCH-v1.0.md,
+# v1.1.0.md, v1.2.0.md). Do not treat this file as current. Do not
+# hand-edit — if a v3-era consumer still needs updates, port them to v4.
+# ===================================================================
+
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
