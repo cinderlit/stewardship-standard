@@ -1,0 +1,24 @@
+---
+description: Session-start protocol — read this repo's context, then the cross-repo canon chain and open handoffs in cinderlit-work-system, before starting work. Always applied.
+alwaysApply: true
+---
+
+# Start every session here (Cursor)
+
+This is a **satellite repo** in Caitlin's QSM portfolio. The canon (source-of-truth index) and the handoff queue live in the **cinderlit-work-system** repo, a sibling under `~/Development`. Before starting any task:
+
+1. Read this repo's own root context: `AGENTS.md`.
+2. Read the cross-repo canon chain in `cinderlit-work-system`, **live at HEAD** — open that repo if it isn't in your current workspace (build workspaces like `qsm-core` do **not** include it):
+   - `work-system/CANON.md` — §3 agent-read contract; the live repo at HEAD beats any snapshot, upload, or memory.
+   - `work-system/governance-preamble.md` — shared agent operating rules (Cursor + Cowork).
+3. **Before starting new work, check for open handoffs addressed to Cursor and surface them to Caitlin first:**
+   - `cinderlit-work-system/work-system/handoffs/` — the portfolio handoff queue.
+
+   Open = a `handoff-*.md` / `cursor-handoff-*.md` not fully checked off, or a `*.handoff.yaml` with `status: draft` / `in_flight`. Don't skip a handoff because the ask was about something else — name it first, then proceed.
+
+## Standing constraints (bite most often)
+
+- **Push is Cursor/Terminal's job.** Cowork commits are local-only until pushed — when you land work, push it (`sop-commit-from-cowork-vs-cursor.md`).
+- **Never hand-number an ADR.** Draft with `new-adr.mjs`, land with `land-adr.mjs` right before commit (governance-preamble DO rule 9). Repos with `.governance/adr/` use `.governance/land-adr.mjs`.
+
+Full rules: `cinderlit-work-system/work-system/governance-preamble.md`. This file is a thin pointer by design — it makes the rules get read, it doesn't restate them.
