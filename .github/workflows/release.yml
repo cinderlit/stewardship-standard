@@ -1,0 +1,102 @@
+
+# Turns the version bump into the release. This is the automation half of the fix:
+# RELEASING.md steps 5 and 6 (tag, publish) stop being things a human remembers.
+#
+# THE TRIGGER IS `version:` IN CITATION.cff.
+# Chosen deliberately over "a new CHANGELOG heading" because bumping the citable record
+# is an unambiguous act of intent — nobody edits CITATION.cff by accident, whereas
+# CHANGELOG entries get drafted, reworded, and staged well before anyone means to ship.
+#
+# When that version has no matching tag on main, this workflow tags it and publishes the
+# GitHub Release. Publishing the Release is what fires the Zenodo deposit via the
+# GitHub↔Zenodo integration — there is no separate Zenodo step to forget.
+#
+# Still manual afterwards, and unavoidably so: adding the minted version DOI back into
+# CITATION.cff (RELEASING.md step 7). Zenodo creates it during deposit, so it cannot be
+# written in advance. release-drift.sh warns when it is missing.
+
+name: release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'CITATION.cff'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read the intended version
+        id: v
+        run: |
+          version=$(grep -m1 -oE '^version: *"?[0-9]+\.[0-9]+\.[0-9]+"?' CITATION.cff | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          if [ -z "$version" ]; then
+            echo "::error::Could not read version from CITATION.cff"; exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version"    >> "$GITHUB_OUTPUT"
+          echo "Intended version: $version"
+
+      - name: Already released?
+        id: check
+        run: |
+          if git rev-parse "refs/tags/${{ steps.v.outputs.tag }}" >/dev/null 2>&1; then
+            echo "already=true" >> "$GITHUB_OUTPUT"
+            echo "Tag ${{ steps.v.outputs.tag }} exists — nothing to do."
+          else
+            echo "already=false" >> "$GITHUB_OUTPUT"
+            echo "Tag ${{ steps.v.outputs.tag }} does not exist — releasing."
+          fi
+
+      # Guard: the three version fields must agree before anything is published.
+      # A release built from a half-updated repo is worse than a missed release.
+      - name: Verify no drift before publishing
+        if: steps.check.outputs.already == 'false'
+        run: bash scripts/check-release-drift.sh --files-only
+
+      - name: Extract this version's CHANGELOG section
+        if: steps.check.outputs.already == 'false'
+        run: |
+          awk -v ver="${{ steps.v.outputs.version }}" '
+            $0 ~ "^## \\[" ver "\\]" { grab = 1; next }
+            grab && /^## / { exit }
+            grab { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error title=No CHANGELOG section::CITATION.cff says ${{ steps.v.outputs.version }} but CHANGELOG.md has no '## [${{ steps.v.outputs.version }}]' heading. Refusing to publish a release with no notes."
+            exit 1
+          fi
+          {
+            echo ""
+            echo "---"
+            echo ""
+            echo "Full changelog: [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ steps.v.outputs.tag }}/CHANGELOG.md)"
+            echo ""
+            echo "Cite the **concept DOI** \`10.5281/zenodo.20436569\` — it always resolves to the latest version."
+          } >> release-notes.md
+
+      - name: Tag and publish
+        if: steps.check.outputs.already == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag "${{ steps.v.outputs.tag }}"
+          git push origin "${{ steps.v.outputs.tag }}"
+          gh release create "${{ steps.v.outputs.tag }}" \
+            --title "${{ steps.v.outputs.tag }}" \
+            --notes-file release-notes.md
+          echo "::notice title=Released::${{ steps.v.outputs.tag }} published. Zenodo deposit fires from the GitHub Release."
+
+      - name: Remind about the one manual step left
+        if: steps.check.outputs.already == 'false'
+        run: |
+          echo "::warning title=One step remains::Zenodo is minting a version DOI for ${{ steps.v.outputs.tag }}. Add it to CITATION.cff identifiers (RELEASING.md step 7). The weekly drift check will nag until you do."

@@ -1,55 +1,89 @@
 # Releasing The Stewardship Standard
 
 **Why this file exists:** bundles **1.3.0** and **1.4.0** were authored on 2026-07-06 and never
-released. They were not tagged, not published, and not deposited. The gap went unnoticed for
-nineteen days because nothing in the repo described what a release *is* — the CHANGELOG entry felt
-like the finish line, and it isn't. Writing the changelog entry is step 2 of 7.
-
-There is no CI here. Every step below is manual and every one of them has been forgotten at least
-once.
+released. Not tagged, not published, not deposited. The gap went unnoticed for nineteen days, during
+which every citation of this standard resolved to **v1.2.0** — a version predating QSM-FAI v1.3.0's
+`action_tier` field. Nothing broke. Nothing failed. There was simply no check.
 
 ## The invariant
 
 **A CHANGELOG entry is not a release.** The only things the outside world can see are the **git
-tag**, the **GitHub Release**, and the **Zenodo deposit**. Until all three exist, the version does
-not exist — no matter how finished the specs are.
+tag**, the **GitHub Release**, and the **Zenodo deposit**.
 
-Current evidence of drift, as of 2026-07-25: the DOI resolved to **v1.2.0 (2026-06-25)** while the
-repo had moved two bundles past it, so every citation pointed at a standard predating QSM-FAI
-v1.3.0's `action_tier` field.
+## How to release
 
-## Steps
+**Bump `version:` and `date-released:` in `CITATION.cff`. That's it.**
 
-1. **Decide the bundle version.** Each constituent spec (`QSM`, `TSS`, `THRIVE`, `QSM-FAI`,
-   `QSM-ARCH`) versions independently; `CHANGELOG.md` tracks the *combined bundle*. A spec changing
-   does not force a bundle minor — an editorial fix to one spec is a bundle **patch**.
-2. **Write the CHANGELOG entry.** State which constituent specs moved and which did not. Say
-   explicitly whether prior conformance claims remain valid — implementers depend on that sentence.
-3. **Update `CITATION.cff`** — `version`, `date-released` (the *actual* release date, not the
-   authoring date).
-4. **Update `.zenodo.json`** — `version` and the `related_identifiers` URL (`tree/vX.Y.Z`).
-5. **Tag and push.** `git tag vX.Y.Z && git push origin vX.Y.Z`. The tag must exist before the
-   GitHub Release.
-6. **Publish the GitHub Release** against that tag. **This is what triggers Zenodo** via the
-   GitHub↔Zenodo integration — there is no workflow file doing it for you.
-7. **Add the new version DOI back into `CITATION.cff`.** Zenodo mints it *during* the deposit, so
-   it cannot be written in advance. This is the step most often skipped: as of 2026-07-25 the
-   `identifiers` list held a version DOI for **v1.0.0 only** — v1.2.0's was never added.
+Everything downstream is automated. `.github/workflows/release.yml` watches `CITATION.cff` on
+`main`; when its version has no matching tag, it tags the commit, publishes the GitHub Release with
+that version's CHANGELOG section as the notes, and the GitHub↔Zenodo integration deposits from the
+Release.
 
-## DOIs — which is which
+`CITATION.cff` is the trigger deliberately, rather than a new CHANGELOG heading: bumping the citable
+record is an unambiguous act of intent. CHANGELOG entries get drafted, reworded, and staged long
+before anyone means to ship — using them as the trigger would release half-finished bundles.
+
+### The full sequence
+
+| # | Step | Who |
+|---|---|---|
+| 1 | Decide the bundle version (see *Versioning*) | you |
+| 2 | Write the CHANGELOG entry under `## [X.Y.Z] — YYYY-MM-DD` | you |
+| 3 | Update `.zenodo.json` — `version` and the `related_identifiers` `tree/vX.Y.Z` URL | you |
+| 4 | Update `CITATION.cff` — `version`, `date-released` (**the actual release date**) | you |
+| 5 | Merge to `main` | you |
+| 6 | Tag `vX.Y.Z` | **automated** |
+| 7 | Publish the GitHub Release → **fires Zenodo** | **automated** |
+| 8 | Add the minted version DOI to `CITATION.cff` `identifiers` | you — *see below* |
+
+**Step 8 cannot be automated.** Zenodo mints the version DOI *during* deposit, so it does not exist
+until after step 7. `scripts/check-release-drift.sh` warns every week until it is added — this is the
+step most often skipped, and v1.2.0's version DOI was never added at all.
+
+## The safety net
+
+`scripts/check-release-drift.sh` compares four things that must agree:
+
+1. `CHANGELOG.md` newest `## [X.Y.Z]` heading — what was written
+2. `CITATION.cff` `version:` — what is citable
+3. `.zenodo.json` `version` — what gets deposited
+4. latest `vX.Y.Z` git tag — **what actually shipped**
+
+Run it any time: `bash scripts/check-release-drift.sh`
+
+`.github/workflows/release-drift.yml` runs it automatically:
+
+- **on pull requests** touching the release files — `--files-only`, since on a release PR the version
+  bump legitimately precedes the tag. Fails the PR if 1–3 disagree.
+- **on push to `main`** — full, including the tag check.
+- **weekly, Mondays** — full. This is the one that would have caught the original failure: drift
+  appears while nobody is pushing, so a check that only runs on commits never sees it.
+
+The same check also runs from `cinderlit-work-system`'s `scripts/weekly-check.sh`, so it surfaces in
+the Thursday review even if GitHub notifications go unread.
+
+## Versioning
+
+Each constituent spec (`QSM`, `TSS`, `THRIVE`, `QSM-FAI`, `QSM-ARCH`) versions independently;
+`CHANGELOG.md` tracks the **combined bundle**. A spec changing does not force a bundle minor — an
+editorial fix to one spec is a bundle **patch**, and the spec file itself may not move at all.
+
+State in every entry which constituent specs moved and which did not, and say explicitly whether
+prior conformance claims remain valid. Implementers depend on that sentence.
+
+## DOIs
 
 - **Concept DOI `10.5281/zenodo.20436569`** — always resolves to the latest version. **Never
-  changes.** This is the one to cite in prose and to leave in the top-level `doi:` field.
-- **Version DOIs** — one per deposit, minted at release. These accumulate in `identifiers`. Adding
-  them is step 7 and is purely record-keeping; nothing breaks immediately if it is skipped, which
-  is exactly why it gets skipped.
+  changes.** Cite this one in prose; it stays in the top-level `doi:` field.
+- **Version DOIs** — one per deposit, minted at release, accumulating in `identifiers`.
 
 ## Don'ts
 
 - **Never rewrite a published spec file.** `specs/QSM-FAI-v1.0.1.md` and friends are shipped
   artifacts. Errata are corrected in the *current* version only and recorded in the CHANGELOG; older
   files stay as published so citations stay honest.
-- **Never tag retroactively with an old date.** If a bundle was authored weeks ago and never
-  shipped, cut a new patch dated today that carries it. A tag dated to the authoring day asserts a
-  publication that did not happen.
+- **Never tag retroactively with an old date.** If a bundle was authored weeks ago and never shipped,
+  cut a new patch dated today that carries it. A tag dated to the authoring day asserts a publication
+  that did not happen. (This is why 1.3.0 and 1.4.0 shipped inside **1.4.1** rather than as themselves.)
 - **Never guess a version DOI.** Leave it absent until Zenodo mints it.
+- **Never bump `CITATION.cff` speculatively.** On `main` that *is* the release trigger.

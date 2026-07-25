@@ -1,0 +1,51 @@
+
+# Catches the failure that hid bundles 1.3.0 and 1.4.0 for nineteen days: a CHANGELOG
+# entry was written, the version was never tagged, and nothing anywhere noticed. Every
+# individual file was internally fine. Nothing checked whether they agreed with reality.
+#
+# Two modes, because a release PR legitimately bumps versions BEFORE the tag exists:
+#   pull_request  → --files-only (CHANGELOG/CITATION/.zenodo must agree; tag not yet due)
+#   push to main  → full (the tag must exist too, or the version is written-but-unshipped)
+#   schedule      → full, weekly, because the drift that matters appears while nobody pushes
+
+name: release drift
+
+on:
+  pull_request:
+    paths:
+      - 'CHANGELOG.md'
+      - 'CITATION.cff'
+      - '.zenodo.json'
+      - 'specs/**'
+      - 'scripts/check-release-drift.sh'
+  push:
+    branches: [main]
+  schedule:
+    # 09:23 Mondays UTC — off the hour on purpose; :00 is where every cron on earth lands.
+    - cron: '23 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Tags are required for the shipped-or-not check; a shallow clone has none,
+          # which would make this workflow silently pass by knowing nothing.
+          fetch-depth: 0
+
+      - name: Check for release drift
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            bash scripts/check-release-drift.sh --files-only
+          else
+            bash scripts/check-release-drift.sh
+          fi
+
+      - name: Explain a failure
+        if: failure()
+        run: |
+          echo "::error title=Release drift::The written version and the released version disagree."
+          echo "See RELEASING.md. A CHANGELOG entry is not a release — only the tag,"
+          echo "the GitHub Release, and the Zenodo deposit are visible outside this repo."
