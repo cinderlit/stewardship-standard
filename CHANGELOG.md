@@ -77,6 +77,27 @@ needed, and one relying on it here would ship a non-conformant escalation path.
 *Found by the FAI/TSS tier reconciliation, 2026-07-25, which was instructed to verify the additivity
 assertion rather than quote it. The §4 erratum above is why that instruction was given.*
 
+### Errata — TSS Appendix Z.1 could not express a valid THRIVE level
+
+**`TSS-v1.2.0.md` Appendix Z.1 mapped only `H0`–`H3`. THRIVE v1.1.0 added `H4 Integrated` in the
+same bundle that shipped TSS v1.2.0, and the row was never added.** The `H4` row is added here,
+marked as THRIVE-only. Editorial: Z.1 is a SHOULD-level alignment aid, no normative requirement
+changed, and no conformance claim is affected.
+
+Appendix Z is what an implementer reads to align a claim across the four scales, so a table that
+omits a level defined by one of them silently tells an H4 implementation that its level does not
+exist. The repository `README.md` already carried the H4 row; the normative spec did not — the
+summary was ahead of the standard, which is the same failure shape as the §4 erratum above.
+
+**H4 has no C/T/L counterpart, and this is not an oversight in the other three specs.** H4 extends
+the THRIVE domain model (WorldDomainScope, IdentityIntentProfile, DevelopmentalContext,
+TemporalCycleProfile); it is not a further step in audit rigour. An implementation at H4 is at T3.
+Per Z.2, TSS T-level remains the primary audit standard.
+
+**TSS is not version-bumped.** The row records a level THRIVE v1.1.0 already defines; adding it
+states what Appendix Z already intended to express, so TSS remains **v1.2.0** and only the bundle
+takes the patch number — the same treatment given the QSM-FAI §4 erratum above.
+
 ### Release hygiene
 
 - `CITATION.cff` and `.zenodo.json` were both still pinned at **1.2.0**; updated here to 1.4.1.
