@@ -15,14 +15,14 @@
 **Family head:** member
 
 - → `orgestra` (`spec-for`) — Orgestra implements the QSM spec this entity is the normative home for — Caitlin, 2026-07-08.
+- ← `cinderlit` (`depends-on`) — Parents The Stewardship Standard under the Cinderlit umbrella. Backfilled from venture-engine-map graph.
+- ← `orgestra` (`spec-for`) — Serves The Stewardship Standard. Backfilled from venture-engine-map graph.
 
 ## State
 
-**Git:** `cursor/per-repo-agent-context` · dirty
+Live git state: run `git status` — this file never carries it.
 
-**Last did:** QSM 6→8 layer (Max-Neef) refactor, Overview alignment polish, conformance authority + QSM v1.2 pushed to cursor/conformance-authority-home. ADR-0001 (layer naming) migrated to enforced .governance/adr format Jul 1.
-
-**Next:** Merge conformance branch to `main`.
+**Roadmap / next:** [Linear](https://linear.app/cinderlit/project/stewardship-standard-d79c37e5e12d) — roadmap items and intentions live there, not here (CANON §1).
 
 **Status file:** [`STATUS.md`](STATUS.md) (human-authored)
 
