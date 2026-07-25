@@ -40,6 +40,43 @@ tier-mapping ADR in cinderlit-work-system.
 The spec file itself is **not** version-bumped — the corrected sentence states what the normative
 table already required, so QSM-FAI remains **v1.3.0**. Only the bundle takes the patch number.
 
+### Correction to the [1.1.0] change record — QSM-FAI v1.1.0 was **not** purely additive
+
+**The [1.1.0] entry below, and `QSM-FAI-v1.1.0.md`'s own version note, both assert that "no v1.0.1
+requirement was removed or tightened, and v1.0.1 conformance claims remain valid under v1.1.0."
+That assertion is incorrect.** This entry supersedes it.
+
+**QSM-FAI v1.1.0 §4.2 ESC-01 is a tightening.** It requires every escalation to be classified under
+exactly one reason from the escalation taxonomy (or a declared ESC-04 extension). Under v1.0.1 §4.1
+an escalating agent was required only to *"attach a `requires_escalation: true` flag"* — there was no
+reason taxonomy and no obligation to classify. ESC-01 therefore imposes a **new MUST on behaviour
+that already existed and was already conformant**: a v1.0.1-conformant implementation emitting a bare
+`requires_escalation: true` is **non-conformant under v1.1.0**. ESC-02 and ESC-03 add further
+MUST-record obligations in the same shape.
+
+**A v1.0.1 conformance claim does not automatically carry forward to v1.1.0.** Implementers holding
+one should re-read §4.2 and verify their escalation path classifies, rather than relying on the
+additivity sentence.
+
+**Checked and cleared, so it is not re-litigated:** PROHIB-06 (v1.1.0 §9) prohibits agents holding a
+`QSM_META` FiduciaryContext and reads like a new prohibition, but `QSM_META` was itself introduced in
+QSM v1.1.0 §6.1 — no v1.0.1 context could carry that type, so nothing previously conformant could
+retroactively violate it. PROHIB-06 **is** genuinely additive. ESC-01 is not, because escalations
+existed at v1.0.1 and the spec already mandated them.
+
+**Why the record is corrected here rather than in the v1.1.0 files.** `specs/QSM-FAI-v1.1.0.md` is a
+shipped artifact and is deliberately left as published (same rule as the §4 erratum above), so its
+inline version note still contains the incorrect sentence. **Where a spec file's own change note and
+this CHANGELOG disagree about what changed between versions, this CHANGELOG is authoritative.**
+
+No known implementation is affected: `org-estra-archive`'s v1.0.1 claim was never issued, and
+Orgestra was built against v1.1.0 or later. This is a defect in the change record, not a live broken
+claim — but the record is what an external implementer relies on to decide whether a re-read is
+needed, and one relying on it here would ship a non-conformant escalation path.
+
+*Found by the FAI/TSS tier reconciliation, 2026-07-25, which was instructed to verify the additivity
+assertion rather than quote it. The §4 erratum above is why that instruction was given.*
+
 ### Release hygiene
 
 - `CITATION.cff` and `.zenodo.json` were both still pinned at **1.2.0**; updated here to 1.4.1.
@@ -116,6 +153,11 @@ The superseded `QSM-ARCH-v1.0.md` remains in `specs/`, marked superseded with a 
 replacement.
 
 ## [1.1.0] — 2026-06-22
+
+> **⚠ Corrected 2026-07-25 — see [1.4.1] § *Correction to the [1.1.0] change record*.** The
+> additivity sentence immediately below is **incorrect**: QSM-FAI v1.1.0 §4.2 **ESC-01 is a
+> tightening**, and a v1.0.1 conformance claim does not automatically carry forward. The [1.4.1]
+> entry is authoritative.
 
 Amendment release. Every change in this release is additive — no v1.0.x/v1.1.x requirement
 was removed or tightened, so all v1.0.0 conformance claims remain valid under v1.1.0. Use case
