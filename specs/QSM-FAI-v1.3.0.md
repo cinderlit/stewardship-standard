@@ -521,7 +521,7 @@ The standing FC sits `suspended` until continuity activation flips it `active` (
 
 ## 4. Action Tiers
 
-QSM-FAI defines a four-tier action model. Tier determines whether an agent may act autonomously,
+QSM-FAI defines a five-tier action model (Tiers 0–4). Tier determines whether an agent may act autonomously,
 must recommend, or must escalate.
 
 | Tier | Label | Examples | Default Agent Permission |
