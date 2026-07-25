@@ -2,9 +2,12 @@ name: Conformance Suite
 
 on:
   push:
-    branches: [main, "cursor/**"]
-  pull_request:
     branches: [main]
+  # No base-branch filter. It used to be `branches: [main]`, which silently gave ZERO checks to
+  # any stacked PR — a PR targeting another PR's branch got a green tick with nothing behind it.
+  # This suite exists because work was built, never landed, and never checked; a CI trigger that
+  # quietly declines to run on half the PRs is the same failure wearing a green badge.
+  pull_request:
 
 jobs:
   validate:
