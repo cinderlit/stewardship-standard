@@ -5,7 +5,19 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
-## Errata — 2026-07-25
+## [1.4.1] — 2026-07-25
+
+**This bundle is the first published release to carry [1.3.0] and [1.4.0].** Both were authored
+2026-07-06 but never tagged, never released, and never deposited — the last release cut was
+**v1.2.0 (2026-06-25)**, which is still what the DOI resolves to. Anyone citing the standard today
+receives a version predating QSM-FAI v1.3.0's `action_tier` field entirely. This release closes
+that gap; nothing in 1.3.0 or 1.4.0 is changed, only finally shipped.
+
+Cut as a patch rather than tagging 1.4.0 retroactively: dating a tag 2026-07-06 would assert a
+publication that never happened. The content of 1.3.0 and 1.4.0 is unchanged and their entries below
+keep their original authoring dates.
+
+### Errata
 
 **QSM-FAI §4 — "four-tier" corrected to "five-tier (Tiers 0–4)."** Editorial only; no normative
 requirement changed and no conformance claim is affected.
@@ -25,8 +37,16 @@ Found while reconciling `capacity-envelope-model.md`'s oversight coefficients ag
 *not* fixed here: **Tier 4 (Delegate) has no oversight cost assigned anywhere** — see the
 tier-mapping ADR in cinderlit-work-system.
 
-No version bump: the corrected sentence states what the normative table already required. If a
-patch release is preferred for citation stability, this becomes QSM-FAI v1.3.1.
+The spec file itself is **not** version-bumped — the corrected sentence states what the normative
+table already required, so QSM-FAI remains **v1.3.0**. Only the bundle takes the patch number.
+
+### Release hygiene
+
+- `CITATION.cff` and `.zenodo.json` were both still pinned at **1.2.0**; updated here to 1.4.1.
+- The `identifiers` list in `CITATION.cff` carries a version DOI for **v1.0.0 only** — v1.2.0's was
+  never added. The concept DOI (`10.5281/zenodo.20436569`) is unchanged and always resolves to the
+  latest version. **The v1.4.1 version DOI can only be added after Zenodo deposits it**, so it is
+  deliberately absent here rather than guessed.
 
 ## [1.4.0] — 2026-07-06
 
