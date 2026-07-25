@@ -1,0 +1,124 @@
+{
+  "_comment": "Demonstrates THRIVE §6.5 DevelopmentalContext and §6.6 TemporalCycleProfile during a major life transition. The fundamental Max-Neef needs remain unchanged; only satisfiers and capacity baselines shift. See THRIVE §6.5 rule: stage modifies satisfiers, not needs.",
+  "context": {
+    "id": "ctx-self-caregiving-001",
+    "name": "Self Stewardship — Caregiving Transition",
+    "type": "SELF",
+    "stewards": ["person-001"],
+    "effective_date": "2026-06-01T00:00:00Z",
+    "scope": "Personal wellbeing, executive function, and caregiving coordination while operating a small business",
+    "needs_framework": "max-neef",
+    "learning_framework": "kolb",
+    "version": "1.0"
+  },
+  "developmental_context": {
+    "life_stage": "sandwich generation — primary caregiver for aging parent while running a business",
+    "stage_framework": "custom life-stage model",
+    "current_focus_or_tension": "Balancing business continuity with increased caregiving obligations; sleep and recovery are irregular but the need for connection and rest has not diminished — only how they are met has changed.",
+    "last_stage_review": "2026-06-01T00:00:00Z"
+  },
+  "temporal_cycle_profile": {
+    "id": "cycle-caregiving-transition-001",
+    "label": "Caregiving transition — irregular capacity",
+    "cycle_type": "life-stage",
+    "approximate_period": "months (estimated 6–18 months until care arrangements stabilize)",
+    "capacity_effect": "baseline reduction across cognitive, emotional, and recovery dimensions during low-capacity phases",
+    "high_capacity_phases": [
+      "weekday mornings before 10am when parent is settled and no urgent business calls",
+      "Sunday afternoons when backup caregiver is available"
+    ],
+    "low_capacity_phases": [
+      "overnight and early morning when sleep is interrupted",
+      "days following medical appointments or care plan changes",
+      "end-of-quarter business deadlines overlapping with care escalations"
+    ]
+  },
+  "capacity_profile": {
+    "id": "cap-caregiving-transition-001",
+    "effective_date": "2026-06-01T00:00:00Z",
+    "capacity": {
+      "cognitive": 0.55,
+      "emotional": 0.50,
+      "physical": 0.60,
+      "social": 0.45,
+      "administrative": 0.50,
+      "recovery": 0.40
+    },
+    "load": {
+      "required_tasks": "high",
+      "interruptions": "high",
+      "care_obligations": "high",
+      "decision_burden": "high",
+      "hidden_maintenance": "medium",
+      "context_switching": "high"
+    },
+    "overload_flag": false,
+    "_note": "Reduced baselines reflect current load, not a judgment about capability. Capacity is expected to recover as care arrangements stabilize."
+  },
+  "needs": [
+    {
+      "id": "need-affection-001",
+      "label": "Affection (Max-Neef)",
+      "priority": "high",
+      "framework_need": "affection",
+      "satisfiers": {
+        "prior_to_transition": "Regular social time with close friends; weekly dinner with partner; informal check-ins with colleagues",
+        "current": "Daily presence with parent during care routines; brief voice messages to friends instead of in-person visits; partner check-in during morning coffee before the day fragments"
+      },
+      "_note": "The need for affection is unchanged. Satisfiers have shifted toward caregiving relationships and shorter, more frequent connection points."
+    },
+    {
+      "id": "need-leisure-001",
+      "label": "Leisure (Max-Neef)",
+      "priority": "medium",
+      "framework_need": "leisure",
+      "satisfiers": {
+        "prior_to_transition": "Evening reading; weekend hikes; monthly live music events",
+        "current": "15-minute audiobook during parent's nap; one short neighborhood walk when backup is available; no live events until care schedule stabilizes"
+      },
+      "_note": "Leisure need persists at the same priority. Scope of satisfiers has narrowed temporarily — this is a capacity adaptation, not a deprioritization of the need."
+    },
+    {
+      "id": "need-protection-001",
+      "label": "Protection (Max-Neef)",
+      "priority": "high",
+      "framework_need": "protection",
+      "satisfiers": {
+        "prior_to_transition": "Routine health checkups; stable income from business; home security and insurance review",
+        "current": "Same health checkups maintained; business continuity plan activated with delegated client communication; added parent medication tracking and emergency contact list"
+      },
+      "_note": "Protection need unchanged. Satisfiers expanded to include parent's safety without removing self-protection measures."
+    }
+  ],
+  "routines": [
+    {
+      "id": "routine-evening-winddown-001",
+      "label": "Evening wind-down",
+      "type": "evening",
+      "trigger_conditions": ["low-capacity phase active", "after 8pm"],
+      "steps": [
+        "Set phone to do-not-disturb except care emergency contacts",
+        "Five minutes of stretching or breathing — no productivity expectations",
+        "Write one line in journal: what went okay today"
+      ],
+      "expected_duration": "15 minutes",
+      "known_failure_modes": ["parent needs assistance after bedtime routine starts", "business email arrives marked urgent"],
+      "fallback_options": ["Skip journal; keep breathing exercise only", "Defer wind-down to next available quiet window — no catch-up required"]
+    },
+    {
+      "id": "routine-morning-micro-reset-001",
+      "label": "Morning micro-reset",
+      "type": "morning",
+      "trigger_conditions": ["low-capacity phase active", "after interrupted sleep"],
+      "steps": [
+        "Drink water before checking phone",
+        "Identify one essential task for the business day — not a full plan",
+        "Send one brief check-in message to backup caregiver or partner"
+      ],
+      "expected_duration": "10 minutes",
+      "known_failure_modes": ["parent wakes before reset completes", "urgent business call interrupts"],
+      "fallback_options": ["Water only — reset rest of routine when a gap appears", "Essential task can be as small as 'reply to one client email'"]
+    }
+  ],
+  "transition_notes": "Declared 2026-06-01 when parent moved in following a fall. What changed: satisfiers for Affection and Leisure were reassigned to fit available time and energy; CapacityProfile baselines were reduced to match current load; two low-capacity routine overrides were activated. What did not change: the underlying Max-Neef needs, their relative priorities, or the steward's dignity. This transition is treated as a temporary capacity phase, not a permanent downgrade of wellbeing requirements."
+}

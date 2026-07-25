@@ -1,0 +1,91 @@
+{
+  "_note": "Goal-driven pattern using existing QSM primitives — not a schema extension. Intent orients → Needs define targets → Actions move toward them → Observation records outcomes → Adaptation updates assumptions. This is a configuration of the standard, not an extension of it.",
+  "context": {
+    "id": "ctx-charter-consultant-001",
+    "name": "Solo Consulting Practice — Q2 2026",
+    "type": "CHARTER",
+    "stewards": ["person-consultant-001"],
+    "effective_date": "2026-04-01T00:00:00Z",
+    "scope": "Independent consulting practice: client delivery, business development, and practice operations",
+    "needs_framework": "pink",
+    "learning_framework": "pdca",
+    "stewardship_phase": "atlas",
+    "version": "1.0"
+  },
+  "intent": {
+    "id": "intent-q2-2026-001",
+    "label": "Q2 2026 practice orientation",
+    "statement": "Grow the practice sustainably by deepening two anchor client relationships, launching a repeatable workshop offering, and protecting recovery time so delivery quality does not erode.",
+    "effective_date": "2026-04-01T00:00:00Z",
+    "_note": "Intent declares desired end state and orientation — not a task list. Needs carry the measurable targets; Actions carry the work."
+  },
+  "needs": [
+    {
+      "id": "need-mastery-delivery-001",
+      "label": "Mastery — delivery excellence",
+      "priority": "high",
+      "target": "Maintain client satisfaction ≥ 4.5/5 across active engagements through Q2; zero missed milestone deliveries",
+      "framework_dimension": "mastery"
+    },
+    {
+      "id": "need-purpose-workshop-001",
+      "label": "Purpose — workshop offering",
+      "priority": "high",
+      "target": "Pilot workshop delivered to at least one paying client by 2026-06-30; post-session NPS ≥ 40",
+      "framework_dimension": "purpose"
+    },
+    {
+      "id": "need-autonomy-capacity-001",
+      "label": "Autonomy — sustainable capacity",
+      "priority": "medium",
+      "target": "Average billable week ≤ 32 hours through Q2; at least one full recovery day per week",
+      "framework_dimension": "autonomy"
+    }
+  ],
+  "actions": [
+    {
+      "id": "action-delivery-review-001",
+      "type": "review",
+      "label": "Biweekly client delivery check-in",
+      "target_need_id": "need-mastery-delivery-001",
+      "actor_id": "person-consultant-001",
+      "timestamp": "2026-04-07T09:00:00Z"
+    },
+    {
+      "id": "action-workshop-outline-001",
+      "type": "create",
+      "label": "Draft workshop curriculum outline",
+      "target_need_id": "need-purpose-workshop-001",
+      "actor_id": "person-consultant-001",
+      "timestamp": "2026-04-14T14:00:00Z"
+    },
+    {
+      "id": "action-capacity-audit-001",
+      "type": "audit",
+      "label": "Weekly time-tracking review",
+      "target_need_id": "need-autonomy-capacity-001",
+      "actor_id": "person-consultant-001",
+      "timestamp": "2026-04-04T17:00:00Z"
+    }
+  ],
+  "records": [
+    {
+      "id": "rec-decision-workshop-client-001",
+      "event_type": "decision",
+      "timestamp": "2026-05-12T10:30:00Z",
+      "actor_id": "person-consultant-001",
+      "context_id": "ctx-charter-consultant-001",
+      "summary": "Accepted anchor client as workshop pilot partner instead of waiting for a new prospect",
+      "details": {
+        "decision": "Offer discounted pilot workshop to existing anchor client (Meridian Analytics) in May rather than holding out for a net-new prospect in June",
+        "alternatives_considered": [
+          "Wait for inbound prospect from conference networking",
+          "Run a free beta with a peer's organization"
+        ],
+        "rationale": "Existing trust reduces delivery risk for first pilot; faster feedback loop supports Q2 target"
+      },
+      "decision_confidence": 0.72,
+      "expected_outcome": "Workshop pilot completed by 2026-05-28 with NPS ≥ 40 and a reusable curriculum artifact for future sales"
+    }
+  ]
+}

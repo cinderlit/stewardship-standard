@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-06-26T00:00:00Z",
+  "claims": [
+    {
+      "id": "cc-orgestra-001",
+      "claimant": "person_caitlin",
+      "implementation_url": "https://orgestra.org",
+      "context_types": ["SELF", "HEARTH", "CHARTER"],
+      "conformance_level": "T1",
+      "qsm_level": "C1",
+      "arch_level": "A1",
+      "claimed_at": "2026-06-25T00:00:00Z",
+      "file": "cc-orgestra-001.json"
+    },
+    {
+      "id": "cc-woodcrestwa-001",
+      "claimant": "Woodcrest HOA",
+      "implementation_url": "https://woodcrestwa.com",
+      "context_types": ["CHARTER", "CREST"],
+      "conformance_level": "T0",
+      "arch_level": "A2",
+      "claimed_at": "2026-06-26T00:00:00Z",
+      "file": "cc-woodcrestwa-001.json"
+    }
+  ]
+}
