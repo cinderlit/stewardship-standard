@@ -5,6 +5,29 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## Errata — 2026-07-25
+
+**QSM-FAI §4 — "four-tier" corrected to "five-tier (Tiers 0–4)."** Editorial only; no normative
+requirement changed and no conformance claim is affected.
+
+The prose introducing §4 Action Tiers read *"QSM-FAI defines a four-tier action model"* while the
+normative table immediately below it listed **five** tiers — `0 Read · 1 Recommend · 2 Notify ·
+3 Act · 4 Delegate`. The table was always authoritative, and §4.1 treats Tier 0 as a real point on
+the scale (it escalates *to* "Recommendation (Tier 1)" and gates "Tier 3 or Tier 4"), so this was an
+off-by-one in the sentence, not an ambiguity about whether Tier 0 counts.
+
+**Present in every published release** — v1.0.1, v1.1.0, v1.2.0, and v1.3.0. Corrected in v1.3.0
+only; the earlier files are shipped historical artifacts and are deliberately left as published.
+Implementers reading any version should treat the **table** as normative.
+
+Found while reconciling `capacity-envelope-model.md`'s oversight coefficients against this spec
+(cinderlit-work-system ADR-0029 AI-6). That reconciliation surfaced a second, larger gap that is
+*not* fixed here: **Tier 4 (Delegate) has no oversight cost assigned anywhere** — see the
+tier-mapping ADR in cinderlit-work-system.
+
+No version bump: the corrected sentence states what the normative table already required. If a
+patch release is preferred for citation stability, this becomes QSM-FAI v1.3.1.
+
 ## [1.4.0] — 2026-07-06
 
 Governance closure spec rider. Adds optional `action_tier` on TENURE entries
