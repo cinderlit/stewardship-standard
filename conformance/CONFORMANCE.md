@@ -81,12 +81,12 @@ Measures **how mature a specific layer is within an implementation**, independen
 
 ## Claim format
 
-Claims MUST validate against [`schemas/conformance-claim.schema.json`](../schemas/conformance-claim.schema.json) (v1.2+).
+Claims MUST validate against [`schemas/conformance-claim.schema.json`](../schemas/conformance-claim.schema.json) (v1.3+).
 
 Required fields:
 - `id` — unique claim identifier
 - `tss_version` — TSS version claimed against
-- `context_types` — context types supported (SELF, HEARTH, ESTATE, CHARTER, CREST)
+- `context_types` — context types supported (SELF, HEARTH, ESTATE, CHARTER, CREST, QSM_META)
 - `conformance_level` — T-level (required)
 
 Optional multi-axis fields:
@@ -95,6 +95,76 @@ Optional multi-axis fields:
 - `layer_maturity` — per-layer M-level map
 - `deviations` — explicit partial implementations
 - `implementation_url` — where the implementation lives
+- `source` — provenance of a registry entry (see *Registry entries are pointers* below)
+
+### Every claimed level carries evidence
+
+A level is stated as an object naming the minimum-conformance rules it rests on and, for each,
+the artifact that satisfies it:
+
+```json
+"arch_level": {
+  "level": "A1",
+  "evidence": [
+    { "rule": "ARCH-01", "satisfied_by": "src/layers/index.ts#L1" },
+    { "rule": "ARCH-05", "satisfied_by": "prisma/schema.prisma#L88",
+      "note": "sensitivity_level on every model holding personal data" }
+  ]
+}
+```
+
+**Why this and not a validator.** No checker can tell whether a level is *true* — that requires
+reading the implementation. What a format can do is make the claim impossible to write without
+looking. You cannot fill in `satisfied_by` for `ARCH-05` without going to find the object that
+declares `sensitivity_level`, and if that field does not exist you discover it at authoring time
+rather than after publication.
+
+This is not hypothetical. Every false level found in the 2026-07-25 conformance review was a
+number someone typed to complete the shape of a form: an `A1` resting on an `ARCH-05`
+`sensitivity_level` that had never existed in the implementation's history, and an `H1` resting on
+THRIVE `Need` and `Routine` objects that had never been modelled. Neither survives a `satisfied_by`
+field. **A claim stops being a number you type and becomes a number you justify.**
+
+Rule IDs are validated by *shape*, not against a closed list. A closed enum in a published schema
+goes stale the moment a spec release adds a rule, and a stale published schema rejects valid
+claims. The reference evaluator carries the per-axis minimum-conformance sets — TSS-01..05
+(TSS §12.3), QSM-01..05 (QSM §12), THRIVE-01..04 (THRIVE §12.2), ARCH-01..05 (QSM-ARCH §8.2) —
+and warns when a claimed level's evidence does not cover them. QSM-FAI is deliberately absent from
+that table: §8 defines L0–L3 in prose with no numbered minimum-conformance list, and inventing one
+here would be this authority asserting a normative list the spec does not contain.
+
+**Migration.** A bare string level (`"arch_level": "A1"`) remains valid for **one release**, with a
+deprecation warning from the evaluator, and is rejected after it. This follows the deprecation
+policy the standard sets for itself (TSS §14.2) rather than invalidating an outside implementer's
+claim overnight.
+
+### Registry entries are pointers
+
+A registry entry is not an independent document. The source of truth for a claim is the
+implementation's own claim file; the registry holds a **pointer plus a fetched snapshot**:
+
+```json
+"source": {
+  "source_url": "https://…/conformance-claim.json",
+  "content_hash": "sha256:…",
+  "fetched_at": "2026-07-25T00:00:00Z"
+}
+```
+
+Copies drift. With exactly two claims registered, one had already diverged from its source —
+publishing a deviation that had become false, while omitting three that had become true. A suite
+validating the registry copy would have passed while the live implementation stayed
+non-conformant. `content_hash` makes that divergence detectable:
+`generate_registry.py --verify-sources` re-reads each source and fails on mismatch. It also fails
+on a source it cannot reach, rather than skipping it — a check that quietly passes when it could
+not run reports "verified" for something it never looked at.
+
+If an implementation publishes no machine-readable claim file, `source_url` is the literal
+`self:registry` with a `note` saying so. A declared absence of provenance can be reviewed; a
+silent one cannot.
+
+`index.json` and `REGISTRY.md` are **generated**. `generate_registry.py` is their only writer and
+`--check` fails the build when they disagree with the claim files beside them.
 
 See [`registry/`](registry/) for published claims.
 

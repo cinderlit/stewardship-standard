@@ -1,11 +1,14 @@
 {
   "id": "cc-orgestra-001",
   "tss_version": "1.2.0",
-  "context_types": ["SELF", "HEARTH", "CHARTER"],
+  "context_types": [
+    "SELF",
+    "HEARTH",
+    "CHARTER"
+  ],
   "conformance_level": "T1",
   "qsm_level": "C1",
-  "arch_level": "A1",
-  "thrive_level": "H1",
+  "thrive_level": "H0",
   "fai_level": "L1",
   "layer_maturity": {
     "intent": "M2",
@@ -20,9 +23,18 @@
   "deviations": [
     "Memory layer (Layer 4) is not directly writable by agent — Obsidian has no MCP connection. Context bundles in data/ serve as machine-readable Memory proxy.",
     "Signal layer (Layer 7) has no persistent dashboard. Cross-context signal check runs as on-demand agent session only.",
-    "TENURE logs are JSONL files; not yet exposed as a queryable API."
+    "TENURE entry_type is extended per QSM-FAI TEN-06 with implementation-specific values 'policy_apply' (an MCP policy dispatch was applied) and 'ext' (pattern-detection bookkeeping and backfilled rows of unknown original type). Each still satisfies TSS-REC-01 through TSS-REC-05.",
+    "TENURE escalation_reason is extended per QSM-FAI ESC-04 with decision-rule trigger identifiers rather than only the §4.2 taxonomy values, so that a rule_conflict escalation records the conflicting rule id inline (ESC-02). Declared here per TSS-CONF-05.",
+    "TENURE action_tier (QSM-FAI v1.3.0 §6.1, optional) is populated from 2026-07-25 onward. Entries written before that date carry null, which means 'not recorded' and must NOT be read as tier 0. Records are append-only (TEN-02) and were deliberately not backfilled with inferred tiers.",
+    "TENURE action_tier on task_run and policy_apply entries is currently a conservative floor of 3 (Act) rather than a per-task measurement; the task catalog has no action_tier column yet. Some entries logged as Tier 3 are in truth Tier 0 reads."
   ],
   "claimant": "person_caitlin",
   "claimed_at": "2026-06-25T00:00:00Z",
-  "implementation_url": "https://orgestra.org"
+  "implementation_url": "https://orgestra.org",
+  "source": {
+    "source_url": "https://gitlab.com/cinderlit/orgestra/-/raw/main/conformance-claim.json",
+    "content_hash": "sha256:c20070c1d3f05b19a4efc3b687cfe4bb962a39c80af9e7ab4b58ea41c94ea722",
+    "fetched_at": "2026-07-25T00:00:00Z",
+    "note": "Hash is of the CORRECTED source claim, which at fetch time had not yet reached the implementation's main branch. --verify-sources will therefore report divergence until it does. That is the intended behaviour: the check goes green when the two are actually the same, not when someone asserts they are."
+  }
 }

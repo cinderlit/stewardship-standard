@@ -1,7 +1,10 @@
 {
   "id": "cc-woodcrestwa-001",
   "tss_version": "1.2.0",
-  "context_types": ["CHARTER", "CREST"],
+  "context_types": [
+    "CHARTER",
+    "CREST"
+  ],
   "conformance_level": "T0",
   "arch_level": "A2",
   "layer_maturity": {
@@ -22,5 +25,11 @@
   ],
   "claimant": "Woodcrest HOA",
   "claimed_at": "2026-06-26T00:00:00Z",
-  "implementation_url": "https://woodcrestwa.com"
+  "implementation_url": "https://woodcrestwa.com",
+  "source": {
+    "source_url": "self:registry",
+    "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "fetched_at": "2026-07-25T00:00:00Z",
+    "note": "This registry entry is the source of record. The implementation is a static site and publishes no machine-readable claim file, so there is nothing to point at and nothing that can diverge. Declared rather than left blank so a reviewer can see the difference between 'no external source exists' and 'nobody filled this in'."
+  }
 }

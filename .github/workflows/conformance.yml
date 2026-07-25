@@ -46,3 +46,18 @@ jobs:
 
       - name: Run conformance suite
         run: pytest tests/ -v --tb=short
+
+      # index.json and REGISTRY.md are generated artifacts that look hand-maintainable.
+      # This fails when someone has edited them directly, which is how a registry ends up
+      # disagreeing with the claim files sitting next to it.
+      - name: Registry artifacts are generated, not hand-edited
+        run: python conformance/tools/generate_registry.py --check
+
+      - name: Evaluate every registered claim
+        run: python conformance/tools/evaluate_claim.py --registry
+
+      # NOT run here: generate_registry.py --verify-sources. It re-reads each claim's source and
+      # fails on divergence OR on a source it cannot reach — and some sources are private
+      # repositories that this public runner has no credentials for. Running it here would fail
+      # every build for a reason unrelated to the change under test. It belongs on a runner that
+      # can see the sources. Named rather than silently omitted so the gap is visible.
