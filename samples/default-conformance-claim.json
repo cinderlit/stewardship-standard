@@ -1,8 +1,17 @@
 {
   "id": "claim-001",
-  "tss_version": "1.1.1",
+  "tss_version": "1.2.0",
   "context_types": ["HEARTH", "SELF"],
-  "conformance_level": "T2",
+  "conformance_level": {
+    "level": "T2",
+    "evidence": [
+      { "rule": "TSS-01", "satisfied_by": "src/context/context.model.ts#L1", "note": "Context is a first-class persisted object, not an implicit grouping." },
+      { "rule": "TSS-02", "satisfied_by": "src/entity/entity.model.ts#L1" },
+      { "rule": "TSS-03", "satisfied_by": "src/record/record.service.ts#L1", "note": "Records are append-only." },
+      { "rule": "TSS-04", "satisfied_by": "conformance-claim.json", "note": "This file. Versioned in git; tss_version is explicit." },
+      { "rule": "TSS-05", "satisfied_by": "src/context/context.model.ts#L14", "note": "The context_type enum admits only HEARTH and SELF, so no other context can be instantiated and none can be claimed." }
+    ]
+  },
   "deviations": [],
   "claimant": "Cinderlit",
   "claimed_at": "2026-05-28T00:00:00Z"

@@ -31,7 +31,7 @@ REGISTRY_DIR = os.path.join(REPO_ROOT, "conformance", "registry")
 AXIS_LADDER = {
     "T": ["T0", "T1", "T2", "T3"],
     "C": ["C0", "C1", "C2", "C3"],
-    "H": ["H0", "H1", "H2", "H3"],
+    "H": ["H0", "H1", "H2", "H3", "H4"],  # H4 Integrated (THRIVE v1.1.0) — THRIVE-only, see TSS Z.1
     "L": ["L0", "L1", "L2", "L3"],
 }
 
@@ -56,6 +56,85 @@ ALL_LAYERS = {
     "signal",
     "adaptation",
 }
+
+# Which named rules a claimed level on each axis rests on.
+#
+# This table lives in the tool and NOT in the schema on purpose. A closed enum of rule IDs in a
+# published JSON Schema goes stale the moment a spec release adds a rule, and a stale published
+# schema is worse than no schema — it rejects valid claims. Tools are cheap to update; a schema
+# with a permanent $id is not. The schema validates rule IDs by SHAPE; this table checks COVERAGE.
+#
+# QSM-FAI is deliberately absent: §8 defines L0-L3 in prose, with no numbered minimum-conformance
+# list to check against. Inventing one here would be this repository asserting a normative list
+# the spec does not contain. Evidence on fai_level is therefore required but not coverage-checked.
+AXIS_MIN_RULES = {
+    "conformance_level": ("TSS §12.3", ["TSS-01", "TSS-02", "TSS-03", "TSS-04", "TSS-05"]),
+    "qsm_level": ("QSM §12", ["QSM-01", "QSM-02", "QSM-03", "QSM-04", "QSM-05"]),
+    "thrive_level": ("THRIVE §12.2", ["THRIVE-01", "THRIVE-02", "THRIVE-03", "THRIVE-04"]),
+    "arch_level": ("QSM-ARCH §8.2", ["ARCH-01", "ARCH-02", "ARCH-03", "ARCH-04", "ARCH-05"]),
+}
+
+LEVEL_FIELDS = ["conformance_level", "qsm_level", "thrive_level", "fai_level", "arch_level"]
+
+
+def level_of(value: Any) -> str | None:
+    """Read a level from either the bare-string form or the v1.3 evidence-bearing object."""
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict):
+        lvl = value.get("level")
+        return lvl if isinstance(lvl, str) else None
+    return None
+
+
+def evidence_of(value: Any) -> list[dict[str, Any]]:
+    if isinstance(value, dict):
+        ev = value.get("evidence")
+        if isinstance(ev, list):
+            return [e for e in ev if isinstance(e, dict)]
+    return []
+
+
+def check_evidence(claim: dict[str, Any]) -> list[str]:
+    """Schema v1.3: every claimed level SHOULD carry per-rule evidence.
+
+    This is the check that closes the class. Every false level found in the 2026-07-25 review
+    survived because a level was a number someone typed: an A1 whose ARCH-05 `sensitivity_level`
+    had never existed in the repository's history, and an H1 whose THRIVE Need and Routine objects
+    were never modelled. Neither could have been written down as `satisfied_by` without the author
+    running into the absence. No validator can verify a citation is TRUE; what it can do is refuse
+    to let a level be stated without one.
+    """
+    warnings: list[str] = []
+    for field in LEVEL_FIELDS:
+        value = claim.get(field)
+        if value is None:
+            continue
+        if isinstance(value, str):
+            warnings.append(
+                f"DEPRECATED: {field} is a bare string level. Schema v1.3 expects "
+                f'{{"level": "{value}", "evidence": [...]}}. Bare levels are accepted for ONE '
+                "release (TSS §14.2 deprecation policy) and will be rejected after it."
+            )
+            continue
+        cited = {e.get("rule") for e in evidence_of(value)}
+        source, required = AXIS_MIN_RULES.get(field, (None, []))
+        missing = [r for r in required if r not in cited]
+        if missing:
+            warnings.append(
+                f"{field}={level_of(value)} cites no evidence for "
+                f"{', '.join(missing)} ({source}). Cite the rule and what satisfies it, or "
+                "record the gap in deviations."
+            )
+        for item in evidence_of(value):
+            sat = (item.get("satisfied_by") or "").strip()
+            if sat.lower() in ("", "tbd", "todo", "n/a", "none", "?"):
+                warnings.append(
+                    f"{field} evidence for {item.get('rule')} has a placeholder "
+                    f"satisfied_by ({item.get('satisfied_by')!r}). A placeholder citation is a "
+                    "claim with no evidence wearing the shape of one."
+                )
+    return [f"WARN: {w}" for w in warnings]
 
 
 def load_json(path: str) -> dict[str, Any]:
@@ -94,7 +173,7 @@ def check_tss_conf_rules(claim: dict[str, Any]) -> list[str]:
         errors.append("TSS-CONF-04: claim MUST specify conformance_level")
 
     # deviations should be present (even if empty) for T1+
-    t_level = claim.get("conformance_level", "")
+    t_level = level_of(claim.get("conformance_level")) or ""
     if t_level in ("T1", "T2", "T3") and "deviations" not in claim:
         warnings.append(
             "TSS-CONF-05: deviations field recommended for T1+ claims (use [] if none)"
@@ -106,7 +185,7 @@ def check_tss_conf_rules(claim: dict[str, Any]) -> list[str]:
 def check_axis_alignment(claim: dict[str, Any]) -> list[str]:
     """Warn when C/H/L levels diverge from T-level on the alignment ladder."""
     warnings: list[str] = []
-    t_level = claim.get("conformance_level")
+    t_level = level_of(claim.get("conformance_level"))
     if not t_level:
         return warnings
 
@@ -115,7 +194,7 @@ def check_axis_alignment(claim: dict[str, Any]) -> list[str]:
         return [f"Invalid T-level: {t_level}"]
 
     for axis_key, field in [("C", "qsm_level"), ("H", "thrive_level"), ("L", "fai_level")]:
-        domain_level = claim.get(field)
+        domain_level = level_of(claim.get(field))
         if domain_level is None:
             continue
         d_idx = level_index(AXIS_LADDER[axis_key], domain_level)
@@ -133,7 +212,7 @@ def check_axis_alignment(claim: dict[str, Any]) -> list[str]:
 def check_arch_maturity_consistency(claim: dict[str, Any]) -> list[str]:
     """Check A-level vs layer_maturity consistency."""
     warnings: list[str] = []
-    arch = claim.get("arch_level")
+    arch = level_of(claim.get("arch_level"))
     maturity = claim.get("layer_maturity")
     if not arch or not maturity:
         return warnings
@@ -181,6 +260,7 @@ def evaluate_claim(claim_path: str, schema: dict[str, Any], strict: bool = False
     results.extend(check_tss_conf_rules(claim))
     results.extend(check_axis_alignment(claim))
     results.extend(check_arch_maturity_consistency(claim))
+    results.extend(check_evidence(claim))
 
     errors = [r for r in results if not r.startswith("WARN:")]
     warnings = [r[6:] for r in results if r.startswith("WARN:")]

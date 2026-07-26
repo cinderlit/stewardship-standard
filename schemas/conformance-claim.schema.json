@@ -1,10 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://stewardshipstandard.org/schemas/conformance-claim/v1.2.json",
+  "$id": "https://stewardshipstandard.org/schemas/conformance-claim/v1.3.json",
   "title": "TSS ConformanceClaim Schema",
-  "description": "A versioned, explicit claim of conformance to TSS and related specs. Defined by TSS v1.2.0 §5.11 and §12, extended for multi-axis claims (v1.2). TSS T-level is the primary audit standard; QSM C-level, THRIVE H-level, QSM-FAI L-level, QSM-ARCH A-level, and Layer Maturity M-level are independent axes (see TSS Appendix Z and specs/QSM-LAYER-MATURITY.md).",
+  "description": "A versioned, explicit claim of conformance to TSS and related specs. Defined by TSS v1.2.0 §5.11 and §12, extended for multi-axis claims (v1.2) and evidence-bearing levels (v1.3). TSS T-level is the primary audit standard; QSM C-level, THRIVE H-level, QSM-FAI L-level, QSM-ARCH A-level, and Layer Maturity M-level are independent axes (see TSS Appendix Z and specs/QSM-LAYER-MATURITY.md). From v1.3 each claimed level SHOULD be stated as an object carrying the minimum-conformance rules it satisfies and the artifact that satisfies each. A bare string level remains valid for ONE release and is deprecated: the reference evaluator warns on it. Rationale: a level given as a bare string is a number you type; a level carrying rule-by-rule evidence is a number you have to justify, and the second cannot be filled in without discovering the field or object it depends on does not exist.",
   "type": "object",
-  "required": ["id", "tss_version", "context_types", "conformance_level"],
+  "required": [
+    "id",
+    "tss_version",
+    "context_types",
+    "conformance_level"
+  ],
   "properties": {
     "id": {
       "type": "string",
@@ -18,54 +23,253 @@
       "type": "array",
       "items": {
         "type": "string",
-        "enum": ["SELF", "HEARTH", "ESTATE", "CHARTER", "CREST", "QSM_META"]
+        "enum": [
+          "SELF",
+          "HEARTH",
+          "ESTATE",
+          "CHARTER",
+          "CREST",
+          "QSM_META"
+        ]
       },
       "minItems": 1,
       "description": "Context types supported (TSS-CONF-03). Enum matches schemas/context.schema.json. QSM_META is included because QSM §6.1 QSM-META-01 describes 'an implementation supporting QSM_META', so an implementation may legitimately claim it; QSM-FAI PROHIB-06 separately bars an AGENT from acting under one, which is why schemas/fiduciary-context-v1.1.schema.json correctly omits it."
     },
     "conformance_level": {
-      "type": "string",
-      "enum": ["T0", "T1", "T2", "T3"],
-      "description": "Primary TSS audit level (TSS-CONF-04)"
+      "description": "Primary TSS audit level (TSS-CONF-04). Minimum-conformance rules: TSS-01..TSS-05 (TSS §12.3).",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "T0",
+            "T1",
+            "T2",
+            "T3"
+          ],
+          "deprecated": true,
+          "description": "DEPRECATED bare form (schema v1.2 and earlier). Accepted for one release per TSS §14.2; the reference evaluator emits a deprecation warning. Migrate to the object form."
+        },
+        {
+          "type": "object",
+          "required": [
+            "level",
+            "evidence"
+          ],
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": [
+                "T0",
+                "T1",
+                "T2",
+                "T3"
+              ]
+            },
+            "evidence": {
+              "$ref": "#/definitions/evidence"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Evidence-bearing form. `evidence` cites the minimum-conformance rules this level rests on and, for each, the artifact that satisfies it."
+        }
+      ]
     },
     "qsm_level": {
-      "type": "string",
-      "enum": ["C0", "C1", "C2", "C3"],
-      "description": "QSM object conformance level (TSS Appendix Z)"
+      "description": "QSM object conformance level (TSS Appendix Z). Minimum-conformance rules: QSM-01..QSM-05 (QSM §12).",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "C0",
+            "C1",
+            "C2",
+            "C3"
+          ],
+          "deprecated": true,
+          "description": "DEPRECATED bare form (schema v1.2 and earlier). Accepted for one release per TSS §14.2; the reference evaluator emits a deprecation warning. Migrate to the object form."
+        },
+        {
+          "type": "object",
+          "required": [
+            "level",
+            "evidence"
+          ],
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": [
+                "C0",
+                "C1",
+                "C2",
+                "C3"
+              ]
+            },
+            "evidence": {
+              "$ref": "#/definitions/evidence"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Evidence-bearing form. `evidence` cites the minimum-conformance rules this level rests on and, for each, the artifact that satisfies it."
+        }
+      ]
     },
     "thrive_level": {
-      "type": "string",
-      "enum": ["H0", "H1", "H2", "H3", "H4"],
-      "description": "THRIVE domain conformance level (TSS Appendix Z). THRIVE runs one level beyond the shared C/T/L ladder: THRIVE v1.1.0 defines H4 Integrated, which has no C/T/L counterpart because it extends the THRIVE domain model rather than audit rigour. An H4 implementation is at T3."
+      "description": "THRIVE domain conformance level (TSS Appendix Z). Minimum-conformance rules: THRIVE-01..THRIVE-04 (THRIVE §12.2); THRIVE-05..08 are SHOULDs. THRIVE runs one level beyond the shared C/T/L ladder — THRIVE v1.1.0 defines H4 Integrated, which has no C/T/L counterpart because it extends the THRIVE domain model rather than audit rigour. An H4 implementation is at T3.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "H0",
+            "H1",
+            "H2",
+            "H3",
+            "H4"
+          ],
+          "deprecated": true,
+          "description": "DEPRECATED bare form (schema v1.2 and earlier). Accepted for one release per TSS §14.2; the reference evaluator emits a deprecation warning. Migrate to the object form."
+        },
+        {
+          "type": "object",
+          "required": [
+            "level",
+            "evidence"
+          ],
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": [
+                "H0",
+                "H1",
+                "H2",
+                "H3",
+                "H4"
+              ]
+            },
+            "evidence": {
+              "$ref": "#/definitions/evidence"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Evidence-bearing form. `evidence` cites the minimum-conformance rules this level rests on and, for each, the artifact that satisfies it."
+        }
+      ]
     },
     "fai_level": {
-      "type": "string",
-      "enum": ["L0", "L1", "L2", "L3"],
-      "description": "QSM-FAI domain conformance level (TSS Appendix Z)"
+      "description": "QSM-FAI domain conformance level (QSM-FAI §8). QSM-FAI defines its levels in prose rather than as a numbered minimum-conformance list, so cite the rule families that actually bind the claimed level — FC-01..05, TEN-01.., ESC-01..04, PROHIB-01..07.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "L0",
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "deprecated": true,
+          "description": "DEPRECATED bare form (schema v1.2 and earlier). Accepted for one release per TSS §14.2; the reference evaluator emits a deprecation warning. Migrate to the object form."
+        },
+        {
+          "type": "object",
+          "required": [
+            "level",
+            "evidence"
+          ],
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": [
+                "L0",
+                "L1",
+                "L2",
+                "L3"
+              ]
+            },
+            "evidence": {
+              "$ref": "#/definitions/evidence"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Evidence-bearing form. `evidence` cites the minimum-conformance rules this level rests on and, for each, the artifact that satisfies it."
+        }
+      ]
     },
     "arch_level": {
-      "type": "string",
-      "enum": ["A0", "A1", "A2", "A3"],
-      "description": "QSM-ARCH architectural completeness level (QSM-ARCH §8.1)"
+      "description": "QSM-ARCH architectural completeness level (QSM-ARCH §8.1). Minimum-conformance rules: ARCH-01..ARCH-05 (QSM-ARCH §8.2). Independent of the C/T/H/L ladder (TSS Appendix Z.3).",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "A0",
+            "A1",
+            "A2",
+            "A3"
+          ],
+          "deprecated": true,
+          "description": "DEPRECATED bare form (schema v1.2 and earlier). Accepted for one release per TSS §14.2; the reference evaluator emits a deprecation warning. Migrate to the object form."
+        },
+        {
+          "type": "object",
+          "required": [
+            "level",
+            "evidence"
+          ],
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": [
+                "A0",
+                "A1",
+                "A2",
+                "A3"
+              ]
+            },
+            "evidence": {
+              "$ref": "#/definitions/evidence"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Evidence-bearing form. `evidence` cites the minimum-conformance rules this level rests on and, for each, the artifact that satisfies it."
+        }
+      ]
     },
     "layer_maturity": {
       "type": "object",
       "description": "Per-layer maturity (M-level) — see specs/QSM-LAYER-MATURITY.md",
       "properties": {
-        "intent": { "$ref": "#/definitions/mLevel" },
-        "governance": { "$ref": "#/definitions/mLevel" },
-        "intake": { "$ref": "#/definitions/mLevel" },
-        "memory": { "$ref": "#/definitions/mLevel" },
-        "practice": { "$ref": "#/definitions/mLevel" },
-        "observation": { "$ref": "#/definitions/mLevel" },
-        "signal": { "$ref": "#/definitions/mLevel" },
-        "adaptation": { "$ref": "#/definitions/mLevel" }
+        "intent": {
+          "$ref": "#/definitions/mLevel"
+        },
+        "governance": {
+          "$ref": "#/definitions/mLevel"
+        },
+        "intake": {
+          "$ref": "#/definitions/mLevel"
+        },
+        "memory": {
+          "$ref": "#/definitions/mLevel"
+        },
+        "practice": {
+          "$ref": "#/definitions/mLevel"
+        },
+        "observation": {
+          "$ref": "#/definitions/mLevel"
+        },
+        "signal": {
+          "$ref": "#/definitions/mLevel"
+        },
+        "adaptation": {
+          "$ref": "#/definitions/mLevel"
+        }
       },
-      "additionalProperties": { "$ref": "#/definitions/mLevel" }
+      "additionalProperties": {
+        "$ref": "#/definitions/mLevel"
+      }
     },
     "deviations": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Explicit partial implementations (TSS-CONF-05)"
     },
     "claimant": {
@@ -86,12 +290,77 @@
       "type": "string",
       "format": "uri",
       "description": "Canonical registry entry URL"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "source_url",
+        "content_hash",
+        "fetched_at"
+      ],
+      "description": "Provenance of this registry entry. A registry entry is a POINTER with a fetched snapshot, not an independent document: the claim's source of truth is the implementation's own claim file. Registry entries that were copies drifted from their sources within weeks of being written — one published a deviation that had become false while omitting three that had become true. content_hash makes that drift detectable instead of invisible.",
+      "properties": {
+        "source_url": {
+          "type": "string",
+          "description": "Where the authoritative claim file lives. May be non-public: an unreachable source is a limit on WHERE the divergence check can run, not a reason to drop the field. The literal \"self:registry\" declares that this registry entry IS the source of record — the implementation publishes no machine-readable claim file of its own. That is a legitimate state and requires a `note` saying so, because a DECLARED absence of provenance can be reviewed and a silent one cannot."
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "sha256 of the canonical JSON of the source claim at fetch time. For \"self:registry\" entries there is no external source, so this is the empty hash sentinel \"sha256:\" + 64 zeros."
+        },
+        "fetched_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "definitions": {
     "mLevel": {
       "type": "string",
-      "enum": ["M0", "M1", "M2", "M3"]
+      "enum": [
+        "M0",
+        "M1",
+        "M2",
+        "M3"
+      ]
+    },
+    "evidenceItem": {
+      "type": "object",
+      "required": [
+        "rule",
+        "satisfied_by"
+      ],
+      "properties": {
+        "rule": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9]*(-[A-Z0-9]+)*-[0-9]{2}$",
+          "description": "A named rule ID from the spec governing this axis, e.g. ARCH-05, TSS-03, THRIVE-02, ESC-01. Validated by shape, not by a closed enum: QSM-FAI has no numbered minimum-conformance list, and a closed enum in a published schema goes stale on the next spec release. The reference evaluator carries the per-axis rule sets and warns when a claimed level's evidence does not cover them."
+        },
+        "satisfied_by": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The artifact that satisfies the rule — a repository path with an optional line anchor (path/to/file.ts#L12), a URL, or a spec section reference. This is the field that does the work: it cannot be filled in for a rule the implementation does not actually satisfy without the author noticing."
+        },
+        "note": {
+          "type": "string",
+          "description": "Optional qualification — partial satisfaction, a caveat, or why this artifact is the right evidence."
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/evidenceItem"
+      },
+      "description": "At least one rule/artifact pair. An empty evidence array is not a claim with weak evidence; it is a bare level wearing the object form."
     }
   }
 }

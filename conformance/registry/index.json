@@ -1,27 +1,56 @@
 {
-  "version": "1.0.0",
-  "generated_at": "2026-06-26T00:00:00Z",
+  "version": "1.1.0",
+  "generated_at": "2026-07-25T23:43:02Z",
   "claims": [
     {
       "id": "cc-orgestra-001",
       "claimant": "person_caitlin",
       "implementation_url": "https://orgestra.org",
-      "context_types": ["SELF", "HEARTH", "CHARTER"],
+      "context_types": [
+        "SELF",
+        "HEARTH",
+        "CHARTER"
+      ],
       "conformance_level": "T1",
       "qsm_level": "C1",
-      "arch_level": "A1",
+      "arch_level": null,
       "claimed_at": "2026-06-25T00:00:00Z",
+      "evidence_bearing_levels": [],
+      "source": {
+        "source_url": "https://gitlab.com/cinderlit/orgestra/-/raw/main/conformance-claim.json",
+        "content_hash": "sha256:c20070c1d3f05b19a4efc3b687cfe4bb962a39c80af9e7ab4b58ea41c94ea722",
+        "fetched_at": "2026-07-25T00:00:00Z",
+        "note": "Hash is of the CORRECTED source claim, which at fetch time had not yet reached the implementation's main branch. --verify-sources will therefore report divergence until it does. That is the intended behaviour: the check goes green when the two are actually the same, not when someone asserts they are."
+      },
       "file": "cc-orgestra-001.json"
     },
     {
       "id": "cc-woodcrestwa-001",
       "claimant": "Woodcrest HOA",
       "implementation_url": "https://woodcrestwa.com",
-      "context_types": ["CHARTER", "CREST"],
+      "context_types": [
+        "CHARTER",
+        "CREST"
+      ],
       "conformance_level": "T0",
+      "qsm_level": null,
       "arch_level": "A2",
       "claimed_at": "2026-06-26T00:00:00Z",
+      "evidence_bearing_levels": [],
+      "source": {
+        "source_url": "self:registry",
+        "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "fetched_at": "2026-07-25T00:00:00Z",
+        "note": "This registry entry is the source of record. The implementation is a static site and publishes no machine-readable claim file, so there is nothing to point at and nothing that can diverge. Declared rather than left blank so a reviewer can see the difference between 'no external source exists' and 'nobody filled this in'."
+      },
       "file": "cc-woodcrestwa-001.json"
+    }
+  ],
+  "withdrawn": [
+    {
+      "id": "cc-quantified-estate-001",
+      "status": "withdrawn",
+      "reason": "The claim was withdrawn rather than corrected in place: its levels were not derived from an assessment, so no edit to them would have been evidence-based either. Re-issue after a real assessment against the schema's evidence form."
     }
   ]
 }
