@@ -1,0 +1,28 @@
+{
+  "id": "cc-orgestra-001",
+  "tss_version": "1.2.0",
+  "context_types": ["SELF", "HEARTH", "CHARTER"],
+  "conformance_level": "T1",
+  "qsm_level": "C1",
+  "arch_level": "A1",
+  "thrive_level": "H1",
+  "fai_level": "L1",
+  "layer_maturity": {
+    "intent": "M2",
+    "governance": "M2",
+    "intake": "M1",
+    "memory": "M1",
+    "practice": "M2",
+    "observation": "M1",
+    "signal": "M0",
+    "adaptation": "M1"
+  },
+  "deviations": [
+    "Memory layer (Layer 4) is not directly writable by agent — Obsidian has no MCP connection. Context bundles in data/ serve as machine-readable Memory proxy.",
+    "Signal layer (Layer 7) has no persistent dashboard. Cross-context signal check runs as on-demand agent session only.",
+    "TENURE logs are JSONL files; not yet exposed as a queryable API."
+  ],
+  "claimant": "person_caitlin",
+  "claimed_at": "2026-06-25T00:00:00Z",
+  "implementation_url": "https://orgestra.org"
+}

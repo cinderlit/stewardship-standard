@@ -1,0 +1,26 @@
+{
+  "id": "cc-woodcrestwa-001",
+  "tss_version": "1.2.0",
+  "context_types": ["CHARTER", "CREST"],
+  "conformance_level": "T0",
+  "arch_level": "A2",
+  "layer_maturity": {
+    "intent": "M2",
+    "governance": "M2",
+    "intake": "M1",
+    "memory": "M2",
+    "practice": "M1",
+    "observation": "M1",
+    "signal": "M1",
+    "adaptation": "M1"
+  },
+  "deviations": [
+    "Static website only — no machine-readable stewardship records export.",
+    "Observation and Signal layers are human-maintained editorial content, not automated monitors.",
+    "CREST context represented editorially; no persisted entity/relationship model.",
+    "T0 claimed: site describes and organizes by QSM layers but does not maintain auditable stewardship records."
+  ],
+  "claimant": "Woodcrest HOA",
+  "claimed_at": "2026-06-26T00:00:00Z",
+  "implementation_url": "https://woodcrestwa.com"
+}

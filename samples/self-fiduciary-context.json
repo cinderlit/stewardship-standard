@@ -1,0 +1,37 @@
+{
+  "id": "fc-self-001",
+  "version": "1.0",
+  "context_type": "SELF",
+  "label": "Personal Stewardship Context",
+  "declared_by": {
+    "steward_id": "steward-001",
+    "steward_name": "Primary Steward",
+    "declared_at": "2026-06-25T00:00:00Z"
+  },
+  "delegation_chain": [
+    {
+      "steward_id": "steward-001",
+      "role": "primary",
+      "authorized_at": "2026-06-25T00:00:00Z",
+      "scope": ["read", "recommend", "act", "delegate"]
+    },
+    {
+      "steward_id": "agent-self-assistant",
+      "role": "delegate",
+      "authorized_at": "2026-06-25T00:00:00Z",
+      "scope": ["read", "recommend"]
+    }
+  ],
+  "entity_set_ref": "locus-self-001",
+  "atlas_ref": "atlas-self-001",
+  "tenure_log_ref": "tenure-self-001",
+  "constraints": {
+    "max_action_tier": 2,
+    "require_human_approval_above_tier": 2,
+    "spending_limit_usd": null,
+    "notification_required_for": ["tier-3-actions", "capacity-overload-flags", "critical-urgency"],
+    "prohibited_domains": []
+  },
+  "status": "active",
+  "expires_at": null
+}

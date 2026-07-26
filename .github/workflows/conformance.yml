@@ -1,0 +1,48 @@
+name: Conformance Suite
+
+on:
+  push:
+    branches: [main, "cursor/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Schema validation and named-rule assertions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Guard against tracked private material
+        run: |
+          tracked_private="$(git ls-files private/)"
+          if [ -n "$tracked_private" ]; then
+            echo "ERROR: internal-only material is tracked under private/ in this PUBLIC repo:" >&2
+            echo "$tracked_private" >&2
+            echo "private/ is gitignored and must never be committed here. Remove it (e.g. git rm -r --cached private/)." >&2
+            exit 1
+          fi
+          echo "OK: no tracked files under private/."
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r tests/requirements-test.txt
+
+      - name: Install governance validators
+        run: |
+          git clone --depth 1 https://gitlab.com/cinderlit/mind-over-meta.git /tmp/mind-over-meta-parent || true
+          if [ -d /tmp/mind-over-meta-parent/packages/governance-validators ]; then
+            pip install -e /tmp/mind-over-meta-parent/packages/governance-validators
+            cinderlit-agent-health --repo .
+            cinderlit-policy-lint policy.yaml
+            cinderlit-brand-lint brand-style.json
+          fi
+
+      - name: Run conformance suite
+        run: pytest tests/ -v --tb=short

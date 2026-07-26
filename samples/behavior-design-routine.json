@@ -1,0 +1,99 @@
+{
+  "_comment": "Demonstrates THRIVE routine habit stacking using the optional behavior_design fields (routine.schema.json v1.1). Three morning routines chained via anchor_routine_id.",
+  "context": {
+    "id": "ctx-self-morning-001",
+    "name": "Self Stewardship — Morning Routine Stack",
+    "type": "SELF",
+    "stewards": ["person-001"],
+    "effective_date": "2026-06-01T00:00:00Z",
+    "scope": "Personal morning routines for grounding, movement, and daily planning",
+    "version": "1.0"
+  },
+  "routines": [
+    {
+      "id": "routine-wake-and-ground-001",
+      "label": "wake-and-ground",
+      "type": "morning",
+      "trigger_conditions": ["weekday morning"],
+      "steps": [
+        "Sit up when alarm sounds",
+        "Open blinds before picking up phone",
+        "Start coffee maker"
+      ],
+      "expected_duration": "10 minutes",
+      "known_failure_modes": [
+        "Snooze alarm repeatedly",
+        "Reach for phone before getting out of bed",
+        "Skip blinds on overcast mornings"
+      ],
+      "fallback_options": [
+        "Minimum viable: sit up and put feet on floor — blinds and coffee can follow within five minutes",
+        "If coffee maker fails, hot water kettle is acceptable substitute"
+      ],
+      "behavior_design": {
+        "design_framework": "implementation-intention",
+        "cue": "alarm at 6:30am",
+        "cue_type": "time",
+        "reward": "immediate — coffee is ready",
+        "implementation_intention": "When my alarm goes off, I will sit up and open the blinds before picking up my phone."
+      }
+    },
+    {
+      "id": "routine-movement-001",
+      "label": "movement",
+      "type": "morning",
+      "trigger_conditions": ["after wake-and-ground completes"],
+      "steps": [
+        "Put on walking shoes",
+        "Walk to the end of the block and back",
+        "Play one favorite song during the walk"
+      ],
+      "expected_duration": "15 minutes",
+      "known_failure_modes": [
+        "Rain or extreme weather",
+        "Early meeting forces shortened morning",
+        "Soreness or low energy after poor sleep"
+      ],
+      "fallback_options": [
+        "Indoor alternative: five minutes of stretching in the living room",
+        "Minimum viable: walk to mailbox and back — still counts as movement"
+      ],
+      "behavior_design": {
+        "design_framework": "tiny-habits",
+        "cue": "finishing first cup of coffee",
+        "cue_type": "preceding-action",
+        "anchor_routine_id": "routine-wake-and-ground-001",
+        "reward": "play one song I like during the walk",
+        "implementation_intention": "After I finish my coffee, I will put on my shoes and walk to the end of the block."
+      }
+    },
+    {
+      "id": "routine-planning-review-001",
+      "label": "planning-review",
+      "type": "morning",
+      "trigger_conditions": ["after movement routine completes"],
+      "steps": [
+        "Open planner at desk",
+        "Write three things to accomplish today",
+        "Close planner — no full day scheduling unless time allows"
+      ],
+      "expected_duration": "10 minutes",
+      "known_failure_modes": [
+        "Temptation to open email or Slack instead of planner",
+        "Over-planning turns three items into a full project list",
+        "Interruption from household member"
+      ],
+      "fallback_options": [
+        "Voice-memo three priorities if desk is unavailable",
+        "Minimum viable: one priority written on a sticky note"
+      ],
+      "behavior_design": {
+        "design_framework": "implementation-intention",
+        "cue": "returning from morning walk",
+        "cue_type": "preceding-action",
+        "anchor_routine_id": "routine-movement-001",
+        "implementation_intention": "When I get back from my walk, I will open my planner and write three things I want to accomplish today."
+      }
+    }
+  ]
+}

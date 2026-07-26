@@ -1,0 +1,37 @@
+{
+  "id": "fc-charter-001",
+  "version": "1.0",
+  "context_type": "CHARTER",
+  "label": "Business / Consulting Practice Context",
+  "declared_by": {
+    "steward_id": "steward-consultant-001",
+    "steward_name": "Solo Consultant",
+    "declared_at": "2026-06-25T00:00:00Z"
+  },
+  "delegation_chain": [
+    {
+      "steward_id": "steward-consultant-001",
+      "role": "primary",
+      "authorized_at": "2026-06-25T00:00:00Z",
+      "scope": ["read", "recommend", "act", "delegate"]
+    },
+    {
+      "steward_id": "agent-charter-assistant",
+      "role": "delegate",
+      "authorized_at": "2026-06-25T00:00:00Z",
+      "scope": ["read", "recommend"]
+    }
+  ],
+  "entity_set_ref": "locus-charter-001",
+  "atlas_ref": "atlas-charter-001",
+  "tenure_log_ref": "tenure-charter-001",
+  "constraints": {
+    "max_action_tier": 2,
+    "require_human_approval_above_tier": 2,
+    "spending_limit_usd": 500,
+    "notification_required_for": ["tier-3-actions", "spending-above-threshold", "critical-urgency", "scope-boundary-approach"],
+    "prohibited_domains": []
+  },
+  "status": "active",
+  "expires_at": null
+}
