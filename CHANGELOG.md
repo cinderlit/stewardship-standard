@@ -5,6 +5,107 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## [1.4.1] — 2026-07-25
+
+**This bundle is the first published release to carry [1.3.0] and [1.4.0].** Both were authored
+2026-07-06 but never tagged, never released, and never deposited — the last release cut was
+**v1.2.0 (2026-06-25)**, which is still what the DOI resolves to. Anyone citing the standard today
+receives a version predating QSM-FAI v1.3.0's `action_tier` field entirely. This release closes
+that gap; nothing in 1.3.0 or 1.4.0 is changed, only finally shipped.
+
+Cut as a patch rather than tagging 1.4.0 retroactively: dating a tag 2026-07-06 would assert a
+publication that never happened. The content of 1.3.0 and 1.4.0 is unchanged and their entries below
+keep their original authoring dates.
+
+### Errata
+
+**QSM-FAI §4 — "four-tier" corrected to "five-tier (Tiers 0–4)."** Editorial only; no normative
+requirement changed and no conformance claim is affected.
+
+The prose introducing §4 Action Tiers read *"QSM-FAI defines a four-tier action model"* while the
+normative table immediately below it listed **five** tiers — `0 Read · 1 Recommend · 2 Notify ·
+3 Act · 4 Delegate`. The table was always authoritative, and §4.1 treats Tier 0 as a real point on
+the scale (it escalates *to* "Recommendation (Tier 1)" and gates "Tier 3 or Tier 4"), so this was an
+off-by-one in the sentence, not an ambiguity about whether Tier 0 counts.
+
+**Present in every published release** — v1.0.1, v1.1.0, v1.2.0, and v1.3.0. Corrected in v1.3.0
+only; the earlier files are shipped historical artifacts and are deliberately left as published.
+Implementers reading any version should treat the **table** as normative.
+
+Found while reconciling `capacity-envelope-model.md`'s oversight coefficients against this spec
+(cinderlit-work-system ADR-0029 AI-6). That reconciliation surfaced a second, larger gap that is
+*not* fixed here: **Tier 4 (Delegate) has no oversight cost assigned anywhere** — see the
+tier-mapping ADR in cinderlit-work-system.
+
+The spec file itself is **not** version-bumped — the corrected sentence states what the normative
+table already required, so QSM-FAI remains **v1.3.0**. Only the bundle takes the patch number.
+
+### Correction to the [1.1.0] change record — QSM-FAI v1.1.0 was **not** purely additive
+
+**The [1.1.0] entry below, and `QSM-FAI-v1.1.0.md`'s own version note, both assert that "no v1.0.1
+requirement was removed or tightened, and v1.0.1 conformance claims remain valid under v1.1.0."
+That assertion is incorrect.** This entry supersedes it.
+
+**QSM-FAI v1.1.0 §4.2 ESC-01 is a tightening.** It requires every escalation to be classified under
+exactly one reason from the escalation taxonomy (or a declared ESC-04 extension). Under v1.0.1 §4.1
+an escalating agent was required only to *"attach a `requires_escalation: true` flag"* — there was no
+reason taxonomy and no obligation to classify. ESC-01 therefore imposes a **new MUST on behaviour
+that already existed and was already conformant**: a v1.0.1-conformant implementation emitting a bare
+`requires_escalation: true` is **non-conformant under v1.1.0**. ESC-02 and ESC-03 add further
+MUST-record obligations in the same shape.
+
+**A v1.0.1 conformance claim does not automatically carry forward to v1.1.0.** Implementers holding
+one should re-read §4.2 and verify their escalation path classifies, rather than relying on the
+additivity sentence.
+
+**Checked and cleared, so it is not re-litigated:** PROHIB-06 (v1.1.0 §9) prohibits agents holding a
+`QSM_META` FiduciaryContext and reads like a new prohibition, but `QSM_META` was itself introduced in
+QSM v1.1.0 §6.1 — no v1.0.1 context could carry that type, so nothing previously conformant could
+retroactively violate it. PROHIB-06 **is** genuinely additive. ESC-01 is not, because escalations
+existed at v1.0.1 and the spec already mandated them.
+
+**Why the record is corrected here rather than in the v1.1.0 files.** `specs/QSM-FAI-v1.1.0.md` is a
+shipped artifact and is deliberately left as published (same rule as the §4 erratum above), so its
+inline version note still contains the incorrect sentence. **Where a spec file's own change note and
+this CHANGELOG disagree about what changed between versions, this CHANGELOG is authoritative.**
+
+No known implementation is affected: `org-estra-archive`'s v1.0.1 claim was never issued, and
+Orgestra was built against v1.1.0 or later. This is a defect in the change record, not a live broken
+claim — but the record is what an external implementer relies on to decide whether a re-read is
+needed, and one relying on it here would ship a non-conformant escalation path.
+
+*Found by the FAI/TSS tier reconciliation, 2026-07-25, which was instructed to verify the additivity
+assertion rather than quote it. The §4 erratum above is why that instruction was given.*
+
+### Errata — TSS Appendix Z.1 could not express a valid THRIVE level
+
+**`TSS-v1.2.0.md` Appendix Z.1 mapped only `H0`–`H3`. THRIVE v1.1.0 added `H4 Integrated` in the
+same bundle that shipped TSS v1.2.0, and the row was never added.** The `H4` row is added here,
+marked as THRIVE-only. Editorial: Z.1 is a SHOULD-level alignment aid, no normative requirement
+changed, and no conformance claim is affected.
+
+Appendix Z is what an implementer reads to align a claim across the four scales, so a table that
+omits a level defined by one of them silently tells an H4 implementation that its level does not
+exist. The repository `README.md` already carried the H4 row; the normative spec did not — the
+summary was ahead of the standard, which is the same failure shape as the §4 erratum above.
+
+**H4 has no C/T/L counterpart, and this is not an oversight in the other three specs.** H4 extends
+the THRIVE domain model (WorldDomainScope, IdentityIntentProfile, DevelopmentalContext,
+TemporalCycleProfile); it is not a further step in audit rigour. An implementation at H4 is at T3.
+Per Z.2, TSS T-level remains the primary audit standard.
+
+**TSS is not version-bumped.** The row records a level THRIVE v1.1.0 already defines; adding it
+states what Appendix Z already intended to express, so TSS remains **v1.2.0** and only the bundle
+takes the patch number — the same treatment given the QSM-FAI §4 erratum above.
+
+### Release hygiene
+
+- `CITATION.cff` and `.zenodo.json` were both still pinned at **1.2.0**; updated here to 1.4.1.
+- The `identifiers` list in `CITATION.cff` carries a version DOI for **v1.0.0 only** — v1.2.0's was
+  never added. The concept DOI (`10.5281/zenodo.20436569`) is unchanged and always resolves to the
+  latest version. **The v1.4.1 version DOI can only be added after Zenodo deposits it**, so it is
+  deliberately absent here rather than guessed.
+
 ## [1.4.0] — 2026-07-06
 
 Governance closure spec rider. Adds optional `action_tier` on TENURE entries
@@ -73,6 +174,11 @@ The superseded `QSM-ARCH-v1.0.md` remains in `specs/`, marked superseded with a 
 replacement.
 
 ## [1.1.0] — 2026-06-22
+
+> **⚠ Corrected 2026-07-25 — see [1.4.1] § *Correction to the [1.1.0] change record*.** The
+> additivity sentence immediately below is **incorrect**: QSM-FAI v1.1.0 §4.2 **ESC-01 is a
+> tightening**, and a v1.0.1 conformance claim does not automatically carry forward. The [1.4.1]
+> entry is authoritative.
 
 Amendment release. Every change in this release is additive — no v1.0.x/v1.1.x requirement
 was removed or tightened, so all v1.0.0 conformance claims remain valid under v1.1.0. Use case

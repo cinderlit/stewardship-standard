@@ -42,9 +42,16 @@ issues in the canonical repository; the latest editor's draft there is authorita
 adds an optional Delegate Track Record to `delegation_chain` entries (§3.3), notes that
 `entry_type` on TENURE entries is extensible (§6.1), and adds a prohibited behavior excluding
 QSM_META governance contexts from agent action (§9, PROHIB-06). All changes are additive or
-optional; no v1.0.1 requirement was removed or tightened, and v1.0.1 conformance claims remain
-valid under v1.1.0. See `CHANGELOG.md` [1.1.0] for the full amendment record and implementation
-evidence.
+optional **with one exception, corrected in the v1.4.1 bundle: `ESC-01` (§4.2) requires every
+escalation to be classified, which v1.0.1 §4.1 permitted to be left unclassified — so a v1.0.1
+implementation emitting a bare `requires_escalation: true` is not conformant at v1.1.0 or
+later.** All other v1.0.1 conformance claims remain valid under v1.1.0. See `CHANGELOG.md`
+[1.4.1] § *Correction to the [1.1.0] change record* for the correction and the migration note,
+and [1.1.0] for the full amendment record and implementation evidence.
+
+`PROHIB-06` reads like a second such exception and is **not** one: `QSM_META` was introduced in
+the same release (QSM v1.1.0 §6.1), so no v1.0.1 context could carry that type and nothing
+previously conformant could retroactively violate it.
 
 **v1.2.0 amendment note:** this revision adds an optional Continuity block to the
 FiduciaryContext (§3.4) covering steward availability, backup designation, and
@@ -521,7 +528,7 @@ The standing FC sits `suspended` until continuity activation flips it `active` (
 
 ## 4. Action Tiers
 
-QSM-FAI defines a four-tier action model. Tier determines whether an agent may act autonomously,
+QSM-FAI defines a five-tier action model (Tiers 0–4). Tier determines whether an agent may act autonomously,
 must recommend, or must escalate.
 
 | Tier | Label | Examples | Default Agent Permission |

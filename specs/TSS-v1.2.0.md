@@ -732,6 +732,13 @@ Implementations SHOULD aim for aligned levels when possible. A typical operation
 | C1 | T1 | H1 | L1 | Structured |
 | C2 | T2 | H2 | L2 | Operational / Auditable |
 | C3 | T3 | H3 | L3 | Normative / Full |
+| — | — | H4 | — | Integrated (THRIVE only — WorldDomainScope, IdentityIntentProfile, DevelopmentalContext, TemporalCycleProfile) |
+
+**THRIVE runs one level beyond the shared ladder.** THRIVE v1.1.0 defines **H4 Integrated**
+(THRIVE §Conformance levels), which has no counterpart on the C/T/L axes: it is an extension of
+the THRIVE domain model, not a further step in audit rigour. An implementation at H4 is at T3 on
+the shared ladder. The row above is included so Appendix Z can express every valid THRIVE level;
+without it, a conformant H4 claim has nowhere to sit in this table.
 
 ### Z.2 Primary audit standard
 
