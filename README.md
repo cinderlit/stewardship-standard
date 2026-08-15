@@ -32,10 +32,10 @@ The standard is composed of interdependent specifications. **TSS is the normativ
 |------|---------|------|
 | **[QSM-OVERVIEW](specs/QSM-OVERVIEW-v1.0.md)** | 1.0.0 | **Conceptual front door** — three orienting questions, five contexts, how the specs relate. Read this first. |
 | **[QSM](specs/QSM-v1.1.0.md)** | 1.1.0 | **Quantified Stewardship Model** — the domain-agnostic ontology and methodology. Defines what exists in a stewardship domain, what it needs, and what follows from that. |
-| **[QSM-ARCH](specs/QSM-ARCH-v1.1.0.md)** | 1.1.0 | **Layer and Engine Operating Model** — eight structural layers, per-layer contracts, cross-cutting planes, context lifecycle. The bridge between doctrine and running systems. |
+| **[QSM-ARCH](specs/QSM-ARCH-v1.2.0.md)** | 1.2.0 | **Layer and Engine Operating Model** — eight structural layers, per-layer contracts, cross-cutting planes, context lifecycle. The bridge between doctrine and running systems. |
 | **[TSS](specs/TSS-v1.2.0.md)** | 1.2.0 | **The Stewardship Standard** — the normative umbrella. Defines required objects, conformance levels (T0–T3), records, and audit rules. **The primary audit standard.** |
 | **[THRIVE](specs/THRIVE-v1.1.0.md)** | 1.1.0 | **Self and Wellness Context Layer** — personal capacity, load, needs, routines, and recovery. Supplies the SELF context. |
-| **[QSM-FAI](specs/QSM-FAI-v1.1.0.md)** | 1.1.0 | **Fiduciary AI Interface** — conditions under which an AI agent may act as a fiduciary within a stewardship context. |
+| **[QSM-FAI](specs/QSM-FAI-v1.3.0.md)** | 1.3.0 | **Fiduciary AI Interface** — conditions under which an AI agent may act as a fiduciary within a stewardship context. |
 | **[QSM-GLOSSARY](specs/QSM-GLOSSARY.md)** | 1.0.0 | **Vocabulary reference** — canonical definitions for terms used across the stack (non-normative). |
 
 Previous versions remain available in `specs/`, each marked superseded with a pointer
@@ -86,13 +86,13 @@ stewardship-standard/
 ├── .zenodo.json                  ← metadata for Zenodo DOI minting
 ├── specs/
 │   ├── QSM-OVERVIEW-v1.0.md
-│   ├── QSM-ARCH-v1.1.0.md
+│   ├── QSM-ARCH-v1.2.0.md
 │   ├── QSM-GLOSSARY.md
 │   ├── QSM-LAYER-MATRIX.md
 │   ├── QSM-v1.1.0.md
 │   ├── TSS-v1.2.0.md
 │   ├── THRIVE-v1.1.0.md
-│   ├── QSM-FAI-v1.1.0.md
+│   ├── QSM-FAI-v1.3.0.md
 │   └── (superseded versions kept alongside, marked superseded)
 ├── schemas/
 │   ├── context.schema.json
@@ -140,9 +140,9 @@ QSM-ARCH **A-levels** (A0–A3) measure architectural completeness separately fr
 ## Getting started
 
 1. Read **[QSM-OVERVIEW](specs/QSM-OVERVIEW-v1.0.md)** for the conceptual foundation.
-2. Read **[QSM](specs/QSM-v1.1.0.md)** and **[QSM-ARCH](specs/QSM-ARCH-v1.1.0.md)** for the ontology and operating model.
+2. Read **[QSM](specs/QSM-v1.1.0.md)** and **[QSM-ARCH](specs/QSM-ARCH-v1.2.0.md)** for the ontology and operating model.
 3. Read **[TSS](specs/TSS-v1.2.0.md)** for conformance and audit requirements.
-4. If you are building an AI agent, read **[QSM-FAI](specs/QSM-FAI-v1.1.0.md)**.
+4. If you are building an AI agent, read **[QSM-FAI](specs/QSM-FAI-v1.3.0.md)**.
 5. If you are modeling personal capacity and wellbeing, read **[THRIVE](specs/THRIVE-v1.1.0.md)**.
 6. Use **[QSM-GLOSSARY](specs/QSM-GLOSSARY.md)** for shared vocabulary.
 7. Validate your data against the JSON schemas in [`schemas/`](schemas/); see [`samples/`](samples/) for worked examples.
