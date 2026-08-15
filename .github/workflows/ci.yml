@@ -1,0 +1,56 @@
+# stewardship-standard CI
+#
+# Stood up 2026-08-14 (CIN-205). Until this file existed the repo had no CI, no tests, and no
+# check of any kind — while being the PUBLIC artifact: three releases, a Zenodo DOI, an open
+# licence, and 16 schemas other repos are invited to validate against. A defect here is one the
+# standard exports to every implementer, which makes it the worst place in the portfolio to have
+# zero verification.
+#
+# Deliberately small. Both jobs were run green on a bare checkout before being listed, and both
+# were proven able to go RED by planting defects and watching them fail — mixed schema drafts, a
+# dangling local $ref, and a `required` entry naming an undeclared property were all caught. A
+# gate that has never rejected anything is decorative.
+#
+# Zero dependencies on purpose: no package.json, no lockfile, no node_modules in a spec repo.
+# That costs real coverage and the cost is stated rather than hidden — check-schemas.mjs does NOT
+# run a JSON Schema engine and does NOT validate samples/ against schemas/. See its header for
+# why (ajv needs ajv-formats for the `date-time` format these schemas use, and no sample declares
+# which schema governs it — a mapping only Caitlin can rule on).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  schemas:
+    name: Schemas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate published schemas
+        run: node .governance/check-schemas.mjs
+
+  adrs:
+    name: ADRs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # Currently 0 ADRs under .governance/adr, so this passes vacuously today. Listed anyway:
+      # the point is that the FIRST ADR to land here is checked on arrival rather than whenever
+      # somebody remembers the script exists. check-schemas.mjs carries the real coverage.
+      - name: Check ADRs
+        run: node .governance/check-adrs.mjs
