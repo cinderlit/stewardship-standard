@@ -139,6 +139,8 @@ QSM-ARCH **A-levels** (A0–A3) measure architectural completeness separately fr
 
 ## Getting started
 
+**New here?** Start at [quantifiedly.com/quickstart](https://quantifiedly.com/quickstart) for a zero-setup path before reading specs.
+
 1. Read **[QSM-OVERVIEW](specs/QSM-OVERVIEW-v1.0.md)** for the conceptual foundation.
 2. Read **[QSM](specs/QSM-v1.1.0.md)** and **[QSM-ARCH](specs/QSM-ARCH-v1.1.0.md)** for the ontology and operating model.
 3. Read **[TSS](specs/TSS-v1.2.0.md)** for conformance and audit requirements.
