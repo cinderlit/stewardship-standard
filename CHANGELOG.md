@@ -5,6 +5,12 @@ project follows [Semantic Versioning](https://semver.org). Each constituent
 spec is versioned independently; this changelog tracks the combined release
 bundle.
 
+## [Unreleased]
+
+### To do before the next release
+
+- Sharpen the "first open standard" claim in README line 3 per `work-system/handoffs/cursor-prompt-sharpen-fai-claim-2026-07-07.md` (the proposed wording is in that prompt; the v1.2.1 release it was written for can no longer be cut).
+
 ## [1.4.1] — 2026-07-25
 
 **This bundle is the first published release to carry [1.3.0] and [1.4.0].** Both were authored
